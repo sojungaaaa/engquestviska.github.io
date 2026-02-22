@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignments · English Quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #7C3AED; --purple-light: #A78BFA; --purple-soft: #EDE9FE;
+      --purple-mid: #C4B5FD; --white: #fff; --off-white: #F9F7FF;
+      --text-dark: #1E1040; --text-muted: #6B5B95; --border: #E5DEFF;
+      --accent: #F59E0B; --green: #10B981;
+    }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 50%, #4C1D95 100%);
+      padding: 36px 20px 52px; text-align: center; position: relative; overflow: hidden;
+    }
+    header::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 28px 28px; pointer-events: none;
+    }
+    .back-btn {
+      position: absolute; top: 20px; left: 20px; z-index: 2;
+      background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3);
+      color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.88rem;
+      font-weight: 600; padding: 8px 18px; border-radius: 999px; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.25); }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 800; color: #fff; position: relative; z-index: 1; }
+    header h1 span { color: var(--accent); font-style: italic; }
+    .header-sub { color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: 8px; position: relative; z-index: 1; }
+    .wave { display: block; width: 100%; margin-top: -2px; }
+
+    /* MAIN */
+    main { max-width: 900px; margin: 0 auto; padding: 32px 16px 80px; }
+
+    /* CHAPTER SECTION */
+    .chapter-section { margin-bottom: 48px; }
+    .chapter-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .chapter-badge {
+      background: linear-gradient(135deg, var(--purple), #5B21B6);
+      color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+      font-weight: 600; padding: 6px 14px; border-radius: 999px; flex-shrink: 0;
+      letter-spacing: 0.05em;
+    }
+    .chapter-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; }
+    .chapter-line { flex: 1; height: 1.5px; background: var(--border); }
+
+    /* TASK GRID */
+    .task-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+
+    /* TASK CARD */
+    .task-card {
+      background: var(--white); border: 1.5px solid var(--border); border-radius: 20px;
+      overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .task-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(124,58,237,0.12); }
+
+    .task-top {
+      padding: 20px 20px 16px; display: flex; align-items: flex-start; gap: 14px;
+    }
+    .task-number {
+      width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple), #5B21B6);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 800; color: #fff;
+    }
+    .task-info { flex: 1; min-width: 0; }
+    .task-name { font-size: 1rem; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
+    .task-topic {
+      font-size: 0.78rem; font-family: 'IBM Plex Mono', monospace;
+      color: var(--purple-light); font-weight: 600;
+    }
+
+    .task-actions {
+      display: flex; gap: 0; border-top: 1.5px solid var(--border);
+    }
+    .btn-task-view {
+      flex: 1; padding: 13px; background: var(--purple-soft); color: var(--purple);
+      border: none; border-right: 1px solid var(--border); font-size: 0.88rem;
+      font-weight: 700; text-align: center; cursor: pointer; font-family: inherit;
+      text-decoration: none; display: block; transition: background 0.15s;
+    }
+    .btn-task-view:hover { background: var(--purple-mid); }
+    .btn-task-download {
+      padding: 13px 18px; background: var(--purple); color: #fff;
+      border: none; font-size: 0.88rem; font-weight: 700;
+      cursor: pointer; font-family: inherit; text-decoration: none;
+      display: flex; align-items: center; gap: 5px; transition: opacity 0.15s;
+    }
+    .btn-task-download:hover { opacity: 0.85; }
+
+    /* PDF VIEWER MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(15,10,40,0.88);
+      backdrop-filter: blur(8px); z-index: 100; display: flex;
+      flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal-top {
+      width: 100%; max-width: 900px; display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 12px;
+    }
+    .modal-top-left { display: flex; flex-direction: column; gap: 2px; }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: #fff; }
+    .modal-subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.6); font-family: 'IBM Plex Mono', monospace; }
+    .modal-actions { display: flex; gap: 10px; align-items: center; }
+    .btn-modal-download {
+      background: var(--accent); color: #fff; border: none; padding: 9px 18px;
+      border-radius: 999px; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+      font-family: inherit; text-decoration: none; display: inline-block;
+    }
+    .btn-modal-close {
+      background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3);
+      color: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 1.1rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .modal-iframe-wrap {
+      width: 100%; max-width: 900px; flex: 1; max-height: 80vh;
+      border-radius: 16px; overflow: hidden; background: #fff;
+    }
+    .modal-iframe-wrap iframe { width: 100%; height: 100%; border: none; min-height: 70vh; }
+
+    footer { background: var(--text-dark); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 0.85rem; }
+    footer strong { color: var(--purple-light); }
+
+    @media (max-width: 600px) {
+      .task-grid { grid-template-columns: 1fr; }
+      .chapter-title { font-size: 1.2rem; }
+      .modal-title { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PDF VIEWER MODAL -->
+<div class="modal-overlay hidden" id="pdfModal">
+  <div class="modal-top">
+    <div class="modal-top-left">
+      <div class="modal-title" id="modalTitle">Task</div>
+      <div class="modal-subtitle" id="modalSubtitle"></div>
+    </div>
+    <div class="modal-actions">
+      <a class="btn-modal-download" id="modalDownload" href="#" target="_blank">⬇ Download</a>
+      <button class="btn-modal-close" onclick="closeModal()">✕</button>
+    </div>
+  </div>
+  <div class="modal-iframe-wrap">
+    <iframe id="modalIframe" src="" allowfullscreen></iframe>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a class="back-btn" href="index.html">← Back</a>
+  <h1>Assign<span>ments</span></h1>
+  <p class="header-sub">English Quest · SMA Negeri 6 Surakarta</p>
+</header>
+
+<svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" preserveAspectRatio="none">
+  <path fill="#4C1D95" d="M0,32 C360,0 1080,64 1440,32 L1440,0 L0,0 Z"/>
+  <path fill="#F9F7FF" d="M0,48 C360,16 1080,64 1440,32 L1440,48 Z"/>
+</svg>
+
+<main>
+
+  <!-- CHAPTER 4 -->
+  <div class="chapter-section">
+    <div class="chapter-header">
+      <div class="chapter-badge">CHAPTER 4</div>
+      <div class="chapter-title">Analytical Exposition</div>
+      <div class="chapter-line"></div>
+    </div>
+    <div class="task-grid">
+
+      <!-- Task 5 -->
+      <div class="task-card">
+        <div class="task-top">
+          <div class="task-number">5</div>
+          <div class="task-info">
+            <div class="task-name">Present Perfect Exercise</div>
+            <div class="task-topic">GRAMMAR · PRESENT PERFECT</div>
+          </div>
+        </div>
+        <div class="task-actions">
+          <button class="btn-task-view" onclick="openPDF('Task 5', 'Present Perfect Exercise', 'https://drive.google.com/file/d/1E3V1BDUAOl4DNbzi5Z24Hq4S8PlcngK8/preview', 'https://drive.google.com/uc?export=download&id=1E3V1BDUAOl4DNbzi5Z24Hq4S8PlcngK8')">👁 View</button>
+          <a class="btn-task-download" href="https://drive.google.com/uc?export=download&id=1E3V1BDUAOl4DNbzi5Z24Hq4S8PlcngK8" target="_blank">⬇</a>
+        </div>
+      </div>
+
+      <!-- Add more task cards here following the same pattern -->
+
+    </div>
+  </div>
+
+</main>
+
+<footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
+
+<script>
+  function openPDF(taskNum, topic, previewUrl, downloadUrl) {
+    document.getElementById('modalTitle').textContent    = taskNum;
+    document.getElementById('modalSubtitle').textContent = topic;
+    document.getElementById('modalIframe').src           = previewUrl;
+    document.getElementById('modalDownload').href        = downloadUrl;
+    document.getElementById('pdfModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('pdfModal').classList.add('hidden');
+    document.getElementById('modalIframe').src = '';
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('pdfModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
