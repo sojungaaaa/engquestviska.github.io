@@ -298,8 +298,8 @@
       return 'bad';
     }
 
-    function row(label, val, type) {
-      if (val === undefined || val === null || val === '' || val === '-') return '';
+    function row(label, val, type, alwaysShow) {
+      if (!alwaysShow && (val === undefined || val === null || val === '')) return '';
       let valueHtml;
       if (type === 'badge-yn') {
         const isYes = String(val).toLowerCase().startsWith('y');
@@ -318,7 +318,7 @@
     const statusKeys    = ['Strikes', 'Can Join Summative?'];
     const skipKeys      = new Set(['No.', 'Nama', 'Nickname', ...chapterKeys, ...summaryKeys, ...statusKeys, 'Activeness', 'Final Score']);
 
-    const chapterRows = chapterKeys.map(k => row(k, s[k])).join('');
+    const chapterRows = chapterKeys.map(k => row(k, s[k] || '-', null, true)).join('');
     const summaryRows = summaryKeys.filter(k => k !== 'Final Score').map(k => row(k, s[k])).join('') + row('Activeness', s['Activeness'], 'badge-active');
     const statusRows  = statusKeys.map(k => {
       if (k === 'Can Join Summative?') return row(k, s[k], 'badge-yn');
