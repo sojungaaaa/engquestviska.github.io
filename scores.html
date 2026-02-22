@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Scores · English Quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #7C3AED; --purple-light: #A78BFA; --purple-soft: #EDE9FE;
+      --purple-mid: #C4B5FD; --white: #fff; --off-white: #F9F7FF;
+      --text-dark: #1E1040; --text-muted: #6B5B95; --border: #E5DEFF;
+      --accent: #F59E0B; --green: #10B981; --red: #EF4444;
+    }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; font-size: 16px; }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 50%, #4C1D95 100%);
+      padding: 36px 20px 52px; text-align: center; position: relative; overflow: hidden;
+    }
+    header::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 28px 28px; pointer-events: none;
+    }
+    .back-btn {
+      position: absolute; top: 20px; left: 20px; z-index: 2;
+      background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3);
+      color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.88rem;
+      font-weight: 600; padding: 8px 18px; border-radius: 999px; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.25); }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 800; color: #fff; position: relative; z-index: 1; }
+    header h1 span { color: var(--accent); font-style: italic; }
+    .header-sub { color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: 8px; position: relative; z-index: 1; }
+    .wave { display: block; width: 100%; margin-top: -2px; }
+
+    /* MAIN */
+    main { max-width: 700px; margin: 0 auto; padding: 28px 16px 80px; }
+
+    /* SELECTOR CARD */
+    .selector-card {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 20px; padding: 28px 24px; margin-bottom: 24px;
+    }
+    .selector-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 20px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .field select {
+      width: 100%; padding: 14px 16px; border: 1.5px solid var(--border);
+      border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem;
+      background: var(--off-white); color: var(--text-dark); outline: none;
+      transition: border-color 0.2s;
+    }
+    .field select:focus { border-color: var(--purple-light); }
+    .btn-view {
+      width: 100%; padding: 15px; background: linear-gradient(135deg, var(--purple), #5B21B6);
+      color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700;
+      font-size: 1rem; border: none; border-radius: 12px; cursor: pointer;
+      margin-top: 4px; transition: opacity 0.2s;
+    }
+    .btn-view:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-view:hover:not(:disabled) { opacity: 0.9; }
+
+    /* SCORE CARD */
+    .score-card {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 20px; overflow: hidden; margin-bottom: 20px;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Student profile strip */
+    .profile-strip {
+      background: linear-gradient(135deg, #7C3AED, #5B21B6);
+      padding: 22px 24px; display: flex; align-items: center; gap: 16px;
+    }
+    .avatar {
+      width: 54px; height: 54px; border-radius: 50%;
+      background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0; font-family: 'Playfair Display', serif;
+      font-weight: 700; color: #fff;
+    }
+    .profile-info .profile-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .profile-info .profile-meta { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+    /* Score items */
+    .score-body { padding: 8px 0; }
+    .score-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px; border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .score-item:last-child { border-bottom: none; }
+    .score-item:hover { background: var(--off-white); }
+    .score-label { font-size: 0.92rem; font-weight: 500; color: var(--text-muted); }
+    .score-value {
+      font-family: 'IBM Plex Mono', monospace; font-size: 1rem; font-weight: 600;
+      color: var(--text-dark); text-align: right;
+    }
+    .score-value.good   { color: var(--green); }
+    .score-value.warn   { color: var(--accent); }
+    .score-value.bad    { color: var(--red); }
+    .score-value.muted  { color: var(--text-muted); }
+
+    /* Special badges */
+    .badge {
+      font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 999px;
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+    .badge-yes    { background: #D1FAE5; color: #065F46; }
+    .badge-no     { background: #FEE2E2; color: #991B1B; }
+    .badge-active { background: #EDE9FE; color: #4C1D95; }
+
+    /* Section divider */
+    .score-section-label {
+      padding: 10px 24px 6px; font-size: 0.72rem; font-weight: 700;
+      color: var(--purple-light); text-transform: uppercase; letter-spacing: 0.1em;
+      background: var(--off-white); border-bottom: 1px solid var(--border);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Final score highlight */
+    .final-score-row {
+      background: linear-gradient(135deg, var(--purple-soft), #F0EBFF);
+      padding: 18px 24px; display: flex; align-items: center; justify-content: space-between;
+      border-top: 2px solid var(--purple-mid);
+    }
+    .final-label { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--purple); }
+    .final-value { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; color: var(--purple); }
+
+    /* Loading / empty */
+    .loading { text-align: center; padding: 48px; color: var(--text-muted); }
+    .spinner { display: inline-block; width: 26px; height: 26px; border: 3px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text-dark); color: #fff; padding: 12px 24px; border-radius: 999px; font-size: 0.9rem; font-weight: 500; transition: transform 0.3s; z-index: 999; white-space: nowrap; pointer-events: none; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.err  { background: #DC2626; }
+
+    footer { background: var(--text-dark); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 0.85rem; }
+    footer strong { color: var(--purple-light); }
+
+    @media (max-width: 480px) {
+      .profile-strip { padding: 18px 16px; }
+      .score-item { padding: 13px 16px; }
+      .score-section-label { padding: 10px 16px 6px; }
+      .final-score-row { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="back-btn" href="index.html">← Back</a>
+  <h1>Student <span>Scores</span></h1>
+  <p class="header-sub">English Quest · SMA Negeri 6 Surakarta</p>
+</header>
+
+<svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" preserveAspectRatio="none">
+  <path fill="#4C1D95" d="M0,32 C360,0 1080,64 1440,32 L1440,0 L0,0 Z"/>
+  <path fill="#F9F7FF" d="M0,48 C360,16 1080,64 1440,32 L1440,48 Z"/>
+</svg>
+
+<main>
+
+  <!-- SELECTOR -->
+  <div class="selector-card">
+    <div class="selector-title">🎓 Find Your Score</div>
+    <div class="field">
+      <label>Your Class</label>
+      <select id="classSelect" onchange="onClassChange()">
+        <option value="">— Select your class —</option>
+        <option value="XE1">X E-1</option>
+        <option value="XE4">X E-4</option>
+        <option value="XE5">X E-5</option>
+        <option value="XE6">X E-6</option>
+        <option value="XE7">X E-7</option>
+        <option value="XE8">X E-8</option>
+        <option value="XE9">X E-9</option>
+        <option value="XE10">X E-10</option>
+        <option value="XE11">X E-11</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Your Name</label>
+      <select id="nameSelect" disabled>
+        <option value="">— Select class first —</option>
+      </select>
+    </div>
+    <button class="btn-view" id="viewBtn" onclick="viewScore()" disabled>View My Score</button>
+  </div>
+
+  <!-- SCORE DISPLAY -->
+  <div id="scoreSection"></div>
+
+</main>
+
+<footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── IMPORTANT: Replace with your Scores Apps Script deployment URL ──
+  const API = 'YOUR_SCORES_API_URL_HERE';
+
+  let studentsCache = {};
+
+  // ── JSONP helper ───────────────────────────────────────────
+  function apiGet(params) {
+    return new Promise((resolve, reject) => {
+      const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      params.callback = cb;
+      const url    = API + '?' + new URLSearchParams(params);
+      const script = document.createElement('script');
+      const timer  = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 15000);
+      function cleanup() { delete window[cb]; if (document.body.contains(script)) document.body.removeChild(script); clearTimeout(timer); }
+      window[cb]      = data => { cleanup(); resolve(data); };
+      script.onerror  = ()   => { cleanup(); reject(new Error('Network error')); };
+      script.src      = url;
+      document.body.appendChild(script);
+    });
+  }
+
+  // ── CONTROLS ───────────────────────────────────────────────
+  async function onClassChange() {
+    const cls = document.getElementById('classSelect').value;
+    const nameSelect = document.getElementById('nameSelect');
+    const viewBtn    = document.getElementById('viewBtn');
+
+    nameSelect.innerHTML = '<option>Loading...</option>';
+    nameSelect.disabled  = true;
+    viewBtn.disabled     = true;
+    document.getElementById('scoreSection').innerHTML = '';
+
+    if (!cls) { nameSelect.innerHTML = '<option>— Select class first —</option>'; return; }
+
+    try {
+      let data = studentsCache[cls];
+      if (!data) {
+        data = await apiGet({ action: 'getStudents', className: cls });
+        studentsCache[cls] = data;
+      }
+      if (data.error) { showToast(data.error, 'err'); return; }
+
+      nameSelect.innerHTML = '<option value="">— Select your name —</option>';
+      data.students.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.no;
+        opt.textContent = s.name + (s.nickname ? ' (' + s.nickname + ')' : '');
+        nameSelect.appendChild(opt);
+      });
+      nameSelect.disabled = false;
+      nameSelect.onchange = () => { viewBtn.disabled = !nameSelect.value; };
+    } catch(e) { showToast('Failed to load students', 'err'); nameSelect.innerHTML = '<option>— Select class first —</option>'; }
+  }
+
+  // ── VIEW SCORE ─────────────────────────────────────────────
+  async function viewScore() {
+    const cls       = document.getElementById('classSelect').value;
+    const studentNo = document.getElementById('nameSelect').value;
+    if (!cls || !studentNo) return;
+
+    document.getElementById('scoreSection').innerHTML = '<div class="loading"><div class="spinner"></div><br/>Loading your scores...</div>';
+    document.getElementById('viewBtn').disabled    = true;
+    document.getElementById('viewBtn').textContent = '⏳ Loading...';
+
+    try {
+      const data = await apiGet({ action: 'getScore', className: cls, studentNo });
+      if (data.error) { showToast(data.error, 'err'); document.getElementById('scoreSection').innerHTML = ''; return; }
+      renderScore(data);
+    } catch(e) {
+      showToast('Failed to load scores', 'err');
+      document.getElementById('scoreSection').innerHTML = '';
+    } finally {
+      document.getElementById('viewBtn').disabled    = false;
+      document.getElementById('viewBtn').textContent = 'View My Score';
+    }
+  }
+
+  // ── RENDER SCORE CARD ──────────────────────────────────────
+  function renderScore(data) {
+    const s     = data.score;
+    const name  = data.name;
+    const nick  = data.nickname;
+    const cls   = document.getElementById('classSelect').options[document.getElementById('classSelect').selectedIndex].text;
+
+    // Avatar initial
+    const initial = nick ? nick[0].toUpperCase() : name[0].toUpperCase();
+
+    // Helper: color code a numeric score
+    function scoreClass(val) {
+      const n = parseFloat(val);
+      if (isNaN(n) || val === '-') return 'muted';
+      if (n >= 80) return 'good';
+      if (n >= 65) return 'warn';
+      return 'bad';
+    }
+
+    // Helper: render a row
+    function row(label, val, type) {
+      if (val === undefined || val === null || val === '') return '';
+      let valueHtml;
+      if (type === 'badge-yn') {
+        const isYes = String(val).toLowerCase().startsWith('y');
+        valueHtml = `<span class="badge ${isYes ? 'badge-yes' : 'badge-no'}">${val}</span>`;
+      } else if (type === 'badge-active') {
+        valueHtml = `<span class="badge badge-active">${val}</span>`;
+      } else {
+        valueHtml = `<span class="score-value ${scoreClass(val)}">${val}</span>`;
+      }
+      return `<div class="score-item"><span class="score-label">${label}</span>${valueHtml}</div>`;
+    }
+
+    // Final score value
+    const finalScore = s['Final Score'] || s['Average'] || '-';
+    const finalClass = scoreClass(finalScore);
+    const finalColor = finalClass === 'good' ? '#10B981' : finalClass === 'warn' ? '#F59E0B' : finalClass === 'bad' ? '#EF4444' : '#6B5B95';
+
+    const html = `
+      <div class="score-card">
+        <div class="profile-strip">
+          <div class="avatar">${initial}</div>
+          <div class="profile-info">
+            <div class="profile-name">${nick || name}</div>
+            <div class="profile-meta">${name} · ${cls}</div>
+          </div>
+        </div>
+
+        <div class="score-body">
+          <div class="score-section-label">📚 Chapter Scores</div>
+          ${row('Chapter 1', s['Chapter 1'])}
+          ${row('Chapter 2', s['Chapter 2'])}
+          ${s['ASAT'] !== undefined ? row('ASAT', s['ASAT']) : ''}
+
+          <div class="score-section-label">📊 Summary</div>
+          ${row('Average', s['Average'])}
+          ${row('Indicator', s['Indicator'])}
+          ${row('Activeness', s['Activeness'], 'badge-active')}
+
+          <div class="score-section-label">⚠️ Status</div>
+          ${row('Strikes', s['Strikes'])}
+          ${row('Can Join Summative?', s['Can Join Summative?'], 'badge-yn')}
+        </div>
+
+        <div class="final-score-row">
+          <div class="final-label">Final Score</div>
+          <div class="final-value" style="color:${finalColor}">${finalScore}</div>
+        </div>
+      </div>`;
+
+    document.getElementById('scoreSection').innerHTML = html;
+  }
+
+  // ── TOAST ──────────────────────────────────────────────────
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className   = 'toast ' + (type || '');
+    setTimeout(() => t.classList.add('show'), 10);
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+</script>
+</body>
+</html>
