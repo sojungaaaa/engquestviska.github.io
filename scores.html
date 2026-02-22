@@ -284,15 +284,12 @@
 
   // ── RENDER SCORE CARD ──────────────────────────────────────
   function renderScore(data) {
-    const s     = data.score;
-    const name  = data.name;
-    const nick  = data.nickname;
-    const cls   = document.getElementById('classSelect').options[document.getElementById('classSelect').selectedIndex].text;
-
-    // Avatar initial
+    const s       = data.score;
+    const name    = data.name;
+    const nick    = data.nickname;
+    const cls     = document.getElementById('classSelect').options[document.getElementById('classSelect').selectedIndex].text;
     const initial = nick ? nick[0].toUpperCase() : name[0].toUpperCase();
 
-    // Helper: color code a numeric score
     function scoreClass(val) {
       const n = parseFloat(val);
       if (isNaN(n) || val === '-') return 'muted';
@@ -301,9 +298,8 @@
       return 'bad';
     }
 
-    // Helper: render a row
     function row(label, val, type) {
-      if (val === undefined || val === null || val === '') return '';
+      if (val === undefined || val === null || val === '' || val === '-') return '';
       let valueHtml;
       if (type === 'badge-yn') {
         const isYes = String(val).toLowerCase().startsWith('y');
@@ -316,7 +312,19 @@
       return `<div class="score-item"><span class="score-label">${label}</span>${valueHtml}</div>`;
     }
 
-    // Final score value
+    // Dynamically find chapter columns (anything starting with 'Chapter' or named 'ASAT')
+    const chapterKeys   = Object.keys(s).filter(k => k.startsWith('Chapter') || k === 'ASAT');
+    const summaryKeys   = ['Average', 'Final Score', 'Indicator'];
+    const statusKeys    = ['Strikes', 'Can Join Summative?'];
+    const skipKeys      = new Set(['No.', 'Nama', 'Nickname', ...chapterKeys, ...summaryKeys, ...statusKeys, 'Activeness', 'Final Score']);
+
+    const chapterRows = chapterKeys.map(k => row(k, s[k])).join('');
+    const summaryRows = summaryKeys.filter(k => k !== 'Final Score').map(k => row(k, s[k])).join('') + row('Activeness', s['Activeness'], 'badge-active');
+    const statusRows  = statusKeys.map(k => {
+      if (k === 'Can Join Summative?') return row(k, s[k], 'badge-yn');
+      return row(k, s[k]);
+    }).join('');
+
     const finalScore = s['Final Score'] || s['Average'] || '-';
     const finalClass = scoreClass(finalScore);
     const finalColor = finalClass === 'good' ? '#10B981' : finalClass === 'warn' ? '#F59E0B' : finalClass === 'bad' ? '#EF4444' : '#6B5B95';
@@ -330,23 +338,13 @@
             <div class="profile-meta">${name} · ${cls}</div>
           </div>
         </div>
-
         <div class="score-body">
-          <div class="score-section-label">📚 Chapter Scores</div>
-          ${row('Chapter 1', s['Chapter 1'])}
-          ${row('Chapter 2', s['Chapter 2'])}
-          ${s['ASAT'] !== undefined ? row('ASAT', s['ASAT']) : ''}
-
+          ${chapterRows ? `<div class="score-section-label">📚 Chapter Scores</div>${chapterRows}` : ''}
           <div class="score-section-label">📊 Summary</div>
-          ${row('Average', s['Average'])}
-          ${row('Indicator', s['Indicator'])}
-          ${row('Activeness', s['Activeness'], 'badge-active')}
-
+          ${summaryRows}
           <div class="score-section-label">⚠️ Status</div>
-          ${row('Strikes', s['Strikes'])}
-          ${row('Can Join Summative?', s['Can Join Summative?'], 'badge-yn')}
+          ${statusRows}
         </div>
-
         <div class="final-score-row">
           <div class="final-label">Final Score</div>
           <div class="final-value" style="color:${finalColor}">${finalScore}</div>
