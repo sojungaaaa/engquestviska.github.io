@@ -329,7 +329,7 @@
 <script>
   // ── CONFIG ─────────────────────────────────────────────────
   // IMPORTANT: Replace this with your NEW Apps Script deployment URL
-  const API = 'https://script.google.com/macros/s/AKfycbxHaOK1WSG5hVVrzOUwGI3QxY3eSbjaAseRVxVaMXU-b8k9Stn4exUUbvB56dYbKLfr/exec';
+  const API = 'YOUR_APPS_SCRIPT_URL_HERE';
 
   // ── STATE ──────────────────────────────────────────────────
   let isTeacher       = false;
@@ -344,26 +344,48 @@
   // Restore session
   if (savedUser && savedPass) verifyLogin(savedUser, savedPass, true);
 
-  // ── API HELPERS (JSONP to bypass CORS) ─────────────────────
-  function apiGet(params) {
+  // ── API HELPERS (fetch first, JSONP fallback) ───────────────
+  async function apiGet(params) {
+    const url = API + '?' + new URLSearchParams(params);
+    // Try fetch first
+    try {
+      const res = await fetch(url);
+      if (res.ok) return await res.json();
+    } catch(e) { /* fall through to JSONP */ }
+
+    // JSONP fallback
     return new Promise((resolve, reject) => {
-      const cb = 'cb_' + Date.now();
-      params.callback = cb;
-      const url = API + '?' + new URLSearchParams(params);
+      const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      const p  = { ...params, callback: cb, _t: Date.now() };
+      const jsonpUrl = API + '?' + new URLSearchParams(p);
       const script = document.createElement('script');
-      const timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 15000);
-      function cleanup() { delete window[cb]; document.body.removeChild(script); clearTimeout(timer); }
-      window[cb] = (data) => { cleanup(); resolve(data); };
-      script.onerror = () => { cleanup(); reject(new Error('Network error')); };
-      script.src = url;
-      document.body.appendChild(script);
+      script.async = true;
+      const timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 20000);
+      function cleanup() {
+        delete window[cb];
+        try { if (script.parentNode) script.parentNode.removeChild(script); } catch(e) {}
+        clearTimeout(timer);
+      }
+      window[cb]     = data => { cleanup(); resolve(data); };
+      script.onerror = ()   => { cleanup(); reject(new Error('Network error')); };
+      script.src = jsonpUrl;
+      (document.head || document.body).appendChild(script);
     });
   }
 
-  function apiPost(body) {
-    // For POST we use GET with action param + encoded body (Apps Script handles both)
-    const params = { ...body };
-    return apiGet(params);
+  async function apiPost(body) {
+    // Try fetch POST first (more reliable for saving data)
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (res.ok) return await res.json();
+    } catch(e) { /* fall through to GET */ }
+
+    // Fall back to GET with params
+    return apiGet(body);
   }
 
   // ── LOGIN ──────────────────────────────────────────────────
