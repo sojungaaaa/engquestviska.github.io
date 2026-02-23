@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Task Status · English Quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple: #7C3AED; --purple-light: #A78BFA; --purple-soft: #EDE9FE;
+      --purple-mid: #C4B5FD; --white: #fff; --off-white: #F9F7FF;
+      --text-dark: #1E1040; --text-muted: #6B5B95; --border: #E5DEFF;
+      --accent: #F59E0B; --green: #10B981; --green-soft: #D1FAE5;
+      --red: #EF4444; --red-soft: #FEE2E2;
+    }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; }
+
+    /* HEADER */
+    header { background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 50%, #4C1D95 100%); padding: 36px 20px 52px; text-align: center; position: relative; overflow: hidden; }
+    header::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size: 28px 28px; pointer-events: none; }
+    .back-btn { position: absolute; top: 20px; left: 20px; z-index: 2; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.88rem; font-weight: 600; padding: 8px 18px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .back-btn:hover { background: rgba(255,255,255,0.25); }
+    .teacher-btn { position: absolute; top: 20px; right: 20px; z-index: 2; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.88rem; font-weight: 600; padding: 8px 18px; border-radius: 999px; cursor: pointer; }
+    .teacher-btn:hover { background: rgba(255,255,255,0.25); }
+    .teacher-badge { position: absolute; top: 20px; right: 20px; z-index: 2; background: var(--accent); color: #fff; font-size: 0.85rem; font-weight: 700; padding: 8px 16px; border-radius: 999px; display: flex; align-items: center; gap: 8px; }
+    .logout-x { cursor: pointer; }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 800; color: #fff; position: relative; z-index: 1; }
+    header h1 span { color: var(--accent); font-style: italic; }
+    .header-sub { color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: 8px; position: relative; z-index: 1; }
+    .wave { display: block; width: 100%; margin-top: -2px; }
+
+    /* TABS */
+    .tab-bar { display: flex; background: var(--white); border-bottom: 2px solid var(--border); max-width: 860px; margin: 0 auto; }
+    .tab-btn { flex: 1; padding: 16px; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.92rem; font-weight: 700; border: none; background: none; cursor: pointer; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+    .tab-btn.hidden { display: none; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 28px 16px 80px; }
+
+    /* SELECTOR CARD */
+    .card { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; padding: 24px 20px; margin-bottom: 20px; }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .field select { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem; background: var(--off-white); color: var(--text-dark); outline: none; }
+    .field select:focus { border-color: var(--purple-light); }
+    .btn-primary { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--purple), #5B21B6); color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 1rem; border: none; border-radius: 12px; cursor: pointer; margin-top: 4px; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── STUDENT TASK STATUS CARD ── */
+    .status-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 20px; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+    .profile-strip { background: linear-gradient(135deg, #7C3AED, #5B21B6); padding: 22px 24px; display: flex; align-items: center; gap: 16px; }
+    .avatar { width: 54px; height: 54px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; font-family: 'Playfair Display', serif; font-weight: 700; color: #fff; }
+    .profile-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: #fff; }
+    .profile-meta { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-top: 3px; }
+
+    /* Progress bar section */
+    .progress-section { padding: 20px 24px; border-bottom: 1.5px solid var(--border); }
+    .progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .progress-title { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .progress-count { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--purple); }
+    .progress-bar-wrap { background: var(--border); border-radius: 999px; height: 10px; overflow: hidden; }
+    .progress-bar-fill { height: 10px; border-radius: 999px; background: linear-gradient(90deg, #10B981, #059669); transition: width 0.6s ease; }
+    .progress-bar-fill.warn { background: linear-gradient(90deg, #F59E0B, #D97706); }
+    .progress-bar-fill.bad  { background: linear-gradient(90deg, #EF4444, #DC2626); }
+
+    /* Task grid */
+    .tasks-section { padding: 20px 24px; }
+    .tasks-chapter-label { font-size: 0.72rem; font-weight: 700; color: var(--purple-light); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'IBM Plex Mono', monospace; margin-bottom: 14px; }
+    .tasks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+    .task-chip { border-radius: 14px; padding: 14px 10px; text-align: center; border: 1.5px solid; transition: transform 0.15s; }
+    .task-chip:hover { transform: translateY(-2px); }
+    .task-chip.done    { background: var(--green-soft); border-color: #34D399; }
+    .task-chip.missing { background: var(--red-soft);   border-color: #FCA5A5; }
+    .task-chip-icon { font-size: 1.3rem; margin-bottom: 6px; }
+    .task-chip-name { font-size: 0.75rem; font-weight: 700; font-family: 'IBM Plex Mono', monospace; color: var(--text-dark); margin-bottom: 4px; }
+    .task-chip-label { font-size: 0.72rem; font-weight: 700; }
+    .task-chip.done    .task-chip-label { color: #065F46; }
+    .task-chip.missing .task-chip-label { color: #991B1B; }
+
+    /* ── TEACHER PANEL ── */
+    .teacher-selector { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; padding: 24px 20px; margin-bottom: 20px; }
+    .teacher-selector-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; }
+
+    .student-list-panel { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 20px; }
+    .panel-header { padding: 16px 20px; background: var(--off-white); border-bottom: 1.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .panel-header-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; }
+    .panel-header-sub { font-size: 0.8rem; color: var(--text-muted); }
+
+    .student-task-row { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .student-task-row:last-child { border-bottom: none; }
+    .str-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .str-no { font-size: 0.8rem; font-weight: 700; color: var(--purple-light); width: 24px; flex-shrink: 0; }
+    .str-name { font-size: 0.95rem; font-weight: 600; flex: 1; }
+    .str-progress { font-size: 0.78rem; font-family: 'IBM Plex Mono', monospace; color: var(--text-muted); }
+    .str-tasks { display: flex; flex-wrap: wrap; gap: 8px; }
+    .task-toggle {
+      padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--border);
+      font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
+      background: var(--off-white); color: var(--text-muted); transition: all 0.15s;
+    }
+    .task-toggle.on  { background: var(--green-soft); border-color: #34D399; color: #065F46; }
+    .task-toggle.saving { opacity: 0.5; cursor: not-allowed; }
+
+    /* LOGIN MODAL */
+    .overlay { position: fixed; inset: 0; background: rgba(30,16,64,0.6); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+    .overlay.hidden { display: none; }
+    .modal { background: var(--white); border-radius: 24px; padding: 36px 28px; width: 100%; max-width: 400px; }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; }
+    .modal-sub { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 24px; }
+    .modal-field { margin-bottom: 16px; }
+    .modal-field label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .modal-field input { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem; outline: none; }
+    .modal-field input:focus { border-color: var(--purple-light); }
+    .modal-error { font-size: 0.85rem; color: var(--red); margin-bottom: 14px; display: none; }
+    .modal-btns { display: flex; gap: 10px; }
+    .btn-login { flex: 1; padding: 14px; background: linear-gradient(135deg, var(--purple), #5B21B6); color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 1rem; border: none; border-radius: 12px; cursor: pointer; }
+    .btn-cancel { padding: 14px 20px; background: var(--off-white); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem; cursor: pointer; color: var(--text-muted); }
+
+    /* LOADING */
+    .loading { text-align: center; padding: 48px; color: var(--text-muted); }
+    .spinner { display: inline-block; width: 26px; height: 26px; border: 3px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text-dark); color: #fff; padding: 12px 24px; border-radius: 999px; font-size: 0.9rem; font-weight: 500; transition: transform 0.3s; z-index: 999; white-space: nowrap; pointer-events: none; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.ok  { background: #059669; }
+    .toast.err { background: #DC2626; }
+
+    .hidden { display: none !important; }
+    footer { background: var(--text-dark); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 0.85rem; }
+    footer strong { color: var(--purple-light); }
+
+    @media (max-width: 500px) {
+      .tasks-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+      .profile-strip { padding: 18px 16px; }
+      .progress-section, .tasks-section { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN MODAL -->
+<div class="overlay hidden" id="loginModal">
+  <div class="modal">
+    <div class="modal-title">Teacher Login</div>
+    <div class="modal-sub">Login to edit task status for all classes.</div>
+    <div class="modal-field"><label>Username</label><input type="text" id="loginUser" placeholder="Username"/></div>
+    <div class="modal-field"><label>Password</label><input type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    <div class="modal-error" id="loginError">Incorrect username or password.</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeLogin()">Cancel</button>
+      <button class="btn-login" onclick="doLogin()">Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a class="back-btn" href="index.html">← Back</a>
+  <div id="headerRight">
+    <button class="teacher-btn" onclick="openLogin()">🔑 Teacher</button>
+  </div>
+  <h1>Task <span>Status</span></h1>
+  <p class="header-sub">English Quest · SMA Negeri 6 Surakarta</p>
+</header>
+
+<svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" preserveAspectRatio="none">
+  <path fill="#4C1D95" d="M0,32 C360,0 1080,64 1440,32 L1440,0 L0,0 Z"/>
+  <path fill="#F9F7FF" d="M0,48 C360,16 1080,64 1440,32 L1440,48 Z"/>
+</svg>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" id="tabStudent" onclick="switchTab('student')">🎓 My Tasks</button>
+  <button class="tab-btn hidden"  id="tabTeacher" onclick="switchTab('teacher')">📝 Teacher Panel</button>
+</div>
+
+<main>
+
+  <!-- ── STUDENT TAB ── -->
+  <div id="studentTab">
+    <div class="card">
+      <div class="card-title">📋 Check Your Task Status</div>
+      <div class="field"><label>Your Class</label>
+        <select id="sClassSelect" onchange="onSClassChange()">
+          <option value="">— Select your class —</option>
+          <option value="XE1">X E-1</option><option value="XE4">X E-4</option>
+          <option value="XE5">X E-5</option><option value="XE6">X E-6</option>
+          <option value="XE7">X E-7</option><option value="XE8">X E-8</option>
+          <option value="XE9">X E-9</option><option value="XE10">X E-10</option>
+          <option value="XE11">X E-11</option>
+        </select>
+      </div>
+      <div class="field"><label>Your Name</label>
+        <select id="sNameSelect" disabled><option>— Select class first —</option></select>
+      </div>
+      <button class="btn-primary" id="sViewBtn" onclick="viewTaskStatus()" disabled>View My Tasks</button>
+    </div>
+    <div id="studentResult"></div>
+  </div>
+
+  <!-- ── TEACHER TAB ── -->
+  <div id="teacherTab" class="hidden">
+    <div class="teacher-selector">
+      <div class="teacher-selector-title">📝 Edit Task Status</div>
+      <div class="field"><label>Class</label>
+        <select id="tClassSelect" onchange="loadTeacherClass()">
+          <option value="">— Select a class —</option>
+          <option value="XE1">X E-1</option><option value="XE4">X E-4</option>
+          <option value="XE5">X E-5</option><option value="XE6">X E-6</option>
+          <option value="XE7">X E-7</option><option value="XE8">X E-8</option>
+          <option value="XE9">X E-9</option><option value="XE10">X E-10</option>
+          <option value="XE11">X E-11</option>
+        </select>
+      </div>
+    </div>
+    <div id="teacherList"></div>
+  </div>
+
+</main>
+
+<footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
+
+  let isTeacher = false, savedUser = '', savedPass = '';
+  let studentsCache = {}, currentTeacherClass = '';
+
+  // Restore session
+  savedUser = sessionStorage.getItem('eq_tu') || '';
+  savedPass = sessionStorage.getItem('eq_tp') || '';
+  if (savedUser && savedPass) verifyLogin(savedUser, savedPass, true);
+
+  // ── API ──────────────────────────────────────────────────────
+  async function apiGet(params) {
+    const url = API + '?' + new URLSearchParams(params);
+    try {
+      const res = await fetch(url);
+      if (res.ok) return await res.json();
+    } catch(e) {}
+    return new Promise((resolve, reject) => {
+      const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      const p  = { ...params, callback: cb, _t: Date.now() };
+      const script = document.createElement('script');
+      script.async = true;
+      const timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 20000);
+      function cleanup() { delete window[cb]; try { if (script.parentNode) script.parentNode.removeChild(script); } catch(e){} clearTimeout(timer); }
+      window[cb]     = d => { cleanup(); resolve(d); };
+      script.onerror = () => { cleanup(); reject(new Error('Network error')); };
+      script.src = API + '?' + new URLSearchParams(p);
+      (document.head || document.body).appendChild(script);
+    });
+  }
+
+  async function apiPost(body) {
+    try {
+      const res = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if (res.ok) return await res.json();
+    } catch(e) {}
+    return apiGet(body);
+  }
+
+  // ── TABS ─────────────────────────────────────────────────────
+  function switchTab(tab) {
+    document.getElementById('studentTab').classList.toggle('hidden', tab !== 'student');
+    document.getElementById('teacherTab').classList.toggle('hidden', tab !== 'teacher');
+    document.getElementById('tabStudent').classList.toggle('active', tab === 'student');
+    document.getElementById('tabTeacher').classList.toggle('active', tab === 'teacher');
+  }
+
+  // ── LOGIN ────────────────────────────────────────────────────
+  function openLogin()  { document.getElementById('loginModal').classList.remove('hidden'); setTimeout(() => document.getElementById('loginUser').focus(), 100); }
+  function closeLogin() { document.getElementById('loginModal').classList.add('hidden'); document.getElementById('loginError').style.display = 'none'; }
+
+  async function doLogin() {
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value.trim();
+    await verifyLogin(u, p, false);
+  }
+
+  async function verifyLogin(u, p, silent) {
+    try {
+      const data = await apiGet({ action: 'checkLogin', username: u, password: p });
+      if (data.ok) {
+        isTeacher = true; savedUser = u; savedPass = p;
+        sessionStorage.setItem('eq_tu', u); sessionStorage.setItem('eq_tp', p);
+        closeLogin();
+        document.getElementById('headerRight').innerHTML = `<div class="teacher-badge">🎓 Teacher <span class="logout-x" onclick="logout()">✕</span></div>`;
+        document.getElementById('tabTeacher').classList.remove('hidden');
+        if (!silent) { showToast('✅ Logged in as Teacher', 'ok'); switchTab('teacher'); }
+      } else {
+        if (!silent) document.getElementById('loginError').style.display = 'block';
+      }
+    } catch(e) { if (!silent) showToast('Connection error', 'err'); }
+  }
+
+  function logout() {
+    isTeacher = false; savedUser = ''; savedPass = '';
+    sessionStorage.removeItem('eq_tu'); sessionStorage.removeItem('eq_tp');
+    document.getElementById('headerRight').innerHTML = `<button class="teacher-btn" onclick="openLogin()">🔑 Teacher</button>`;
+    document.getElementById('tabTeacher').classList.add('hidden');
+    switchTab('student');
+    showToast('Logged out');
+  }
+
+  // ── STUDENT — LOAD NAMES ──────────────────────────────────────
+  async function onSClassChange() {
+    const cls = document.getElementById('sClassSelect').value;
+    const nameSelect = document.getElementById('sNameSelect');
+    const viewBtn    = document.getElementById('sViewBtn');
+    nameSelect.innerHTML = '<option>Loading...</option>';
+    nameSelect.disabled = true; viewBtn.disabled = true;
+    document.getElementById('studentResult').innerHTML = '';
+    if (!cls) { nameSelect.innerHTML = '<option>— Select class first —</option>'; return; }
+    try {
+      let data = studentsCache[cls];
+      if (!data) { data = await apiGet({ action: 'getStudents', className: cls }); studentsCache[cls] = data; }
+      if (data.error) { showToast(data.error, 'err'); return; }
+      nameSelect.innerHTML = '<option value="">— Select your name —</option>';
+      data.students.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.no;
+        opt.textContent = s.name + (s.nickname ? ' (' + s.nickname + ')' : '');
+        nameSelect.appendChild(opt);
+      });
+      nameSelect.disabled = false;
+      nameSelect.onchange = () => { viewBtn.disabled = !nameSelect.value; };
+    } catch(e) { showToast('Failed to load students', 'err'); nameSelect.innerHTML = '<option>— Select class first —</option>'; }
+  }
+
+  // ── STUDENT — VIEW TASKS ──────────────────────────────────────
+  async function viewTaskStatus() {
+    const cls = document.getElementById('sClassSelect').value;
+    const no  = document.getElementById('sNameSelect').value;
+    const clsLabel = document.getElementById('sClassSelect').options[document.getElementById('sClassSelect').selectedIndex].text;
+    if (!cls || !no) return;
+    document.getElementById('studentResult').innerHTML = '<div class="loading"><div class="spinner"></div><br/>Loading your tasks...</div>';
+    document.getElementById('sViewBtn').disabled = true;
+    document.getElementById('sViewBtn').textContent = '⏳ Loading...';
+    try {
+      const data = await apiGet({ action: 'getTaskStatus', className: cls, studentNo: no });
+      if (data.error) { showToast(data.error, 'err'); document.getElementById('studentResult').innerHTML = ''; return; }
+      renderStudentTasks(data, clsLabel);
+    } catch(e) { showToast('Failed to load tasks', 'err'); document.getElementById('studentResult').innerHTML = ''; }
+    finally { document.getElementById('sViewBtn').disabled = false; document.getElementById('sViewBtn').textContent = 'View My Tasks'; }
+  }
+
+  function renderStudentTasks(data, clsLabel) {
+    const tasks    = data.tasks;
+    const keys     = Object.keys(tasks);
+    const done     = keys.filter(k => tasks[k]).length;
+    const total    = keys.length;
+    const pct      = total > 0 ? Math.round((done / total) * 100) : 0;
+    const barClass = pct >= 80 ? '' : pct >= 50 ? 'warn' : 'bad';
+    const initial  = data.nickname ? data.nickname[0].toUpperCase() : data.name[0].toUpperCase();
+
+    // Group tasks by chapter (C4T1 → Chapter 4, C5T1 → Chapter 5)
+    const chapters = {};
+    keys.forEach(k => {
+      const match = k.match(/^C(\d+)T(\d+)$/i);
+      const chapter = match ? 'Chapter ' + match[1] : 'Tasks';
+      if (!chapters[chapter]) chapters[chapter] = [];
+      chapters[chapter].push(k);
+    });
+
+    const chapHtml = Object.entries(chapters).map(([ch, ckeys]) => `
+      <div class="tasks-chapter-label">${ch}</div>
+      <div class="tasks-grid" style="margin-bottom:${Object.keys(chapters).length > 1 ? '20px' : '0'}">
+        ${ckeys.map(k => {
+          const isDone = tasks[k];
+          const match  = k.match(/^C(\d+)T(\d+)$/i);
+          const label  = match ? 'Task ' + match[2] : k;
+          return `<div class="task-chip ${isDone ? 'done' : 'missing'}">
+            <div class="task-chip-icon">${isDone ? '✅' : '❌'}</div>
+            <div class="task-chip-name">${k}</div>
+            <div class="task-chip-label">${isDone ? 'Done' : 'Missing'}</div>
+          </div>`;
+        }).join('')}
+      </div>`).join('');
+
+    document.getElementById('studentResult').innerHTML = `
+      <div class="status-card">
+        <div class="profile-strip">
+          <div class="avatar">${initial}</div>
+          <div>
+            <div class="profile-name">${data.nickname || data.name}</div>
+            <div class="profile-meta">${data.name} · ${clsLabel}</div>
+          </div>
+        </div>
+        <div class="progress-section">
+          <div class="progress-label">
+            <div class="progress-title">Overall Progress</div>
+            <div class="progress-count">${done} / ${total} Done</div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill ${barClass}" style="width:${pct}%"></div>
+          </div>
+        </div>
+        <div class="tasks-section">${chapHtml}</div>
+      </div>`;
+  }
+
+  // ── TEACHER — LOAD CLASS ──────────────────────────────────────
+  async function loadTeacherClass() {
+    const cls = document.getElementById('tClassSelect').value;
+    if (!cls) { document.getElementById('teacherList').innerHTML = ''; return; }
+    currentTeacherClass = cls;
+    document.getElementById('teacherList').innerHTML = '<div class="loading"><div class="spinner"></div><br/>Loading class...</div>';
+    try {
+      const data = await apiGet({ action: 'getAllTasks', className: cls });
+      if (data.error) { showToast(data.error, 'err'); document.getElementById('teacherList').innerHTML = ''; return; }
+      renderTeacherPanel(data, cls);
+    } catch(e) { showToast('Failed to load class', 'err'); document.getElementById('teacherList').innerHTML = ''; }
+  }
+
+  function renderTeacherPanel(data, cls) {
+    const { students, taskKeys } = data;
+    const rows = students.map(s => {
+      const done  = taskKeys.filter(k => s.tasks[k]).length;
+      const btns  = taskKeys.map(k => `
+        <button class="task-toggle ${s.tasks[k] ? 'on' : ''}" id="toggle-${s.no}-${k}"
+          onclick="toggleTask(${s.no}, '${k}', '${cls}')">${k}</button>`).join('');
+      return `
+        <div class="student-task-row">
+          <div class="str-top">
+            <span class="str-no">${s.no}</span>
+            <span class="str-name">${s.nickname || s.name}</span>
+            <span class="str-progress">${done}/${taskKeys.length}</span>
+          </div>
+          <div class="str-tasks">${btns}</div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('teacherList').innerHTML = `
+      <div class="student-list-panel">
+        <div class="panel-header">
+          <div class="panel-header-title">${cls} · Task Status</div>
+          <div class="panel-header-sub">Tap to toggle ✓ / ✗</div>
+        </div>
+        ${rows}
+      </div>`;
+  }
+
+  // ── TOGGLE TASK ───────────────────────────────────────────────
+  async function toggleTask(studentNo, taskKey, className) {
+    const btn = document.getElementById('toggle-' + studentNo + '-' + taskKey);
+    if (!btn || btn.classList.contains('saving')) return;
+    const newVal = !btn.classList.contains('on');
+    btn.classList.add('saving');
+    btn.textContent = '...';
+    try {
+      const res = await apiPost({
+        action: 'saveTaskStatus', username: savedUser, password: savedPass,
+        className, studentNo: String(studentNo), tasks: { [taskKey]: newVal }
+      });
+      if (res.success) {
+        btn.classList.toggle('on', newVal);
+        btn.textContent = taskKey;
+        // Update progress counter
+        const row = btn.closest('.student-task-row');
+        const allBtns = row.querySelectorAll('.task-toggle');
+        const doneCount = [...allBtns].filter(b => b.classList.contains('on')).length;
+        row.querySelector('.str-progress').textContent = doneCount + '/' + allBtns.length;
+        showToast(newVal ? '✅ Marked as done' : '❌ Marked as missing', newVal ? 'ok' : '');
+      } else {
+        showToast('Error: ' + res.error, 'err');
+        btn.textContent = taskKey;
+      }
+    } catch(e) {
+      showToast('Failed to save', 'err');
+      btn.textContent = taskKey;
+    }
+    btn.classList.remove('saving');
+  }
+
+  // ── TOAST ─────────────────────────────────────────────────────
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = 'toast ' + (type || '');
+    setTimeout(() => t.classList.add('show'), 10);
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
