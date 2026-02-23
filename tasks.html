@@ -456,9 +456,9 @@
     btn.classList.add('saving');
     btn.textContent = '...';
     try {
-      const res = await apiPost({
+      const res = await apiGet({
         action: 'saveTaskStatus', username: savedUser, password: savedPass,
-        className, studentNo: String(studentNo), tasks: { [taskKey]: newVal }
+        className, studentNo: String(studentNo), tasks: JSON.stringify({ [taskKey]: newVal })
       });
       if (res.success) {
         btn.classList.toggle('on', newVal);
