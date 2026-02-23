@@ -593,7 +593,7 @@
     document.getElementById('saveBtn').textContent = '⏳ Saving...';
 
     try {
-      const res = await apiPost({ action: 'saveAttendance', username: savedUser, password: savedPass, className: currentClass, meetingNumber: meetingNo, meetingDate, flaggedRecords: flagged });
+      const res = await apiGet({ action: 'saveAttendance', username: savedUser, password: savedPass, className: currentClass, meetingNumber: meetingNo, meetingDate, flaggedRecords: JSON.stringify(flagged) });
       if (res.success) {
         showToast('✅ Attendance saved!', 'ok');
         loadClass();
@@ -610,7 +610,7 @@
     if (!confirm('Add a new meeting column to ' + currentClass + '?')) return;
     document.getElementById('addMeetingBtn').textContent = '⏳ Adding...';
     try {
-      const res = await apiPost({ action: 'addMeeting', username: savedUser, password: savedPass, className: currentClass });
+      const res = await apiGet({ action: 'addMeeting', username: savedUser, password: savedPass, className: currentClass });
       if (res.success) { showToast('✅ Meeting ' + res.newMeetingNumber + ' added!', 'ok'); loadClass(); }
       else showToast('Error: ' + res.error, 'err');
     } catch(e) { showToast('Failed. Check connection.', 'err'); }
