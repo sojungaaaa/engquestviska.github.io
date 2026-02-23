@@ -312,7 +312,7 @@
     <div class="lb-card hidden" id="lbCard">
       <div class="lb-head">
         <div>
-          <div class="lb-head-title">🏆 Top 10 Diligent Students</div>
+          <div class="lb-head-title">⚠️ Top 10 Low Attendance</div>
           <div class="lb-head-sub" id="lbSub">Load a class to see</div>
         </div>
         <button class="btn-lb-refresh" onclick="loadLeaderboard()">↻ Refresh</button>
@@ -472,7 +472,7 @@
 
       // Leaderboard
       document.getElementById('lbCard').classList.remove('hidden');
-      document.getElementById('lbSub').textContent = 'Top attendees in ' + currentClass;
+      document.getElementById('lbSub').textContent = 'Lowest attendance in ' + currentClass;
       loadLeaderboard();
 
     } catch(e) { showToast('Failed to load. Check connection.', 'err'); }
@@ -623,13 +623,13 @@
     try {
       const data = await apiGet({ action: 'getLeaderboard', className: currentClass });
       if (!data.length) { document.getElementById('lbRows').innerHTML = '<div class="lb-empty">No data yet.</div>'; return; }
-      const medals = ['🥇','🥈','🥉'];
+      const icons = ['🔴','🟠','🟡'];
       document.getElementById('lbRows').innerHTML = data.map((s, i) => `
         <div class="lb-row">
-          <div class="lb-rank ${i<3?'r'+(i+1):'rN'}">${i<3?medals[i]:i+1}</div>
+          <div class="lb-rank ${i<3?'r'+(i+1):'rN'}">${i<3?icons[i]:i+1}</div>
           <div class="lb-name">${s.name}</div>
-          <div class="lb-bar-wrap"><div class="lb-bar" style="width:${s.pct}%"></div></div>
-          <div class="lb-pct">${s.pct}%</div>
+          <div class="lb-bar-wrap"><div class="lb-bar" style="width:${s.pct}%;background:${s.pct < 50 ? 'linear-gradient(90deg,#EF4444,#DC2626)' : s.pct < 75 ? 'linear-gradient(90deg,#F59E0B,#D97706)' : 'linear-gradient(90deg,#34D399,#10B981)'}"></div></div>
+          <div class="lb-pct" style="color:${s.pct < 50 ? '#DC2626' : s.pct < 75 ? '#D97706' : '#10B981'}">${s.pct}%</div>
         </div>`).join('');
     } catch(e) { document.getElementById('lbRows').innerHTML = '<div class="lb-empty">Failed to load.</div>'; }
   }
