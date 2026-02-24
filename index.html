@@ -1062,7 +1062,7 @@ async function loadHallOfFame() {
 
     // Top 5 overall by total points
     const top5 = [...all].sort((a,b) => b.total - a.total).slice(0, 5);
-    const maxPts = top5[0]?.total || 1;
+    const maxPts = 100; // Fixed to Plus Ultra threshold
 
     // Category champions — highest raw count per activity
     const champs = HOF_ACTS.map(act => {
