@@ -281,13 +281,24 @@
     .act-bar-fill { height: 8px; border-radius: 999px; background: linear-gradient(90deg, #8B5CF6, #A78BFA); transition: width 0.7s ease; }
 
     /* Stat items */
-    .act-stats { padding: 16px 24px 0; display: flex; flex-direction: column; gap: 10px; }
-    .act-stat-row { display: flex; align-items: center; gap: 12px; }
-    .act-stat-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .act-stat-label { font-size: 0.85rem; color: #A79FC0; flex: 1; }
-    .act-stat-bar-wrap { width: 90px; background: #241A3A; border-radius: 999px; height: 6px; overflow: hidden; }
-    .act-stat-bar { height: 6px; border-radius: 999px; transition: width 0.6s ease; }
-    .act-stat-val { font-size: 0.88rem; font-weight: 700; color: #F1EEFF; min-width: 24px; text-align: right; font-family: 'IBM Plex Mono', monospace; }
+    .act-stats { padding: 14px 20px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .act-stat-card { background: #241A3A; border: 1px solid #2E2250; border-radius: 14px; padding: 12px 14px; }
+    .act-stat-top { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+    .act-stat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .act-stat-label { font-size: 0.72rem; color: #7C6FA0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.2; }
+    .act-stat-nums { display: flex; justify-content: space-between; align-items: flex-end; }
+    .act-stat-times { font-size: 1.2rem; font-weight: 800; color: #F1EEFF; font-family: 'Playfair Display', serif; line-height: 1; }
+    .act-stat-times span { font-size: 0.65rem; color: #7C6FA0; font-weight: 500; font-family: 'IBM Plex Sans', sans-serif; display: block; margin-top: 2px; }
+    .act-stat-pts { text-align: right; }
+    .act-stat-pts-val { font-size: 0.88rem; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
+    .act-stat-pts-label { font-size: 0.6rem; color: #7C6FA0; margin-top: 1px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    /* Info box */
+    .act-info-box { margin: 14px 20px 0; background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2); border-radius: 12px; padding: 10px 14px; }
+    .act-info-title { font-size: 0.7rem; font-weight: 700; color: #A78BFA; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .act-info-rows { display: flex; flex-direction: column; gap: 3px; }
+    .act-info-row { display: flex; justify-content: space-between; font-size: 0.72rem; color: #7C6FA0; }
+    .act-info-row span:last-child { color: #A79FC0; font-family: 'IBM Plex Mono', monospace; font-weight: 600; }
 
     /* Indicator badge */
     .act-indicator { margin: 16px 24px 0; padding: 10px 16px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; text-align: center; }
@@ -559,18 +570,34 @@ async function openActModal(name, cls) {
     if (student.nickname) document.getElementById('actAvatar').textContent = student.nickname[0].toUpperCase();
 
     const total   = (student.VocabularyBox||0) + (student.Answering||0) + (student.Presenting||0) + (student.DoingTaskOnTime||0) + (student.HelpingHand||0);
-    const maxVal  = Math.max(...ACTS.map(a => student[a.key] || 0), 1);
     const indClass = student.Indicator.includes('Super') ? 'ind-super' : student.Indicator.includes('Active (+') && !student.Indicator.includes('Not') ? 'ind-active' : student.Indicator.includes('Okay') ? 'ind-okay' : 'ind-not';
     const barPct  = Math.min(100, Math.round((total / 50) * 100)); // 50 = rough max
 
+    // Point rules per activity
+    const pointRules = {
+      VocabularyBox:    { pts: 1,  unit: 'pt each',  info: 'Each vocab box submission' },
+      Answering:        { pts: 2,  unit: 'pts each',  info: 'Each question answered' },
+      Presenting:       { pts: 5,  unit: 'pts each',  info: 'Each presentation done' },
+      DoingTaskOnTime:  { pts: 2,  unit: 'pts each',  info: 'Tasks submitted on time' },
+      HelpingHand:      { pts: 1,  unit: 'pt each',  info: 'Helping classmates' },
+    };
+
     const statsHtml = ACTS.map(a => {
-      const val = student[a.key] || 0;
-      const pct = maxVal > 0 ? Math.round((val / maxVal) * 100) : 0;
-      return `<div class="act-stat-row">
-        <div class="act-stat-dot" style="background:${a.color}"></div>
-        <div class="act-stat-label">${a.label}</div>
-        <div class="act-stat-bar-wrap"><div class="act-stat-bar" style="width:${pct}%;background:${a.color}"></div></div>
-        <div class="act-stat-val">${val}</div>
+      const times = student[a.key] || 0;
+      const rule  = pointRules[a.key];
+      const pts   = times * rule.pts;
+      return `<div class="act-stat-card">
+        <div class="act-stat-top">
+          <div class="act-stat-dot" style="background:${a.color}"></div>
+          <div class="act-stat-label">${a.label}</div>
+        </div>
+        <div class="act-stat-nums">
+          <div class="act-stat-times">${times}<span>times</span></div>
+          <div class="act-stat-pts">
+            <div class="act-stat-pts-val" style="color:${a.color}">+${pts}</div>
+            <div class="act-stat-pts-label">points</div>
+          </div>
+        </div>
       </div>`;
     }).join('');
 
@@ -583,7 +610,13 @@ async function openActModal(name, cls) {
         <div class="act-bar-wrap"><div class="act-bar-fill" style="width:${barPct}%"></div></div>
       </div>
       <div class="act-stats">${statsHtml}</div>
-      <div class="act-indicator ${indClass}">${student.Indicator || '—'}</div>`;
+      <div class="act-info-box">
+        <div class="act-info-title">📖 How points work</div>
+        <div class="act-info-rows">
+          ${ACTS.map(a => `<div class="act-info-row"><span>${a.label}</span><span>×${pointRules[a.key].pts} ${pointRules[a.key].unit}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="act-indicator ${indClass}" style="margin-top:14px">${student.Indicator || '—'}</div>`;
 
   } catch(e) {
     document.getElementById('actBody').innerHTML = '<div class="act-loading">Failed to load stats.</div>';
