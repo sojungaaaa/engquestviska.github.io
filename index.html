@@ -428,6 +428,37 @@
       .highlight-banner::after { display: none; }
     }
 
+
+    /* ── STRIKE LIST ── */
+    .strike-list-section { margin-bottom: 40px; }
+    .strike-list-wrap { background: var(--white); border: 1.5px solid #FCA5A5; border-radius: 20px; overflow: hidden; }
+    .strike-list-header { background: linear-gradient(135deg, #DC2626, #991B1B); padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+    .strike-list-header-text { flex: 1; }
+    .strike-list-header-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: #fff; }
+    .strike-list-header-sub { font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 2px; }
+    .strike-pulse { width: 10px; height: 10px; border-radius: 50%; background: #FCA5A5; flex-shrink: 0; animation: strPulse 1.4s ease-in-out infinite; }
+    @keyframes strPulse { 0%,100%{box-shadow:0 0 0 0 rgba(252,165,165,0.7)} 50%{box-shadow:0 0 0 8px rgba(252,165,165,0)} }
+
+    .strike-list-row { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #FEE2E2; transition: background 0.15s; }
+    .strike-list-row:last-child { border-bottom: none; }
+    .strike-list-row:hover { background: #FFF5F5; }
+    .sl-num { font-size: 0.72rem; font-weight: 700; color: #FCA5A5; width: 20px; flex-shrink: 0; text-align: center; font-family: 'IBM Plex Mono', monospace; }
+    .sl-avatar { width: 34px; height: 34px; border-radius: 50%; background: #FEE2E2; border: 2px solid #FCA5A5; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; font-weight: 700; color: #DC2626; flex-shrink: 0; font-family: 'Playfair Display', serif; }
+    .sl-info { flex: 1; min-width: 0; }
+    .sl-name { font-size: 0.9rem; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sl-class { font-size: 0.7rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-top: 1px; }
+    .sl-strikes { display: flex; gap: 4px; flex-shrink: 0; }
+    .sl-dot { width: 16px; height: 16px; border-radius: 50%; font-size: 0.6rem; display: flex; align-items: center; justify-content: center; }
+    .sl-dot.hit  { background: #FEE2E2; }
+    .sl-dot.miss { background: var(--border); }
+
+    .strike-empty { padding: 32px; text-align: center; }
+    .strike-empty-icon { font-size: 2rem; margin-bottom: 8px; }
+    .strike-empty-text { font-size: 0.88rem; color: var(--text-muted); }
+
+    .strike-list-footer { padding: 10px 20px; background: #FFF5F5; border-top: 1px solid #FEE2E2; text-align: center; }
+    .strike-list-footer a { font-size: 0.78rem; font-weight: 700; color: #DC2626; text-decoration: none; font-family: 'IBM Plex Mono', monospace; }
+
     /* ── HALL OF FAME ── */
     .hof-section { margin-bottom: 40px; }
     .hof-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
@@ -716,6 +747,7 @@
 
 
 
+
   <!-- HALL OF FAME -->
   <div class="hof-section" id="hofSection">
     <div class="hof-title-row">
@@ -726,6 +758,31 @@
     </div>
     <div id="hofContent">
       <div class="hof-loading"><div class="hof-spinner"></div><br/>Loading hall of fame...</div>
+    </div>
+  </div>
+
+  <!-- STRIKE LIST -->
+  <div class="strike-list-section">
+    <div class="hof-title-row">
+      <div>
+        <div class="hof-title">⚠️ Strike Board</div>
+        <div class="hof-subtitle">Students who need to clear their strikes</div>
+      </div>
+    </div>
+    <div class="strike-list-wrap">
+      <div class="strike-list-header">
+        <div class="strike-pulse"></div>
+        <div class="strike-list-header-text">
+          <div class="strike-list-header-title">Students with Active Strikes</div>
+          <div class="strike-list-header-sub">Submit your clearance text to your teacher to remove strikes</div>
+        </div>
+      </div>
+      <div id="strikeListContent">
+        <div class="hof-loading"><div class="hof-spinner" style="border-top-color:#DC2626"></div><br/>Loading...</div>
+      </div>
+      <div class="strike-list-footer">
+        <a href="strikes.html">📝 How to clear your strike →</a>
+      </div>
     </div>
   </div>
 
@@ -1366,6 +1423,85 @@ function headerLogout() {
     document.getElementById('summEditBtn').classList.remove('visible');
   }
 }
+</script>
+
+
+<script>
+// ── STRIKE BOARD ──────────────────────────────────────────────
+const SL_API     = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
+const SL_CLASSES = ['XE1','XE4','XE5','XE6','XE7','XE8','XE9','XE10','XE11'];
+
+async function slApiGet(params) {
+  const url = SL_API + '?' + new URLSearchParams(params);
+  try { const r = await fetch(url); if (r.ok) return await r.json(); } catch(e) {}
+  return new Promise((resolve, reject) => {
+    const cb = 'sl_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const p  = {...params, callback:cb, _t:Date.now()};
+    const s  = document.createElement('script'); s.async = true;
+    const t  = setTimeout(()=>{cleanup();reject();},20000);
+    function cleanup(){delete window[cb];try{if(s.parentNode)s.parentNode.removeChild(s);}catch(e){}clearTimeout(t);}
+    window[cb] = d=>{cleanup();resolve(d);};
+    s.onerror  = ()=>{cleanup();reject();};
+    s.src = SL_API+'?'+new URLSearchParams(p);
+    (document.head||document.body).appendChild(s);
+  });
+}
+
+async function loadStrikeBoard() {
+  try {
+    const results = await Promise.all(
+      SL_CLASSES.map(cls =>
+        slApiGet({ action: 'getAllStrikes', className: cls })
+          .then(d => ({ cls, students: d.students || [] }))
+          .catch(() => ({ cls, students: [] }))
+      )
+    );
+
+    // Flatten and filter only students with strikes
+    const withStrikes = [];
+    results.forEach(({ cls, students }) => {
+      students.forEach(s => {
+        if (s.total > 0) withStrikes.push({ ...s, cls });
+      });
+    });
+
+    // Sort by most strikes first, then name
+    withStrikes.sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
+
+    const el = document.getElementById('strikeListContent');
+    if (withStrikes.length === 0) {
+      el.innerHTML = `<div class="strike-empty">
+        <div class="strike-empty-icon">🎉</div>
+        <div class="strike-empty-text">No students with active strikes. Keep it up everyone!</div>
+      </div>`;
+      return;
+    }
+
+    el.innerHTML = withStrikes.map((s, i) => {
+      const initial = (s.nickname || s.name)[0].toUpperCase();
+      const dispName = s.nickname || s.name.split(' ').slice(0,2).join(' ');
+      const clsLabel = s.cls.replace('XE', 'X E-');
+      const dots = [1,2,3,4].map(n =>
+        `<div class="sl-dot ${n <= s.total ? 'hit' : 'miss'}">${n <= s.total ? '⚠️' : ''}</div>`
+      ).join('');
+      return `<div class="strike-list-row">
+        <div class="sl-num">${i+1}</div>
+        <div class="sl-avatar">${initial}</div>
+        <div class="sl-info">
+          <div class="sl-name">${dispName}</div>
+          <div class="sl-class">${clsLabel}</div>
+        </div>
+        <div class="sl-strikes">${dots}</div>
+      </div>`;
+    }).join('');
+
+  } catch(e) {
+    document.getElementById('strikeListContent').innerHTML =
+      '<div class="strike-empty"><div class="strike-empty-text">Could not load strike board.</div></div>';
+  }
+}
+
+loadStrikeBoard();
 </script>
 
 </body>
