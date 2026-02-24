@@ -3,395 +3,223 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Attendance Tracker · English Quest</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <title>Activeness · English Quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --purple: #7C3AED; --purple-light: #A78BFA; --purple-soft: #EDE9FE;
-      --purple-mid: #C4B5FD; --white: #FFFFFF; --off-white: #F9F7FF;
-      --text-dark: #1E1040; --text-muted: #6B5B95; --border: #E5DEFF;
+      --bg: #0F0A1E; --surface: #1A1230; --surface2: #241A3A;
+      --border: #2E2250; --purple: #8B5CF6; --purple-bright: #A78BFA;
       --accent: #F59E0B; --green: #10B981; --red: #EF4444;
+      --blue: #3B82F6; --pink: #EC4899; --teal: #14B8A6;
+      --text: #F1EEFF; --muted: #7C6FA0; --white: #fff;
     }
-    body { font-family: 'IBM Plex Sans', sans-serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; font-size: 16px; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
     /* HEADER */
     header {
-      background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 50%, #4C1D95 100%);
-      padding: 28px 20px 44px; text-align: center; position: relative; overflow: hidden;
+      padding: 20px 20px 24px; position: relative;
+      background: linear-gradient(180deg, #1A0F35 0%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
     }
-    header::before {
-      content: ''; position: absolute; inset: 0;
-      background-image: radial-gradient(circle, rgba(255,255,255,0.10) 1px, transparent 1px);
-      background-size: 28px 28px; pointer-events: none;
-    }
-    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,2.6rem); font-weight: 800; color: #fff; position: relative; z-index: 1; }
-    header h1 span { color: var(--accent); }
-    .header-sub { color: rgba(255,255,255,0.75); font-size: 1rem; margin-top: 6px; position: relative; z-index: 1; }
-    .header-right { position: absolute; top: 16px; right: 16px; z-index: 2; }
-    .login-btn {
-      background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.4);
-      color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.9rem;
-      font-weight: 600; padding: 10px 20px; border-radius: 999px; cursor: pointer;
-    }
-    .teacher-badge {
-      background: var(--accent); color: #fff; font-size: 0.88rem; font-weight: 700;
-      padding: 8px 16px; border-radius: 999px; display: flex; align-items: center; gap: 8px;
-    }
-    .logout-x { cursor: pointer; font-size: 1rem; }
-    .wave { display: block; width: 100%; margin-top: -2px; }
+    .header-row { display: flex; align-items: center; justify-content: space-between; max-width: 960px; margin: 0 auto; }
+    .back-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 16px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .back-btn:hover { color: var(--text); border-color: var(--purple); }
+    .header-center { text-align: center; flex: 1; }
+    .header-title { font-family: 'Syne', sans-serif; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 800; background: linear-gradient(135deg, #A78BFA, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .header-sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+    .header-right { min-width: 80px; display: flex; justify-content: flex-end; }
+    .teacher-badge { background: linear-gradient(135deg, var(--accent), #D97706); color: #fff; font-size: 0.78rem; font-weight: 700; padding: 7px 14px; border-radius: 999px; display: flex; align-items: center; gap: 6px; }
+    .logout-x { cursor: pointer; opacity: 0.7; }
+    .logout-x:hover { opacity: 1; }
 
     /* MAIN */
-    main { max-width: 860px; margin: 0 auto; padding: 24px 16px 80px; }
+    main { max-width: 960px; margin: 0 auto; padding: 24px 16px 80px; }
 
-    /* CARD */
-    .card {
-      background: var(--white); border: 1.5px solid var(--border);
-      border-radius: 20px; padding: 24px 20px; margin-bottom: 20px;
-    }
-    .card-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; }
+    /* LOGIN WALL */
+    .login-wall { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
+    .login-box { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 40px 32px; width: 100%; max-width: 380px; text-align: center; }
+    .login-icon { font-size: 2.5rem; margin-bottom: 16px; }
+    .login-title { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; }
+    .login-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 28px; }
+    .input-field { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 13px 16px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--text); outline: none; margin-bottom: 12px; }
+    .input-field:focus { border-color: var(--purple); }
+    .input-field::placeholder { color: var(--muted); }
+    .login-error { font-size: 0.82rem; color: var(--red); margin-bottom: 12px; display: none; }
+    .btn-login { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--purple), #6D28D9); color: #fff; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 1rem; border: none; border-radius: 12px; cursor: pointer; transition: opacity 0.2s; }
+    .btn-login:hover { opacity: 0.9; }
 
-    /* CONTROLS */
-    .field { margin-bottom: 14px; }
-    .field label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-    .field select, .field input[type="date"] {
-      width: 100%; padding: 14px 16px; border: 1.5px solid var(--border);
-      border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem;
-      background: var(--off-white); color: var(--text-dark); outline: none;
-    }
-    .field select:focus, .field input:focus { border-color: var(--purple-light); }
-    .btn-primary {
-      width: 100%; padding: 15px; background: linear-gradient(135deg, var(--purple), #5B21B6);
-      color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700;
-      font-size: 1rem; border: none; border-radius: 12px; cursor: pointer; margin-top: 4px;
-    }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    /* CLASS SELECTOR */
+    .top-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 24px; flex-wrap: wrap; }
+    .class-select { flex: 1; min-width: 160px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--text); outline: none; cursor: pointer; }
+    .class-select:focus { border-color: var(--purple); }
+    .class-select option { background: var(--surface); }
+    .class-info { font-size: 0.82rem; color: var(--muted); font-family: 'DM Mono', monospace; }
 
-    /* VIEW BADGE */
-    .view-badge {
-      background: var(--purple-soft); color: var(--purple);
-      font-size: 0.85rem; font-weight: 600; padding: 10px 16px;
-      border-radius: 12px; margin-bottom: 16px; text-align: center;
-    }
+    /* LEGEND */
+    .legend { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-family: 'DM Mono', monospace; color: var(--muted); background: var(--surface); border: 1px solid var(--border); padding: 5px 10px; border-radius: 999px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-    /* MEETING INFO BAR */
-    .meeting-bar {
-      background: var(--purple-soft); border: 1.5px solid var(--purple-mid);
-      border-radius: 16px; padding: 16px 20px; margin-bottom: 16px;
-    }
-    .meeting-bar-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--purple); }
-    .meeting-bar-counts { display: flex; gap: 16px; margin-top: 10px; font-size: 0.9rem; font-weight: 600; flex-wrap: wrap; }
-    .count-present { color: #059669; }
-    .count-absent  { color: #DC2626; }
-    .count-other   { color: var(--text-muted); }
-    .day-label { font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; }
+    /* STUDENT CARDS GRID */
+    .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
 
-    /* DATE INPUT (teacher) */
-    .date-field { margin-top: 12px; }
-    .date-field label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
-    .date-field input[type="date"] {
-      width: 100%; padding: 12px 16px; border: 1.5px solid var(--purple-mid);
-      border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem;
-      background: var(--white); color: var(--text-dark); outline: none;
-    }
+    /* STUDENT CARD */
+    .student-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; transition: border-color 0.2s, transform 0.15s; }
+    .student-card:hover { border-color: var(--purple); transform: translateY(-2px); }
+    .card-top { padding: 14px 16px 10px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+    .card-no { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); width: 22px; flex-shrink: 0; }
+    .card-name { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; flex: 1; line-height: 1.2; }
+    .card-total { font-family: 'DM Mono', monospace; font-size: 0.78rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--surface2); border: 1px solid var(--border); }
+    .card-total.high { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.4); color: var(--green); }
+    .card-total.mid  { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.4); color: var(--accent); }
+    .card-total.low  { background: rgba(239,68,68,0.1);  border-color: rgba(239,68,68,0.3);  color: var(--red); }
 
-    /* QUICK ACTIONS */
-    .quick-actions { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-    .btn-quick {
-      flex: 1; min-width: 120px; padding: 12px; border-radius: 12px; border: 1.5px solid;
-      font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif;
-      text-align: center;
-    }
-    .btn-all-present { background: #D1FAE5; border-color: #34D399; color: #065F46; }
-    .btn-all-absent  { background: #FEE2E2; border-color: #F87171; color: #991B1B; }
+    /* ACTIVITY BUTTONS */
+    .card-activities { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
+    .act-row { display: flex; align-items: center; gap: 8px; }
+    .act-label { font-size: 0.72rem; color: var(--muted); width: 90px; flex-shrink: 0; font-family: 'DM Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .act-controls { display: flex; align-items: center; gap: 6px; flex: 1; }
+    .act-btn { width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; transition: all 0.15s; flex-shrink: 0; line-height: 1; }
+    .act-btn.plus  { background: rgba(139,92,246,0.2); border-color: var(--purple); color: var(--purple-bright); font-size: 1.1rem; }
+    .act-btn.plus:hover  { background: var(--purple); color: #fff; }
+    .act-btn.minus { color: var(--muted); font-size: 1rem; }
+    .act-btn.minus:hover { background: rgba(239,68,68,0.15); border-color: var(--red); color: var(--red); }
+    .act-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .act-val { font-family: 'DM Mono', monospace; font-size: 0.9rem; font-weight: 600; min-width: 24px; text-align: center; color: var(--text); transition: color 0.2s; }
+    .act-val.changed { color: var(--accent); }
 
-    /* STUDENT LIST */
-    .list-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 20px; }
-    .list-header { padding: 16px 20px; background: var(--off-white); border-bottom: 1.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .list-header-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; }
-    .list-count { font-size: 0.82rem; color: var(--text-muted); }
+    /* Indicator badge */
+    .card-indicator { margin: 0 12px 12px; font-size: 0.72rem; font-family: 'DM Mono', monospace; padding: 4px 10px; border-radius: 6px; text-align: center; font-weight: 600; }
+    .ind-hyper  { background: rgba(251,191,36,0.15);  color: #FBBF24; border: 1px solid rgba(251,191,36,0.4); }
+    .ind-super  { background: rgba(16,185,129,0.15);  color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+    .ind-active { background: rgba(139,92,246,0.15);  color: var(--purple-bright); border: 1px solid rgba(139,92,246,0.3); }
+    .ind-okay   { background: rgba(245,158,11,0.15);  color: var(--accent); border: 1px solid rgba(245,158,11,0.3); }
+    .ind-not    { background: rgba(239,68,68,0.1);    color: var(--red);    border: 1px solid rgba(239,68,68,0.2); }
 
-    /* STUDENT ROW */
-    .s-row { border-bottom: 1.5px solid var(--border); }
-    .s-row:last-child { border-bottom: none; }
-    .s-top { display: flex; align-items: center; gap: 12px; padding: 14px 20px 10px; }
-    .s-no { font-size: 0.85rem; font-weight: 700; color: var(--purple-light); width: 28px; flex-shrink: 0; }
-    .s-name { font-size: 1rem; font-weight: 600; flex: 1; line-height: 1.3; }
-    /* Status buttons — segmented bar */
-    .s-btns { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1.5px solid var(--border); }
-    .s-btn {
-      padding: 13px 4px; font-size: 0.8rem; font-weight: 700; text-align: center;
-      border: none; border-right: 1px solid var(--border); background: #F9F7FF;
-      color: #9CA3AF; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif;
-      transition: background 0.15s, color 0.15s;
-    }
-    .s-btn:last-child { border-right: none; }
-    .s-btn.on-Present    { background: #D1FAE5; color: #065F46; }
-    .s-btn.on-Absent     { background: #FEE2E2; color: #991B1B; }
-    .s-btn.on-Sick       { background: #FEF3C7; color: #78350F; }
-    .s-btn.on-Permission { background: #EDE9FE; color: #4C1D95; }
-    .s-btn.on-Dispen     { background: #DBEAFE; color: #1E3A5F; }
-    /* View mode pill */
-    .s-pill { display: inline-block; font-size: 0.85rem; font-weight: 700; padding: 6px 18px; border-radius: 999px; margin: 0 20px 14px; }
-    .pill-Present    { background: #D1FAE5; color: #065F46; }
-    .pill-Absent     { background: #FEE2E2; color: #991B1B; }
-    .pill-Sick       { background: #FEF3C7; color: #78350F; }
-    .pill-Permission { background: #EDE9FE; color: #4C1D95; }
-    .pill-Dispen     { background: #DBEAFE; color: #1E3A5F; }
-    .pill-empty      { background: #F3F4F6; color: #9CA3AF; }
-
-    /* SUBMIT */
-    .submit-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
-    .submit-info { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px; text-align: center; }
-    .btn-save {
-      width: 100%; padding: 16px; background: linear-gradient(135deg, #10B981, #059669);
-      color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700;
-      font-size: 1rem; border: none; border-radius: 12px; cursor: pointer;
-    }
-    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-add-meeting {
-      width: 100%; padding: 13px; background: var(--purple-soft); border: 1.5px solid var(--purple-mid);
-      color: var(--purple); font-family: 'IBM Plex Sans', sans-serif; font-weight: 700;
-      font-size: 0.95rem; border-radius: 12px; cursor: pointer; margin-top: 10px;
-    }
-
-    /* LEADERBOARD */
-    .lb-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 20px; }
-    .lb-head { background: linear-gradient(135deg, #7C3AED, #5B21B6); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .lb-head-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: #fff; }
-    .lb-head-sub { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-top: 3px; }
-    .btn-lb-refresh { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 7px 14px; border-radius: 999px; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit; }
-    .lb-row { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border); }
-    .lb-row:last-child { border-bottom: none; }
-    .lb-rank { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; }
-    .r1 { background: #FEF3C7; color: #92400E; border: 2px solid #F59E0B; }
-    .r2 { background: #F3F4F6; color: #374151; border: 2px solid #9CA3AF; }
-    .r3 { background: #FEE2E2; color: #7C2D12; border: 2px solid #FB923C; }
-    .rN { background: var(--purple-soft); color: var(--purple); border: 2px solid var(--purple-mid); }
-    .lb-name { flex: 1; font-size: 0.92rem; font-weight: 600; }
-    .lb-pct { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--green); min-width: 52px; text-align: right; }
-    .lb-bar-wrap { width: 60px; background: #F3F4F6; border-radius: 999px; height: 7px; }
-    .lb-bar { height: 7px; border-radius: 999px; background: linear-gradient(90deg, #34D399, #10B981); }
-    .lb-empty { padding: 32px; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
-
-    /* LOGIN MODAL */
-    .overlay { position: fixed; inset: 0; background: rgba(30,16,64,0.6); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-    .modal { background: var(--white); border-radius: 24px; padding: 36px 28px; width: 100%; max-width: 400px; }
-    .modal-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
-    .modal-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px; }
-    .modal-field { margin-bottom: 18px; }
-    .modal-field label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-    .modal-field input { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem; outline: none; }
-    .modal-field input:focus { border-color: var(--purple-light); }
-    .modal-error { font-size: 0.85rem; color: var(--red); margin-bottom: 16px; display: none; }
-    .modal-btns { display: flex; gap: 10px; }
-    .btn-login { flex: 1; padding: 14px; background: linear-gradient(135deg, var(--purple), #5B21B6); color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 1rem; border: none; border-radius: 12px; cursor: pointer; }
-    .btn-cancel { padding: 14px 20px; background: var(--off-white); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem; cursor: pointer; color: var(--text-muted); }
-
-    /* TOAST */
-    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text-dark); color: #fff; padding: 14px 28px; border-radius: 999px; font-size: 0.92rem; font-weight: 500; transition: transform 0.3s ease; z-index: 999; white-space: nowrap; pointer-events: none; }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-    .toast.ok  { background: #059669; }
-    .toast.err { background: #DC2626; }
-
-    /* SPINNER */
-    .spinner-wrap { padding: 48px; text-align: center; color: var(--text-muted); }
+    /* Loading */
+    .loading { text-align: center; padding: 60px; color: var(--muted); }
     .spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Toast */
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 10px 22px; border-radius: 999px; font-size: 0.88rem; font-weight: 500; transition: transform 0.3s; z-index: 999; white-space: nowrap; pointer-events: none; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.ok  { border-color: var(--green); color: var(--green); }
+    .toast.err { border-color: var(--red); color: var(--red); }
+
     .hidden { display: none !important; }
-    footer { background: var(--text-dark); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 0.85rem; }
-    footer strong { color: var(--purple-light); }
+    footer { text-align: center; padding: 20px; font-size: 0.82rem; color: var(--muted); border-top: 1px solid var(--border); }
+
+    @media (max-width: 500px) {
+      .students-grid { grid-template-columns: 1fr; }
+      .act-label { width: 72px; }
+    }
   </style>
 </head>
 <body>
 
-<!-- LOGIN MODAL -->
-<div class="overlay hidden" id="loginModal">
-  <div class="modal">
-    <div class="modal-title">Teacher Login</div>
-    <div class="modal-sub">Enter your credentials to enable edit mode.</div>
-    <div class="modal-field">
-      <label>Username</label>
-      <input type="text" id="loginUser" autocomplete="off" placeholder="Username"/>
-    </div>
-    <div class="modal-field">
-      <label>Password</label>
-      <input type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter') doLogin()"/>
-    </div>
-    <div class="modal-error" id="loginError">Incorrect username or password.</div>
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeLogin()">Cancel</button>
-      <button class="btn-login" onclick="doLogin()">Login</button>
-    </div>
-  </div>
-</div>
-
-<!-- HEADER -->
 <header>
-  <div class="header-right" id="headerRight">
-    <button class="login-btn" onclick="openLogin()">🔑 Teacher Login</button>
+  <div class="header-row">
+    <a class="back-btn" href="index.html">← Back</a>
+    <div class="header-center">
+      <div class="header-title">Activeness</div>
+      <div class="header-sub">English Quest · Real-time tracker</div>
+    </div>
+    <div class="header-right" id="headerRight">
+      <!-- filled by JS -->
+    </div>
   </div>
-  <h1>Attendance <span>Tracker</span></h1>
-  <p class="header-sub">English Quest · SMA Negeri 6 Surakarta</p>
 </header>
-
-<svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" preserveAspectRatio="none">
-  <path fill="#4C1D95" d="M0,32 C360,0 1080,64 1440,32 L1440,0 L0,0 Z"/>
-  <path fill="#F9F7FF" d="M0,48 C360,16 1080,64 1440,32 L1440,48 Z"/>
-</svg>
 
 <main>
 
-  <!-- CONTROLS -->
-  <div class="card">
-    <div class="card-title">📋 Select Class & Meeting</div>
-    <div class="field">
-      <label>Class</label>
-      <select id="classSelect" onchange="onClassChange()">
-        <option value="">— Choose Class —</option>
-        <option>XE1</option><option>XE4</option><option>XE5</option>
-        <option>XE6</option><option>XE7</option><option>XE8</option>
-        <option>XE9</option><option>XE10</option><option>XE11</option>
-      </select>
+  <!-- LOGIN WALL -->
+  <div class="login-wall" id="loginWall">
+    <div class="login-box">
+      <div class="login-icon">🔐</div>
+      <div class="login-title">Teacher Access</div>
+      <div class="login-sub">This page is for teachers only.</div>
+      <input class="input-field" type="text" id="loginUser" placeholder="Username"/>
+      <input class="input-field" type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <div class="login-error" id="loginError">Incorrect username or password.</div>
+      <button class="btn-login" onclick="doLogin()">Login</button>
     </div>
-    <div class="field">
-      <label>Meeting</label>
-      <select id="meetingSelect" onchange="onMeetingChange()">
-        <option>— Choose class first —</option>
-      </select>
-    </div>
-    <button class="btn-primary" id="loadBtn" onclick="loadClass()" disabled>View Attendance</button>
   </div>
 
-  <!-- ATTENDANCE SECTION -->
-  <div id="attendanceSection" class="hidden">
-
-    <div id="viewBadge" class="view-badge">👁️ View Only — Login as teacher to edit</div>
-
-    <!-- Meeting bar -->
-    <div class="meeting-bar">
-      <div class="meeting-bar-title" id="meetingBarTitle">Meeting –</div>
-      <div class="day-label" id="dayLabel"></div>
-      <div class="meeting-bar-counts">
-        <span class="count-present" id="presentCount">0 Present</span>
-        <span class="count-absent"  id="absentCount">0 Absent</span>
-        <span class="count-other"   id="otherCount">0 Other</span>
-      </div>
-      <div class="date-field hidden" id="dateFieldWrap">
-        <label>Meeting Date</label>
-        <input type="date" id="meetingDateInput" onchange="onDateChange()"/>
-      </div>
+  <!-- MAIN PANEL (hidden until logged in) -->
+  <div id="mainPanel" class="hidden">
+    <div class="top-bar">
+      <select class="class-select" id="classSelect" onchange="loadClass()">
+        <option value="">— Select a class —</option>
+        <option value="XE1">X E-1</option>
+        <option value="XE4">X E-4</option>
+        <option value="XE5">X E-5</option>
+        <option value="XE6">X E-6</option>
+        <option value="XE7">X E-7</option>
+        <option value="XE8">X E-8</option>
+        <option value="XE9">X E-9</option>
+        <option value="XE10">X E-10</option>
+        <option value="XE11">X E-11</option>
+      </select>
+      <span class="class-info" id="classInfo"></span>
     </div>
 
-    <!-- Quick actions (teacher) -->
-    <div class="quick-actions hidden" id="quickActions">
-      <button class="btn-quick btn-all-present" onclick="markAll('Present')">✅ All Present</button>
-      <button class="btn-quick btn-all-absent"  onclick="markAll('Absent')">❌ All Absent</button>
+    <!-- Activity legend -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#8B5CF6"></div>VB · Vocab Box</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3B82F6"></div>ANS · Answering</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#10B981"></div>PRE · Presenting</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div>DTO · Task On Time</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#EC4899"></div>HH · Helping Hand</div>
     </div>
 
-    <!-- Student list -->
-    <div class="list-card">
-      <div class="list-header">
-        <div class="list-header-title" id="listTitle">Students</div>
-        <div class="list-count" id="listCount"></div>
-      </div>
-      <div id="studentRows">
-        <div class="spinner-wrap"><div class="spinner"></div><br/>Loading...</div>
-      </div>
-    </div>
-
-    <!-- Submit (teacher) -->
-    <div class="submit-card hidden" id="submitCard">
-      <div class="submit-info">Unmarked students are saved as <strong>Present</strong>.</div>
-      <button class="btn-save" id="saveBtn" onclick="submitAttendance()">💾 Save Attendance</button>
-      <button class="btn-add-meeting hidden" id="addMeetingBtn" onclick="addNewMeeting()">＋ Add New Meeting</button>
-    </div>
-
-    <!-- Leaderboard -->
-    <div class="lb-card hidden" id="lbCard">
-      <div class="lb-head">
-        <div>
-          <div class="lb-head-title">⚠️ Top 10 Low Attendance</div>
-          <div class="lb-head-sub" id="lbSub">Load a class to see</div>
-        </div>
-        <button class="btn-lb-refresh" onclick="loadLeaderboard()">↻ Refresh</button>
-      </div>
-      <div id="lbRows"><div class="lb-empty">Loading...</div></div>
-    </div>
-
+    <div id="studentsList"></div>
   </div>
+
 </main>
 
-<footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
+<footer>© 2025 English Quest · SMA Negeri 6 Surakarta · Built with ❤️ by LaksMedia</footer>
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── CONFIG ─────────────────────────────────────────────────
-  // IMPORTANT: Replace this with your NEW Apps Script deployment URL
-  const API = 'https://script.google.com/macros/s/AKfycbxHaOK1WSG5hVVrzOUwGI3QxY3eSbjaAseRVxVaMXU-b8k9Stn4exUUbvB56dYbKLfr/exec';
+  const API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
 
-  // ── STATE ──────────────────────────────────────────────────
-  let isTeacher       = false;
-  let savedUser       = sessionStorage.getItem('eq_u') || '';
-  let savedPass       = sessionStorage.getItem('eq_p') || '';
-  let currentStudents = [];
-  let currentMeetings = [];
-  let studentStatuses = {};
-  let currentClass    = '';
-  let currentMeeting  = null;
+  const ACTS = [
+    { key: 'Vocabulary Box',     short: 'VB',  col: '#8B5CF6' },
+    { key: 'Answering',          short: 'ANS', col: '#3B82F6' },
+    { key: 'Presenting',         short: 'PRE', col: '#10B981' },
+    { key: 'Doing Task On Time', short: 'DTO', col: '#F59E0B' },
+    { key: 'Helping Hand',       short: 'HH',  col: '#EC4899' },
+  ];
+
+  let savedUser = '', savedPass = '', currentClass = '';
+  let studentsData = [];
 
   // Restore session
+  savedUser = sessionStorage.getItem('eq_tu') || '';
+  savedPass = sessionStorage.getItem('eq_tp') || '';
   if (savedUser && savedPass) verifyLogin(savedUser, savedPass, true);
 
-  // ── API HELPERS (fetch first, JSONP fallback) ───────────────
+  // ── API ───────────────────────────────────────────────────
   async function apiGet(params) {
     const url = API + '?' + new URLSearchParams(params);
-    // Try fetch first
-    try {
-      const res = await fetch(url);
-      if (res.ok) return await res.json();
-    } catch(e) { /* fall through to JSONP */ }
-
-    // JSONP fallback
+    try { const res = await fetch(url); if (res.ok) return await res.json(); } catch(e) {}
     return new Promise((resolve, reject) => {
       const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
       const p  = { ...params, callback: cb, _t: Date.now() };
-      const jsonpUrl = API + '?' + new URLSearchParams(p);
       const script = document.createElement('script');
       script.async = true;
       const timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 20000);
-      function cleanup() {
-        delete window[cb];
-        try { if (script.parentNode) script.parentNode.removeChild(script); } catch(e) {}
-        clearTimeout(timer);
-      }
-      window[cb]     = data => { cleanup(); resolve(data); };
-      script.onerror = ()   => { cleanup(); reject(new Error('Network error')); };
-      script.src = jsonpUrl;
+      function cleanup() { delete window[cb]; try { if (script.parentNode) script.parentNode.removeChild(script); } catch(e){} clearTimeout(timer); }
+      window[cb]     = d => { cleanup(); resolve(d); };
+      script.onerror = () => { cleanup(); reject(new Error('Network error')); };
+      script.src = API + '?' + new URLSearchParams(p);
       (document.head || document.body).appendChild(script);
     });
   }
 
-  async function apiPost(body) {
-    // Try fetch POST first (more reliable for saving data)
-    try {
-      const res = await fetch(API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      if (res.ok) return await res.json();
-    } catch(e) { /* fall through to GET */ }
-
-    // Fall back to GET with params
-    return apiGet(body);
-  }
-
-  // ── LOGIN ──────────────────────────────────────────────────
-  function openLogin()  { document.getElementById('loginModal').classList.remove('hidden'); setTimeout(() => document.getElementById('loginUser').focus(), 100); }
-  function closeLogin() { document.getElementById('loginModal').classList.add('hidden'); document.getElementById('loginError').style.display = 'none'; }
-
+  // ── LOGIN ─────────────────────────────────────────────────
   async function doLogin() {
     const u = document.getElementById('loginUser').value.trim();
     const p = document.getElementById('loginPass').value.trim();
@@ -402,13 +230,12 @@
     try {
       const data = await apiGet({ action: 'checkLogin', username: u, password: p });
       if (data.ok) {
-        isTeacher = true; savedUser = u; savedPass = p;
-        sessionStorage.setItem('eq_u', u);
-        sessionStorage.setItem('eq_p', p);
-        closeLogin();
-        setTeacherUI(true);
-        if (!silent) showToast('✅ Logged in as Teacher', 'ok');
-        if (currentStudents.length) rerenderRows();
+        savedUser = u; savedPass = p;
+        sessionStorage.setItem('eq_tu', u); sessionStorage.setItem('eq_tp', p);
+        document.getElementById('loginWall').classList.add('hidden');
+        document.getElementById('mainPanel').classList.remove('hidden');
+        document.getElementById('headerRight').innerHTML = `<div class="teacher-badge">🎓 Teacher <span class="logout-x" onclick="logout()">✕</span></div>`;
+        if (!silent) showToast('✅ Logged in!', 'ok');
       } else {
         if (!silent) document.getElementById('loginError').style.display = 'block';
       }
@@ -416,231 +243,145 @@
   }
 
   function logout() {
-    isTeacher = false; savedUser = ''; savedPass = '';
-    sessionStorage.removeItem('eq_u'); sessionStorage.removeItem('eq_p');
-    setTeacherUI(false);
-    showToast('Logged out');
-    if (currentStudents.length) rerenderRows();
+    savedUser = ''; savedPass = '';
+    sessionStorage.removeItem('eq_tu'); sessionStorage.removeItem('eq_tp');
+    document.getElementById('loginWall').classList.remove('hidden');
+    document.getElementById('mainPanel').classList.add('hidden');
+    document.getElementById('headerRight').innerHTML = '';
   }
 
-  function setTeacherUI(on) {
-    document.getElementById('headerRight').innerHTML = on
-      ? `<div class="teacher-badge">🎓 Teacher Mode <span class="logout-x" onclick="logout()">✕</span></div>`
-      : `<button class="login-btn" onclick="openLogin()">🔑 Teacher Login</button>`;
-    document.getElementById('viewBadge').classList.toggle('hidden', on);
-    document.getElementById('quickActions').classList.toggle('hidden', !on);
-    document.getElementById('submitCard').classList.toggle('hidden', !on);
-    document.getElementById('dateFieldWrap').classList.toggle('hidden', !on);
-    document.getElementById('loadBtn').textContent = on ? 'Load Attendance' : 'View Attendance';
-  }
-
-  // ── CONTROLS ──────────────────────────────────────────────
-  function onClassChange() {
-    const cls = document.getElementById('classSelect').value;
-    document.getElementById('loadBtn').disabled = !cls;
-    document.getElementById('meetingSelect').innerHTML = '<option>— Choose class first —</option>';
-    document.getElementById('attendanceSection').classList.add('hidden');
-  }
-
+  // ── LOAD CLASS ────────────────────────────────────────────
   async function loadClass() {
     currentClass = document.getElementById('classSelect').value;
-    if (!currentClass) return;
-    document.getElementById('loadBtn').disabled    = true;
-    document.getElementById('loadBtn').textContent = '⏳ Loading...';
-    document.getElementById('studentRows').innerHTML = '<div class="spinner-wrap"><div class="spinner"></div><br/>Loading...</div>';
-    document.getElementById('attendanceSection').classList.remove('hidden');
-
+    if (!currentClass) { document.getElementById('studentsList').innerHTML = ''; document.getElementById('classInfo').textContent = ''; return; }
+    document.getElementById('studentsList').innerHTML = '<div class="loading"><div class="spinner"></div><br/>Loading students...</div>';
+    document.getElementById('classInfo').textContent = '';
     try {
-      const data = await apiGet({ action: 'getClassData', className: currentClass });
-      if (data.error) { showToast(data.error, 'err'); return; }
-
-      currentStudents = data.students;
-      currentMeetings = data.meetings;
-
-      const sel = document.getElementById('meetingSelect');
-      sel.innerHTML = '';
-      data.meetings.forEach(m => {
-        const opt = document.createElement('option');
-        opt.value = m.number;
-        opt.textContent = 'Meeting ' + m.number + (m.date ? ' · ' + m.date : ' · no date') + (m.number === data.nextMeeting.number ? ' ← next' : '');
-        sel.appendChild(opt);
-      });
-      sel.value = data.nextMeeting.number;
-
-      renderMeeting(data.nextMeeting);
-      setTeacherUI(isTeacher);
-
-      // Leaderboard
-      document.getElementById('lbCard').classList.remove('hidden');
-      document.getElementById('lbSub').textContent = 'Lowest attendance in ' + currentClass;
-      loadLeaderboard();
-
-    } catch(e) { showToast('Failed to load. Check connection.', 'err'); }
-    finally {
-      document.getElementById('loadBtn').disabled    = false;
-      document.getElementById('loadBtn').textContent = isTeacher ? 'Load Attendance' : 'View Attendance';
-    }
+      const data = await apiGet({ action: 'getAllActiveness', className: currentClass });
+      if (data.error) { showToast(data.error, 'err'); document.getElementById('studentsList').innerHTML = ''; return; }
+      studentsData = data.students;
+      document.getElementById('classInfo').textContent = studentsData.length + ' students';
+      renderStudents();
+    } catch(e) { showToast('Failed to load class', 'err'); document.getElementById('studentsList').innerHTML = ''; }
   }
 
-  function onMeetingChange() {
-    const m = currentMeetings.find(x => x.number == document.getElementById('meetingSelect').value);
-    if (m) renderMeeting(m);
-  }
+  // ── RENDER STUDENTS ───────────────────────────────────────
+  function renderStudents() {
+    const grid = document.createElement('div');
+    grid.className = 'students-grid';
 
-  function renderMeeting(meeting) {
-    currentMeeting = meeting;
-    document.getElementById('meetingBarTitle').textContent = 'Meeting ' + meeting.number + ' · ' + currentClass;
-    document.getElementById('listTitle').textContent  = currentClass + ' · Meeting ' + meeting.number;
-    document.getElementById('listCount').textContent  = currentStudents.length + ' students';
+    studentsData.forEach(s => {
+      const total = (s.VocabularyBox || 0) + (s.Answering || 0) + (s.Presenting || 0) + (s.DoingTaskOnTime || 0) + (s.HelpingHand || 0);
+      const totalClass = total >= 30 ? 'high' : total >= 10 ? 'mid' : 'low';
+      const indClass   = s.Indicator.includes('Hyperactive') ? 'ind-hyper' :
+        s.Indicator.includes('Super') ? 'ind-super' :
+        s.Indicator.includes('Active') && !s.Indicator.includes('Not') ? 'ind-active' :
+        s.Indicator.includes('Okay') ? 'ind-okay' : 'ind-not';
 
-    // Date input
-    if (meeting.date) {
-      const parts = meeting.date.split('/');
-      if (parts.length === 3) {
-        const yr = parts[2].length === 2 ? '20' + parts[2] : parts[2];
-        document.getElementById('meetingDateInput').value = yr + '-' + parts[1].padStart(2,'0') + '-' + parts[0].padStart(2,'0');
-      }
-    } else {
-      document.getElementById('meetingDateInput').value = '';
-    }
-    updateDayLabel();
+      const vals = {
+        'Vocabulary Box':     s.VocabularyBox    || 0,
+        'Answering':          s.Answering        || 0,
+        'Presenting':         s.Presenting       || 0,
+        'Doing Task On Time': s.DoingTaskOnTime  || 0,
+        'Helping Hand':       s.HelpingHand      || 0,
+      };
 
-    // Show/hide add meeting button
-    const isLast = meeting.number === currentMeetings[currentMeetings.length - 1].number;
-    document.getElementById('addMeetingBtn').classList.toggle('hidden', !isLast);
-
-    // Init statuses
-    studentStatuses = {};
-    currentStudents.forEach(s => { studentStatuses[s.no] = s.attendance['m' + meeting.number] || ''; });
-    rerenderRows();
-  }
-
-  function onDateChange() { updateDayLabel(); }
-  function updateDayLabel() {
-    const val = document.getElementById('meetingDateInput').value;
-    const el  = document.getElementById('dayLabel');
-    if (val) {
-      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      el.textContent = days[new Date(val + 'T00:00:00').getDay()];
-    } else { el.textContent = ''; }
-  }
-
-  // ── RENDER ROWS ────────────────────────────────────────────
-  function rerenderRows() {
-    const container = document.getElementById('studentRows');
-    const html = [];
-
-    currentStudents.forEach(s => {
-      const st = studentStatuses[s.no] || '';
-      html.push(`<div class="s-row">`);
-      html.push(`  <div class="s-top"><span class="s-no">${s.no}</span><span class="s-name">${s.name}</span></div>`);
-
-      if (isTeacher) {
-        html.push(`  <div class="s-btns" id="btns-${s.no}">`);
-        ['Present','Absent','Sick','Permission','Dispen'].forEach(btn => {
-          const on = st === btn ? ' on-' + btn : '';
-          html.push(`    <button class="s-btn${on}" onclick="setStatus(${s.no},'${btn}')">${btn}</button>`);
-        });
-        html.push(`  </div>`);
-      } else {
-        const cls = st ? 'pill-' + st : 'pill-empty';
-        html.push(`  <span class="s-pill ${cls}">${st || '–'}</span>`);
-      }
-      html.push(`</div>`);
-    });
-
-    container.innerHTML = html.join('');
-    updateCounts();
-  }
-
-  function setStatus(no, status) {
-    studentStatuses[no] = status;
-    const btns = document.getElementById('btns-' + no);
-    if (!btns) return;
-    btns.querySelectorAll('.s-btn').forEach(b => {
-      const st = b.textContent.trim();
-      b.className = 's-btn' + (st === status ? ' on-' + st : '');
-    });
-    updateCounts();
-  }
-
-  function markAll(status) {
-    currentStudents.forEach(s => setStatus(s.no, status));
-  }
-
-  function updateCounts() {
-    const vals = Object.values(studentStatuses);
-    const unmarked = vals.filter(v => !v).length;
-    document.getElementById('presentCount').textContent = vals.filter(v => v === 'Present').length + ' Present';
-    document.getElementById('absentCount').textContent  = vals.filter(v => v === 'Absent').length + ' Absent';
-    document.getElementById('otherCount').textContent   = vals.filter(v => v && v !== 'Present' && v !== 'Absent').length + ' Other';
-    document.getElementById('listCount').textContent    = currentStudents.length + ' students' + (unmarked > 0 ? ' · ' + unmarked + ' unmarked' : '');
-  }
-
-  // ── SUBMIT ─────────────────────────────────────────────────
-  async function submitAttendance() {
-    const rawDate = document.getElementById('meetingDateInput').value;
-    if (!rawDate) { showToast('Please select a date first!', 'err'); return; }
-
-    const dp = rawDate.split('-');
-    const meetingDate = parseInt(dp[2]) + '/' + parseInt(dp[1]) + '/' + dp[0].slice(-2);
-    const meetingNo   = parseInt(document.getElementById('meetingSelect').value);
-    const flagged     = currentStudents
-      .filter(s => studentStatuses[s.no] && studentStatuses[s.no] !== 'Present')
-      .map(s => ({ studentNo: s.no, status: studentStatuses[s.no] }));
-
-    document.getElementById('saveBtn').disabled    = true;
-    document.getElementById('saveBtn').textContent = '⏳ Saving...';
-
-    try {
-      const res = await apiGet({ action: 'saveAttendance', username: savedUser, password: savedPass, className: currentClass, meetingNumber: meetingNo, meetingDate, flaggedRecords: JSON.stringify(flagged) });
-      if (res.success) {
-        showToast('✅ Attendance saved!', 'ok');
-        loadClass();
-      } else { showToast('Error: ' + res.error, 'err'); }
-    } catch(e) { showToast('Failed to save. Check connection.', 'err'); }
-    finally {
-      document.getElementById('saveBtn').disabled    = false;
-      document.getElementById('saveBtn').textContent = '💾 Save Attendance';
-    }
-  }
-
-  // ── ADD MEETING ────────────────────────────────────────────
-  async function addNewMeeting() {
-    if (!confirm('Add a new meeting column to ' + currentClass + '?')) return;
-    document.getElementById('addMeetingBtn').textContent = '⏳ Adding...';
-    try {
-      const res = await apiGet({ action: 'addMeeting', username: savedUser, password: savedPass, className: currentClass });
-      if (res.success) { showToast('✅ Meeting ' + res.newMeetingNumber + ' added!', 'ok'); loadClass(); }
-      else showToast('Error: ' + res.error, 'err');
-    } catch(e) { showToast('Failed. Check connection.', 'err'); }
-    finally { document.getElementById('addMeetingBtn').textContent = '＋ Add New Meeting'; }
-  }
-
-  // ── LEADERBOARD ────────────────────────────────────────────
-  async function loadLeaderboard() {
-    document.getElementById('lbRows').innerHTML = '<div class="lb-empty"><div class="spinner"></div></div>';
-    try {
-      const data = await apiGet({ action: 'getLeaderboard', className: currentClass });
-      if (!data.length) { document.getElementById('lbRows').innerHTML = '<div class="lb-empty">No data yet.</div>'; return; }
-      const icons = ['🔴','🟠','🟡'];
-      document.getElementById('lbRows').innerHTML = data.map((s, i) => `
-        <div class="lb-row">
-          <div class="lb-rank ${i<3?'r'+(i+1):'rN'}">${i<3?icons[i]:i+1}</div>
-          <div class="lb-name">${s.name}</div>
-          <div class="lb-bar-wrap"><div class="lb-bar" style="width:${s.pct}%;background:${s.pct < 50 ? 'linear-gradient(90deg,#EF4444,#DC2626)' : s.pct < 75 ? 'linear-gradient(90deg,#F59E0B,#D97706)' : 'linear-gradient(90deg,#34D399,#10B981)'}"></div></div>
-          <div class="lb-pct" style="color:${s.pct < 50 ? '#DC2626' : s.pct < 75 ? '#D97706' : '#10B981'}">${s.pct}%</div>
+      const actRows = ACTS.map(a => `
+        <div class="act-row">
+          <span class="act-label" style="color:${a.col}">${a.short}</span>
+          <div class="act-controls">
+            <button class="act-btn minus" onclick="changeVal(${s.no},'${a.key}',-1,this)" ${vals[a.key] <= 0 ? 'disabled' : ''}>−</button>
+            <span class="act-val" id="val-${s.no}-${a.key.replace(/\s/g,'_')}">${vals[a.key]}</span>
+            <button class="act-btn plus" onclick="changeVal(${s.no},'${a.key}',1,this)">+</button>
+          </div>
         </div>`).join('');
-    } catch(e) { document.getElementById('lbRows').innerHTML = '<div class="lb-empty">Failed to load.</div>'; }
+
+      const card = document.createElement('div');
+      card.className = 'student-card';
+      card.id = 'card-' + s.no;
+      card.innerHTML = `
+        <div class="card-top">
+          <span class="card-no">${s.no}</span>
+          <span class="card-name">${s.nickname || s.name}</span>
+          <span class="card-total ${totalClass}" id="total-${s.no}">${total}</span>
+        </div>
+        <div class="card-activities">${actRows}</div>
+        <div class="card-indicator ${indClass}" id="ind-${s.no}">${s.Indicator || '—'}</div>`;
+
+      grid.appendChild(card);
+    });
+
+    document.getElementById('studentsList').innerHTML = '';
+    document.getElementById('studentsList').appendChild(grid);
   }
 
-  // ── TOAST ──────────────────────────────────────────────────
+  // ── CHANGE VALUE ──────────────────────────────────────────
+  async function changeVal(studentNo, column, delta, btn) {
+    const valKey  = 'val-' + studentNo + '-' + column.replace(/\s/g, '_');
+    const valEl   = document.getElementById(valKey);
+    const totalEl = document.getElementById('total-' + studentNo);
+    if (!valEl) return;
+
+    const current  = parseInt(valEl.textContent) || 0;
+    const newValue = Math.max(0, current + delta);
+    if (newValue === current) return;
+
+    // Optimistic update
+    valEl.textContent = newValue;
+    valEl.classList.add('changed');
+    setTimeout(() => valEl.classList.remove('changed'), 600);
+
+    // Update total display
+    recalcTotal(studentNo);
+
+    // Disable buttons briefly
+    const card = document.getElementById('card-' + studentNo);
+    card.querySelectorAll('.act-btn').forEach(b => b.disabled = true);
+
+    try {
+      const res = await apiGet({ action: 'incrementActiveness', username: savedUser, password: savedPass, className: currentClass, studentNo: String(studentNo), column, delta: String(delta) });
+      if (res.success) {
+        showToast(`+1 ${column.split(' ')[0]} → ${res.newValue}`, 'ok');
+        // Update minus btn state
+        const minusBtn = valEl.previousElementSibling;
+        if (minusBtn) minusBtn.disabled = res.newValue <= 0;
+      } else {
+        // Revert
+        valEl.textContent = current;
+        recalcTotal(studentNo);
+        showToast('Error: ' + res.error, 'err');
+      }
+    } catch(e) {
+      valEl.textContent = current;
+      recalcTotal(studentNo);
+      showToast('Failed to save', 'err');
+    }
+
+    card.querySelectorAll('.act-btn').forEach(b => b.disabled = false);
+    // Re-check minus buttons
+    card.querySelectorAll('.act-val').forEach(v => {
+      v.previousElementSibling.disabled = parseInt(v.textContent) <= 0;
+    });
+  }
+
+  function recalcTotal(studentNo) {
+    const totalEl = document.getElementById('total-' + studentNo);
+    if (!totalEl) return;
+    let sum = 0;
+    ACTS.forEach(a => {
+      const el = document.getElementById('val-' + studentNo + '-' + a.key.replace(/\s/g, '_'));
+      if (el) sum += parseInt(el.textContent) || 0;
+    });
+    totalEl.textContent = sum;
+    totalEl.className = 'card-total ' + (sum >= 30 ? 'high' : sum >= 10 ? 'mid' : 'low');
+  }
+
+  // ── TOAST ─────────────────────────────────────────────────
   function showToast(msg, type) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className   = 'toast ' + (type || '');
+    t.textContent = msg; t.className = 'toast ' + (type || '');
     setTimeout(() => t.classList.add('show'), 10);
-    setTimeout(() => t.classList.remove('show'), 3500);
+    setTimeout(() => t.classList.remove('show'), 2500);
   }
 </script>
 </body>
