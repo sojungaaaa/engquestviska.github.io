@@ -426,6 +426,48 @@
       .highlight-banner { padding: 24px 22px; }
       .highlight-banner::after { display: none; }
     }
+
+    /* ── HALL OF FAME ── */
+    .hof-section { margin-bottom: 40px; }
+    .hof-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .hof-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 800; color: var(--text-dark); }
+    .hof-subtitle { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .hof-loading { text-align: center; padding: 32px; color: var(--text-muted); font-size: 0.88rem; }
+    .hof-spinner { display: inline-block; width: 20px; height: 20px; border: 2.5px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: hofSpin 0.8s linear infinite; margin-bottom: 8px; }
+    @keyframes hofSpin { to { transform: rotate(360deg); } }
+
+    /* Top 5 leaderboard */
+    .hof-top5 { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 16px; }
+    .hof-top5-header { background: linear-gradient(135deg, #7C3AED, #5B21B6); padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
+    .hof-top5-header-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: #fff; }
+    .hof-top5-header-sub { font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 1px; }
+    .hof-row { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    .hof-row:last-child { border-bottom: none; }
+    .hof-row:hover { background: var(--off-white); }
+    .hof-rank { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 800; width: 32px; text-align: center; flex-shrink: 0; }
+    .hof-rank-1 { color: #F59E0B; }
+    .hof-rank-2 { color: #9CA3AF; }
+    .hof-rank-3 { color: #B45309; }
+    .hof-rank-n { color: var(--purple-light); font-size: 0.85rem; }
+    .hof-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.95rem; color: #fff; flex-shrink: 0; }
+    .hof-info { flex: 1; min-width: 0; }
+    .hof-name { font-size: 0.92rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hof-class { font-size: 0.72rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; }
+    .hof-pts { font-family: 'IBM Plex Mono', monospace; font-size: 0.88rem; font-weight: 700; color: var(--purple); text-align: right; flex-shrink: 0; }
+    .hof-bar-wrap { width: 80px; background: var(--border); border-radius: 999px; height: 5px; overflow: hidden; flex-shrink: 0; }
+    .hof-bar { height: 5px; border-radius: 999px; background: linear-gradient(90deg, var(--purple), var(--purple-light)); }
+
+    /* Category champions */
+    .hof-champs-title { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; font-family: 'IBM Plex Mono', monospace; }
+    .hof-champs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    .hof-champ-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 14px 12px; text-align: center; transition: transform 0.15s, box-shadow 0.15s; }
+    .hof-champ-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(124,58,237,0.1); }
+    .hof-champ-icon { font-size: 1.5rem; margin-bottom: 6px; }
+    .hof-champ-cat { font-size: 0.65rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'IBM Plex Mono', monospace; margin-bottom: 6px; }
+    .hof-champ-name { font-family: 'Playfair Display', serif; font-size: 0.88rem; font-weight: 700; color: var(--text-dark); line-height: 1.2; margin-bottom: 3px; }
+    .hof-champ-class { font-size: 0.68rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-bottom: 6px; }
+    .hof-champ-val { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; display: inline-block; }
+
   </style>
 </head>
 <body>
@@ -465,6 +507,20 @@
       <p>Your one-stop hub for class documents, student data, and updates.</p>
     </div>
     <a href="#students" class="highlight-banner-btn">Explore →</a>
+  </div>
+
+
+  <!-- HALL OF FAME -->
+  <div class="hof-section" id="hofSection">
+    <div class="hof-title-row">
+      <div>
+        <div class="hof-title">🏆 Hall of Fame</div>
+        <div class="hof-subtitle">Most active students across all classes</div>
+      </div>
+    </div>
+    <div id="hofContent">
+      <div class="hof-loading"><div class="hof-spinner"></div><br/>Loading hall of fame...</div>
+    </div>
   </div>
 
   <!-- DOCUMENTS / FILES -->
@@ -595,6 +651,128 @@
 <footer>
   <p>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong> on GitHub Pages</p>
 </footer>
+
+
+<script>
+// ── HALL OF FAME ────────────────────────────────────────────
+const HOF_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
+const HOF_CLASSES = ['XE1','XE4','XE5','XE6','XE7','XE8','XE9','XE10','XE11'];
+const HOF_ACTS = [
+  { key: 'VocabularyBox',    label: 'Vocab Box',    icon: '📚', color: '#8B5CF6', bg: '#EDE9FE', pts: 1 },
+  { key: 'Answering',        label: 'Answering',    icon: '🙋', color: '#3B82F6', bg: '#DBEAFE', pts: 2 },
+  { key: 'Presenting',       label: 'Presenting',   icon: '🎤', color: '#10B981', bg: '#D1FAE5', pts: 5 },
+  { key: 'DoingTaskOnTime',  label: 'Task On Time', icon: '✅', color: '#F59E0B', bg: '#FEF3C7', pts: 2 },
+  { key: 'HelpingHand',      label: 'Helping Hand', icon: '🤝', color: '#EC4899', bg: '#FCE7F3', pts: 1 },
+];
+const AVATAR_COLORS = ['#7C3AED','#2563EB','#059669','#D97706','#DC2626','#7C3AED','#0891B2','#9333EA','#16A34A'];
+
+async function hofApiGet(params) {
+  const url = HOF_API + '?' + new URLSearchParams(params);
+  try { const res = await fetch(url); if (res.ok) return await res.json(); } catch(e) {}
+  return new Promise((resolve, reject) => {
+    const cb = 'hof_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const p  = { ...params, callback: cb, _t: Date.now() };
+    const script = document.createElement('script');
+    script.async = true;
+    const timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 25000);
+    function cleanup() { delete window[cb]; try { if (script.parentNode) script.parentNode.removeChild(script); } catch(e){} clearTimeout(timer); }
+    window[cb]     = d => { cleanup(); resolve(d); };
+    script.onerror = () => { cleanup(); reject(new Error('Network error')); };
+    script.src = HOF_API + '?' + new URLSearchParams(p);
+    (document.head || document.body).appendChild(script);
+  });
+}
+
+async function loadHallOfFame() {
+  try {
+    // Fetch all classes in parallel
+    const results = await Promise.all(
+      HOF_CLASSES.map(cls =>
+        hofApiGet({ action: 'getAllActiveness', className: cls })
+          .then(d => ({ cls, students: d.students || [] }))
+          .catch(() => ({ cls, students: [] }))
+      )
+    );
+
+    // Flatten all students with class tag
+    const all = [];
+    results.forEach(({ cls, students }) => {
+      students.forEach(s => {
+        const total = (s.VocabularyBox||0)*1 + (s.Answering||0)*2 + (s.Presenting||0)*5 + (s.DoingTaskOnTime||0)*2 + (s.HelpingHand||0)*1;
+        all.push({ ...s, cls, total });
+      });
+    });
+
+    if (all.length === 0) { document.getElementById('hofContent').innerHTML = '<div class="hof-loading">No data yet.</div>'; return; }
+
+    // Top 5 overall by total points
+    const top5 = [...all].sort((a,b) => b.total - a.total).slice(0, 5);
+    const maxPts = top5[0]?.total || 1;
+
+    // Category champions — highest raw count per activity
+    const champs = HOF_ACTS.map(act => {
+      const best = [...all].sort((a,b) => (b[act.key]||0) - (a[act.key]||0))[0];
+      return { ...act, champion: best };
+    });
+
+    const rankIcons = ['🥇','🥈','🥉','4','5'];
+    const rankClasses = ['hof-rank-1','hof-rank-2','hof-rank-3','hof-rank-n','hof-rank-n'];
+
+    const top5Html = top5.map((s, i) => {
+      const pct     = Math.round((s.total / maxPts) * 100);
+      const clsIdx  = HOF_CLASSES.indexOf(s.cls);
+      const avatarBg = AVATAR_COLORS[clsIdx] || '#7C3AED';
+      const initial  = (s.nickname || s.name)[0].toUpperCase();
+      const dispName = s.nickname || s.name.split(' ')[0];
+      const clsLabel = s.cls.replace('XE','X E-');
+      return `<div class="hof-row">
+        <div class="hof-rank ${rankClasses[i]}">${rankIcons[i]}</div>
+        <div class="hof-avatar" style="background:${avatarBg}">${initial}</div>
+        <div class="hof-info">
+          <div class="hof-name">${dispName}</div>
+          <div class="hof-class">${clsLabel}</div>
+        </div>
+        <div class="hof-bar-wrap"><div class="hof-bar" style="width:${pct}%"></div></div>
+        <div class="hof-pts">${s.total} pts</div>
+      </div>`;
+    }).join('');
+
+    const champsHtml = champs.map(c => {
+      const s    = c.champion;
+      if (!s) return '';
+      const val  = s[c.key] || 0;
+      const pts  = val * c.pts;
+      const name = s.nickname || s.name.split(' ')[0];
+      const cls  = s.cls.replace('XE','X E-');
+      return `<div class="hof-champ-card">
+        <div class="hof-champ-icon">${c.icon}</div>
+        <div class="hof-champ-cat">${c.label}</div>
+        <div class="hof-champ-name">${name}</div>
+        <div class="hof-champ-class">${cls}</div>
+        <div class="hof-champ-val" style="background:${c.bg};color:${c.color}">${val}× · +${pts}pts</div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('hofContent').innerHTML = `
+      <div class="hof-top5">
+        <div class="hof-top5-header">
+          <div>
+            <div class="hof-top5-header-title">⚡ Top 5 Most Active</div>
+            <div class="hof-top5-header-sub">Ranked by total activeness points</div>
+          </div>
+        </div>
+        ${top5Html}
+      </div>
+      <div class="hof-champs-title">👑 Category Champions</div>
+      <div class="hof-champs-grid">${champsHtml}</div>`;
+
+  } catch(e) {
+    document.getElementById('hofContent').innerHTML = '<div class="hof-loading">Could not load hall of fame.</div>';
+  }
+}
+
+loadHallOfFame();
+</script>
 
 </body>
 </html>
