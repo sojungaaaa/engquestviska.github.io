@@ -448,8 +448,8 @@
     if (!pendingStrike) return;
     const reason = document.getElementById('reasonInput').value.trim();
     if (!reason) { showToast('Please enter a reason', 'err'); return; }
+    const { studentNo, cls } = pendingStrike; // grab BEFORE closeReasonModal clears it
     closeReasonModal();
-    const { studentNo, cls } = pendingStrike;
     try {
       const res = await apiGet({ action: 'addStrike', username: savedUser, password: savedPass, className: cls, studentNo: String(studentNo), reason });
       if (res.success) {
