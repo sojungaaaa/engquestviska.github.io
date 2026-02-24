@@ -468,6 +468,52 @@
     .hof-champ-class { font-size: 0.68rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-bottom: 6px; }
     .hof-champ-val { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; display: inline-block; }
 
+
+    /* ── SCHEDULE ── */
+    .sched-wrap { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 16px; }
+    .sched-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer; user-select: none; transition: background 0.15s; }
+    .sched-header:hover { background: var(--off-white); }
+    .sched-icon { font-size: 1.3rem; }
+    .sched-header-text { flex: 1; }
+    .sched-header-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; }
+    .sched-header-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 1px; }
+    .sched-arrow { font-size: 1.1rem; color: var(--text-muted); transition: transform 0.3s; }
+    .sched-arrow.open { transform: rotate(90deg); }
+    .sched-body { display: none; border-top: 1.5px solid var(--border); }
+    .sched-body.open { display: block; }
+
+    /* Day tabs */
+    .sched-days { display: flex; overflow-x: auto; border-bottom: 1.5px solid var(--border); scrollbar-width: none; }
+    .sched-days::-webkit-scrollbar { display: none; }
+    .sched-day-btn { padding: 11px 18px; font-size: 0.82rem; font-weight: 700; border: none; background: none; cursor: pointer; white-space: nowrap; color: var(--text-muted); border-bottom: 2.5px solid transparent; margin-bottom: -2px; font-family: 'IBM Plex Sans', sans-serif; transition: all 0.2s; flex-shrink: 0; }
+    .sched-day-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+    .sched-day-btn.today { color: var(--accent); border-bottom-color: var(--accent); }
+    .sched-day-btn.today.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Schedule items */
+    .sched-content { padding: 4px 0 8px; }
+    .sched-item { display: flex; align-items: center; gap: 14px; padding: 12px 20px; border-bottom: 1px solid var(--border); }
+    .sched-item:last-child { border-bottom: none; }
+    .sched-item.now { background: linear-gradient(90deg, rgba(124,58,237,0.06), transparent); }
+    .sched-period { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; font-weight: 700; color: var(--purple-light); min-width: 28px; text-align: center; background: var(--purple-soft); border-radius: 6px; padding: 3px 6px; flex-shrink: 0; }
+    .sched-time { font-size: 0.78rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; min-width: 100px; flex-shrink: 0; }
+    .sched-class-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; font-weight: 700; padding: 5px 14px; border-radius: 999px; flex-shrink: 0; }
+    .sched-now-badge { font-size: 0.68rem; font-weight: 700; color: var(--accent); background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); padding: 2px 8px; border-radius: 999px; margin-left: auto; white-space: nowrap; }
+    .sched-break { display: flex; align-items: center; gap: 10px; padding: 8px 20px; }
+    .sched-break-line { flex: 1; height: 1px; background: var(--border); }
+    .sched-break-label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; font-family: 'IBM Plex Mono', monospace; }
+
+    /* Class color badges */
+    .cls-e1  { background: #EDE9FE; color: #5B21B6; }
+    .cls-e4  { background: #DBEAFE; color: #1D4ED8; }
+    .cls-e5  { background: #D1FAE5; color: #065F46; }
+    .cls-e6  { background: #FEF3C7; color: #92400E; }
+    .cls-e7  { background: #FCE7F3; color: #9D174D; }
+    .cls-e8  { background: #FEE2E2; color: #991B1B; }
+    .cls-e9  { background: #F0FDF4; color: #166534; }
+    .cls-e10 { background: #FFF7ED; color: #9A3412; }
+    .cls-e11 { background: #F5F3FF; color: #4C1D95; }
+
   </style>
 </head>
 <body>
@@ -594,14 +640,20 @@
         </div>
         <div class="card-wide-arrow">›</div>
       </a>
-      <a href="#" class="card-wide">
-        <div class="card-wide-icon ic-yellow">🗓️</div>
-        <div class="card-wide-body">
-          <div class="card-wide-title">Class Schedule</div>
-          <div class="card-wide-sub">Agenda & upcoming events</div>
+      <div class="sched-wrap">
+        <div class="sched-header" onclick="toggleSched()">
+          <span class="sched-icon">🗓️</span>
+          <div class="sched-header-text">
+            <div class="sched-header-title">Class Schedule</div>
+            <div class="sched-header-sub" id="schedSub">Weekly teaching schedule</div>
+          </div>
+          <span class="sched-arrow" id="schedArrow">›</span>
         </div>
-        <div class="card-wide-arrow">›</div>
-      </a>
+        <div class="sched-body" id="schedBody">
+          <div class="sched-days" id="schedDayTabs"></div>
+          <div class="sched-content" id="schedContent"></div>
+        </div>
+      </div>
       <a href="#" class="card-wide">
         <div class="card-wide-icon ic-green">🎯</div>
         <div class="card-wide-body">
@@ -772,6 +824,175 @@ async function loadHallOfFame() {
 }
 
 loadHallOfFame();
+</script>
+
+
+<script>
+// ── SCHEDULE ──────────────────────────────────────────────────
+const PERIODS = [
+  { p:1,  time:'07.00–07.45' },
+  { p:2,  time:'07.45–08.30' },
+  { p:3,  time:'08.30–09.15' },
+  { break: 'Break' },
+  { p:4,  time:'09.30–10.15' },
+  { p:5,  time:'10.15–11.00' },
+  { p:6,  time:'11.00–11.45' },
+  { break: 'Break & Sholat' },
+  { p:7,  time:'12.30–13.15' },
+  { p:8,  time:'13.15–14.00' },
+  { p:9,  time:'14.00–14.45' },
+  { p:10, time:'14.45–15.30' },
+];
+
+const SCHEDULE = {
+  Monday:    [ {p:2, cls:'XE4'}, {p:3, cls:'XE5'}, {p:6, cls:'XE6'}, {p:8, cls:'XE7'} ],
+  Tuesday:   [ {p:'1-2', cls:'XE11'}, {p:'5-6', cls:'XE7'}, {p:'9-10', cls:'XE8'} ],
+  Wednesday: [ {p:'1-2', cls:'XE1'}, {p:'3-4', cls:'XE5'}, {p:5, cls:'XE9'}, {p:'7-8', cls:'XE6'}, {p:9, cls:'XE10'} ],
+  Thursday:  [ {p:4, cls:'XE8'}, {p:'5-6', cls:'XE4'}, {p:7, cls:'XE11'}, {p:'9-10', cls:'XE9'} ],
+  Friday:    [ {p:3, cls:'XE1'}, {p:'4-5', cls:'XE10'} ],
+};
+
+const CLS_COLORS = { XE1:'cls-e1', XE4:'cls-e4', XE5:'cls-e5', XE6:'cls-e6', XE7:'cls-e7', XE8:'cls-e8', XE9:'cls-e9', XE10:'cls-e10', XE11:'cls-e11' };
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+const DAY_SHORT = ['Mon','Tue','Wed','Thu','Fri'];
+
+let activeDay = '';
+let schedOpen = false;
+
+// Get current day
+function getTodayDay() {
+  const d = new Date().getDay(); // 0=Sun,1=Mon...5=Fri,6=Sat
+  if (d >= 1 && d <= 5) return DAYS[d - 1];
+  return 'Monday';
+}
+
+// Get current period
+function getCurrentPeriod() {
+  const now  = new Date();
+  const mins = now.getHours() * 60 + now.getMinutes();
+  const ranges = [
+    [0*60+0,  7*60+45,  1],
+    [7*60+45, 8*60+30,  2],
+    [8*60+30, 9*60+15,  3],
+    [9*60+30, 10*60+15, 4],
+    [10*60+15,11*60+0,  5],
+    [11*60+0, 11*60+45, 6],
+    [12*60+30,13*60+15, 7],
+    [13*60+15,14*60+0,  8],
+    [14*60+0, 14*60+45, 9],
+    [14*60+45,15*60+30, 10],
+  ];
+  for (const [s,e,p] of ranges) { if (mins >= s && mins < e) return p; }
+  return -1;
+}
+
+function toggleSched() {
+  schedOpen = !schedOpen;
+  document.getElementById('schedBody').classList.toggle('open', schedOpen);
+  document.getElementById('schedArrow').classList.toggle('open', schedOpen);
+  if (schedOpen && !activeDay) {
+    buildTabs();
+    showDay(getTodayDay());
+  }
+}
+
+function buildTabs() {
+  const today = getTodayDay();
+  const tabs = document.getElementById('schedDayTabs');
+  tabs.innerHTML = DAYS.map((d,i) => {
+    const isToday = d === today;
+    return `<button class="sched-day-btn ${isToday?'today':''}" id="tab-${d}" onclick="showDay('${d}')">${DAY_SHORT[i]}${isToday?' 📍':''}</button>`;
+  }).join('');
+}
+
+function showDay(day) {
+  activeDay = day;
+  // Update tab active state
+  DAYS.forEach(d => {
+    const tab = document.getElementById('tab-' + d);
+    if (tab) tab.classList.toggle('active', d === day);
+  });
+
+  const daySchedule = SCHEDULE[day] || [];
+  const today       = getTodayDay();
+  const currPeriod  = today === day ? getCurrentPeriod() : -1;
+
+  // Build period lookup for this day
+  const periodMap = {};
+  daySchedule.forEach(item => {
+    if (typeof item.p === 'string') {
+      item.p.split('-').forEach(n => { periodMap[parseInt(n)] = item.cls; });
+    } else {
+      periodMap[item.p] = item.cls;
+    }
+  });
+
+  // Render
+  let html = '';
+  PERIODS.forEach(slot => {
+    if (slot.break) {
+      html += `<div class="sched-break">
+        <div class="sched-break-line"></div>
+        <div class="sched-break-label">☕ ${slot.break}</div>
+        <div class="sched-break-line"></div>
+      </div>`;
+      return;
+    }
+    const cls    = periodMap[slot.p];
+    const isNow  = slot.p === currPeriod && cls;
+    if (!cls) return; // skip empty periods
+
+    // Get display period string
+    const matchEntry = daySchedule.find(e => {
+      if (typeof e.p === 'string') return e.p.split('-').includes(String(slot.p)) && e.cls === cls;
+      return e.p === slot.p;
+    });
+
+    // Only render the FIRST period of a double class
+    const pStr = typeof matchEntry?.p === 'string' ? matchEntry.p : String(slot.p);
+    // Avoid rendering second slot of doubles
+    if (typeof matchEntry?.p === 'string') {
+      const parts = matchEntry.p.split('-').map(Number);
+      if (slot.p !== parts[0]) return;
+    }
+
+    // Get time range
+    let timeStr = slot.time;
+    if (typeof matchEntry?.p === 'string') {
+      const parts   = matchEntry.p.split('-').map(Number);
+      const start   = PERIODS.find(x => x.p === parts[0])?.time.split('–')[0] || '';
+      const end     = PERIODS.find(x => x.p === parts[parts.length-1])?.time.split('–')[1] || '';
+      timeStr = start + '–' + end;
+    }
+
+    const clsLabel = cls.replace('XE','X E-');
+    const colCls   = CLS_COLORS[cls] || '';
+    html += `<div class="sched-item ${isNow?'now':''}">
+      <span class="sched-period">${pStr}</span>
+      <span class="sched-time">${timeStr}</span>
+      <span class="sched-class-badge ${colCls}">${clsLabel}</span>
+      ${isNow ? '<span class="sched-now-badge">▶ Now</span>' : ''}
+    </div>`;
+  });
+
+  if (!html) html = '<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:0.88rem;">No classes today 🎉</div>';
+  document.getElementById('schedContent').innerHTML = html;
+
+  // Update sub text
+  const count = daySchedule.length;
+  document.getElementById('schedSub').textContent = `${day} · ${count} class${count !== 1 ? 'es' : ''}`;
+}
+
+// Auto-open on today if it's a school day
+window.addEventListener('DOMContentLoaded', () => {
+  const today = getTodayDay();
+  const d = new Date().getDay();
+  if (d >= 1 && d <= 5) {
+    // Show today's schedule info in sub even before opening
+    const count = SCHEDULE[today]?.length || 0;
+    document.getElementById('schedSub').textContent = `Today: ${today} · ${count} class${count !== 1 ? 'es' : ''}`;
+  }
+});
 </script>
 
 </body>
