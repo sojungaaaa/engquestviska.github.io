@@ -302,10 +302,11 @@
 
     /* Indicator badge */
     .act-indicator { margin: 16px 24px 0; padding: 10px 16px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; text-align: center; }
-    .ind-super  { background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); }
-    .ind-active { background: rgba(139,92,246,0.15); color: #A78BFA; border: 1px solid rgba(139,92,246,0.3); }
-    .ind-okay   { background: rgba(245,158,11,0.15); color: #F59E0B; border: 1px solid rgba(245,158,11,0.3); }
-    .ind-not    { background: rgba(239,68,68,0.1);   color: #EF4444; border: 1px solid rgba(239,68,68,0.2); }
+    .ind-hyper  { background: rgba(251,191,36,0.15); color: #FBBF24; border: 1px solid rgba(251,191,36,0.4); }
+    .ind-super  { background: rgba(16,185,129,0.15);  color: #10B981; border: 1px solid rgba(16,185,129,0.3); }
+    .ind-active { background: rgba(139,92,246,0.15);  color: #A78BFA; border: 1px solid rgba(139,92,246,0.3); }
+    .ind-okay   { background: rgba(245,158,11,0.15);  color: #F59E0B; border: 1px solid rgba(245,158,11,0.3); }
+    .ind-not    { background: rgba(239,68,68,0.1);    color: #EF4444; border: 1px solid rgba(239,68,68,0.2); }
 
     .act-loading { text-align: center; padding: 40px; color: #7C6FA0; font-size: 0.9rem; }
     .act-spinner { display: inline-block; width: 22px; height: 22px; border: 2px solid #2E2250; border-top-color: #8B5CF6; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 10px; }
@@ -570,8 +571,11 @@ async function openActModal(name, cls) {
     if (student.nickname) document.getElementById('actAvatar').textContent = student.nickname[0].toUpperCase();
 
     const total   = (student.VocabularyBox||0) + (student.Answering||0) + (student.Presenting||0) + (student.DoingTaskOnTime||0) + (student.HelpingHand||0);
-    const indClass = student.Indicator.includes('Super') ? 'ind-super' : student.Indicator.includes('Active (+') && !student.Indicator.includes('Not') ? 'ind-active' : student.Indicator.includes('Okay') ? 'ind-okay' : 'ind-not';
-    const barPct  = Math.min(100, Math.round((total / 50) * 100)); // 50 = rough max
+    const indClass = student.Indicator.includes('Hyperactive') ? 'ind-hyper' :
+      student.Indicator.includes('Super') ? 'ind-super' :
+      student.Indicator.includes('Active') && !student.Indicator.includes('Not') ? 'ind-active' :
+      student.Indicator.includes('Okay') ? 'ind-okay' : 'ind-not';
+    const barPct  = Math.min(100, Math.round((total / 75) * 100)); // 75 = Hyperactive threshold
 
     // Point rules per activity
     const pointRules = {
