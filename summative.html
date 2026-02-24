@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Summative · English Quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple:#7C3AED; --purple-light:#A78BFA; --purple-soft:#EDE9FE;
+      --white:#fff; --off-white:#F9F7FF; --text-dark:#1E1040;
+      --text-muted:#6B5B95; --border:#E5DEFF; --accent:#F59E0B;
+      --red:#DC2626; --red-soft:#FEE2E2; --green:#10B981;
+    }
+    body { font-family:'IBM Plex Sans',sans-serif; background:var(--off-white); color:var(--text-dark); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* HEADER */
+    header { background:linear-gradient(135deg,#DC2626 0%,#991B1B 50%,#7F1D1D 100%); padding:40px 20px 56px; text-align:center; position:relative; overflow:hidden; }
+    header::before { content:''; position:absolute; inset:0; background-image:radial-gradient(circle,rgba(255,255,255,0.07) 1px,transparent 1px); background-size:28px 28px; pointer-events:none; }
+    .back-btn { position:absolute; top:20px; left:20px; z-index:2; background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); color:#fff; font-family:'IBM Plex Sans',sans-serif; font-size:0.88rem; font-weight:600; padding:8px 18px; border-radius:999px; cursor:pointer; text-decoration:none; }
+    .pulse-dot { display:inline-block; width:10px; height:10px; background:#FCA5A5; border-radius:50%; margin-right:8px; animation:pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(252,165,165,0.7)} 50%{box-shadow:0 0 0 10px rgba(252,165,165,0)} }
+    header h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,5vw,2.8rem); font-weight:800; color:#fff; position:relative; z-index:1; margin-bottom:8px; }
+    header h1 span { color:#FCA5A5; font-style:italic; }
+    .header-sub { color:rgba(255,255,255,0.7); font-size:0.95rem; position:relative; z-index:1; }
+    .wave { display:block; width:100%; margin-top:-2px; }
+
+    /* MAIN */
+    main { flex:1; max-width:680px; margin:0 auto; padding:28px 16px 80px; width:100%; }
+
+    /* LOADING / EMPTY */
+    .state-box { background:var(--white); border:1.5px solid var(--border); border-radius:20px; padding:48px 24px; text-align:center; }
+    .state-icon { font-size:3rem; margin-bottom:16px; }
+    .state-title { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; margin-bottom:8px; }
+    .state-sub { font-size:0.88rem; color:var(--text-muted); line-height:1.5; }
+    .spinner { display:inline-block; width:28px; height:28px; border:3px solid var(--border); border-top-color:var(--red); border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:12px; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* EXAM CARD */
+    .exam-card { background:var(--white); border:1.5px solid var(--border); border-radius:24px; overflow:hidden; margin-bottom:20px; animation:slideUp 0.4s cubic-bezier(0.34,1.2,0.64,1); }
+    @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+    .exam-header { background:linear-gradient(135deg,#DC2626,#991B1B); padding:24px 24px 20px; }
+    .exam-header-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .exam-live-badge { font-size:0.68rem; font-weight:800; color:#FCA5A5; background:rgba(0,0,0,0.2); padding:3px 10px; border-radius:999px; text-transform:uppercase; letter-spacing:0.1em; font-family:'IBM Plex Mono',monospace; display:flex; align-items:center; gap:5px; }
+    .exam-title { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:800; color:#fff; line-height:1.2; margin-bottom:6px; }
+    .exam-classes { display:flex; flex-wrap:wrap; gap:6px; }
+    .exam-cls-chip { font-size:0.72rem; font-weight:700; background:rgba(255,255,255,0.2); color:#fff; padding:3px 10px; border-radius:999px; font-family:'IBM Plex Mono',monospace; border:1px solid rgba(255,255,255,0.2); }
+
+    /* Countdown big */
+    .countdown-box { background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:16px 20px; margin-top:16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+    .countdown-label { font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; }
+    .countdown-val { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:800; color:#fff; }
+    .countdown-val.urgent { color:#FCA5A5; animation:blink 1s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    .countdown-date { text-align:right; }
+    .countdown-date-val { font-size:0.9rem; font-weight:700; color:rgba(255,255,255,0.9); }
+    .countdown-date-day { font-size:0.75rem; color:rgba(255,255,255,0.6); margin-top:2px; }
+
+    /* Info sections */
+    .info-section { padding:20px 24px; border-bottom:1.5px solid var(--border); }
+    .info-section:last-child { border-bottom:none; }
+    .info-label { font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+    .info-content { font-size:0.95rem; color:var(--text-dark); line-height:1.6; font-weight:500; }
+
+    /* Study tips formatting */
+    .study-item { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:1px solid var(--border); }
+    .study-item:last-child { border-bottom:none; }
+    .study-bullet { width:6px; height:6px; border-radius:50%; background:var(--red); flex-shrink:0; margin-top:7px; }
+
+    /* Tip box */
+    .tip-box { background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(124,58,237,0.02)); border:1.5px solid var(--purple-soft); border-radius:16px; padding:16px 20px; margin-top:16px; display:flex; gap:12px; align-items:flex-start; }
+    .tip-box-icon { font-size:1.3rem; flex-shrink:0; }
+    .tip-box-text { font-size:0.85rem; color:var(--text-muted); line-height:1.5; }
+    .tip-box-text strong { color:var(--purple); }
+
+    /* Teacher panel */
+    .teacher-panel { background:var(--white); border:1.5px solid var(--border); border-radius:20px; padding:24px; margin-bottom:20px; display:none; }
+    .teacher-panel.visible { display:block; animation:slideUp 0.3s ease; }
+    .tp-title { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; margin-bottom:4px; }
+    .tp-sub { font-size:0.78rem; color:var(--text-muted); margin-bottom:20px; }
+    .field { margin-bottom:14px; }
+    .field label { display:block; font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:7px; }
+    .field input, .field textarea { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-family:'IBM Plex Sans',sans-serif; font-size:0.95rem; outline:none; background:var(--off-white); color:var(--text-dark); }
+    .field input:focus, .field textarea:focus { border-color:var(--purple-light); }
+    .field textarea { resize:none; height:100px; }
+    .cls-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+    .cls-btn { padding:8px 6px; border:1.5px solid var(--border); border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer; background:var(--off-white); color:var(--text-muted); font-family:'IBM Plex Mono',monospace; text-align:center; transition:all 0.15s; }
+    .cls-btn.selected { background:var(--red-soft); border-color:#FCA5A5; color:var(--red); }
+    .tp-btns { display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; }
+    .btn-publish { flex:1; padding:13px; background:linear-gradient(135deg,var(--red),#991B1B); color:#fff; font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:0.92rem; border:none; border-radius:12px; cursor:pointer; }
+    .btn-clear { padding:13px 16px; background:var(--off-white); border:1.5px solid var(--border); border-radius:12px; font-family:'IBM Plex Sans',sans-serif; cursor:pointer; color:var(--text-muted); font-size:0.92rem; }
+
+    /* Toast */
+    .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--text-dark); color:#fff; padding:12px 24px; border-radius:999px; font-size:0.9rem; font-weight:500; transition:transform 0.3s; z-index:999; white-space:nowrap; pointer-events:none; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+    .toast.ok { background:#059669; }
+    .toast.err { background:var(--red); }
+
+    footer { background:var(--text-dark); color:rgba(255,255,255,0.5); text-align:center; padding:20px; font-size:0.85rem; }
+    footer strong { color:var(--purple-light); }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="back-btn" href="index.html">← Back</a>
+  <h1><span class="pulse-dot"></span>Summative <span>Assessments</span></h1>
+  <p class="header-sub">Exam schedule, topics & what to study · English Quest</p>
+</header>
+
+<svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" preserveAspectRatio="none">
+  <path fill="#7F1D1D" d="M0,32 C360,0 1080,64 1440,32 L1440,0 L0,0 Z"/>
+  <path fill="#F9F7FF" d="M0,48 C360,16 1080,64 1440,32 L1440,48 Z"/>
+</svg>
+
+<main>
+
+  <!-- TEACHER PANEL -->
+  <div class="teacher-panel" id="teacherPanel">
+    <div class="tp-title">📝 Manage Summative Info</div>
+    <div class="tp-sub">Set the exam details. Students will see this on this page and as a sticky banner on the homepage.</div>
+    <div class="field">
+      <label>Exam Date</label>
+      <input type="date" id="tpDate"/>
+    </div>
+    <div class="field">
+      <label>Exam Title / Topic</label>
+      <input type="text" id="tpTitle" placeholder="e.g. Chapter 4 & 5 — Present Perfect"/>
+    </div>
+    <div class="field">
+      <label>What to Study (one item per line)</label>
+      <textarea id="tpStudy" placeholder="Grammar: Present Perfect Tense&#10;Vocabulary Box words (Chapter 4 & 5)&#10;Reading text: The Journey&#10;Writing: Recount text structure"></textarea>
+    </div>
+    <div class="field">
+      <label>Which Classes</label>
+      <div class="cls-grid">
+        <div class="cls-btn" data-cls="XE1"  onclick="toggleCls(this)">X E-1</div>
+        <div class="cls-btn" data-cls="XE4"  onclick="toggleCls(this)">X E-4</div>
+        <div class="cls-btn" data-cls="XE5"  onclick="toggleCls(this)">X E-5</div>
+        <div class="cls-btn" data-cls="XE6"  onclick="toggleCls(this)">X E-6</div>
+        <div class="cls-btn" data-cls="XE7"  onclick="toggleCls(this)">X E-7</div>
+        <div class="cls-btn" data-cls="XE8"  onclick="toggleCls(this)">X E-8</div>
+        <div class="cls-btn" data-cls="XE9"  onclick="toggleCls(this)">X E-9</div>
+        <div class="cls-btn" data-cls="XE10" onclick="toggleCls(this)">X E-10</div>
+        <div class="cls-btn" data-cls="XE11" onclick="toggleCls(this)">X E-11</div>
+      </div>
+    </div>
+    <div class="tp-btns">
+      <button class="btn-clear" onclick="clearSumm()">🗑 Clear</button>
+      <button class="btn-publish" onclick="saveSumm()">💾 Save & Publish</button>
+    </div>
+  </div>
+
+  <!-- EXAM DISPLAY -->
+  <div id="examContent">
+    <div class="state-box">
+      <div class="spinner"></div>
+      <div class="state-title">Loading exam info...</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
+let isTeacher = false;
+let savedUser = sessionStorage.getItem('eq_tu') || '';
+let savedPass = sessionStorage.getItem('eq_tp') || '';
+let countdownInterval = null;
+let currentData = null;
+
+async function apiGet(params) {
+  const url = API + '?' + new URLSearchParams(params);
+  try { const r = await fetch(url); if (r.ok) return await r.json(); } catch(e) {}
+  return new Promise((resolve, reject) => {
+    const cb = 'cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const p  = {...params, callback:cb, _t:Date.now()};
+    const s  = document.createElement('script'); s.async = true;
+    const t  = setTimeout(()=>{cleanup();reject(new Error('Timeout'));},15000);
+    function cleanup(){delete window[cb];try{if(s.parentNode)s.parentNode.removeChild(s);}catch(e){}clearTimeout(t);}
+    window[cb] = d=>{cleanup();resolve(d);};
+    s.onerror  = ()=>{cleanup();reject(new Error('Network error'));};
+    s.src = API+'?'+new URLSearchParams(p);
+    (document.head||document.body).appendChild(s);
+  });
+}
+
+// Check teacher session
+if (savedUser && savedPass) {
+  apiGet({action:'checkLogin', username:savedUser, password:savedPass})
+    .then(d => { if (d.ok) { isTeacher=true; document.getElementById('teacherPanel').classList.add('visible'); } })
+    .catch(()=>{});
+}
+
+// Load summative
+async function loadSummative() {
+  try {
+    const res = await apiGet({action:'getSummative'});
+    if (res.exists && res.data) {
+      currentData = res.data;
+      renderExam(res.data);
+      prefillTeacherPanel(res.data);
+    } else {
+      renderEmpty();
+    }
+  } catch(e) { renderEmpty(); }
+}
+loadSummative();
+
+function renderExam(d) {
+  const date   = new Date(d.date + 'T00:00:00');
+  const clsHtml = (d.classes||[]).map(c =>
+    `<span class="exam-cls-chip">${c.replace('XE','X E-')}</span>`
+  ).join('');
+
+  // Study items — split by newline
+  const studyItems = (d.study||'').split('\n').filter(s => s.trim());
+  const studyHtml = studyItems.length > 0
+    ? studyItems.map(s => `<div class="study-item"><div class="study-bullet"></div><div>${s.trim()}</div></div>`).join('')
+    : '<div style="color:var(--text-muted);font-size:0.88rem;">No specific study notes added.</div>';
+
+  document.getElementById('examContent').innerHTML = `
+    <div class="exam-card">
+      <div class="exam-header">
+        <div class="exam-header-top">
+          <div class="exam-live-badge"><span class="pulse-dot" style="width:7px;height:7px;margin:0"></span> Upcoming Exam</div>
+        </div>
+        <div class="exam-title">${d.title}</div>
+        <div class="exam-classes">${clsHtml || '<span class="exam-cls-chip">All Classes</span>'}</div>
+        <div class="countdown-box">
+          <div>
+            <div class="countdown-label">Time Remaining</div>
+            <div class="countdown-val" id="cdVal">—</div>
+          </div>
+          <div class="countdown-date">
+            <div class="countdown-date-val">${date.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+            <div class="countdown-date-day">${date.toLocaleDateString('en-GB',{weekday:'long'})}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="info-label">📚 What to Study</div>
+        <div>${studyHtml}</div>
+      </div>
+
+      <div class="info-section">
+        <div class="tip-box">
+          <div class="tip-box-icon">💡</div>
+          <div class="tip-box-text">
+            <strong>Study tip:</strong> Focus on understanding concepts rather than memorizing.
+            Review your Vocabulary Box entries and make sure you understand the grammar rules — not just the examples!
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  startCountdown(d.date);
+}
+
+function renderEmpty() {
+  document.getElementById('examContent').innerHTML = `
+    <div class="state-box">
+      <div class="state-icon">🎯</div>
+      <div class="state-title">No Upcoming Exam</div>
+      <div class="state-sub">Your teacher hasn't scheduled a summative exam yet.<br/>Check back here closer to the exam period!</div>
+    </div>`;
+}
+
+function startCountdown(dateStr) {
+  if (countdownInterval) clearInterval(countdownInterval);
+  function update() {
+    const el   = document.getElementById('cdVal'); if (!el) return;
+    const now  = new Date();
+    const target = new Date(dateStr + 'T00:00:00');
+    const diff = target - now;
+    if (diff <= 0) {
+      el.textContent = '🔴 Exam Day!'; el.classList.add('urgent');
+      clearInterval(countdownInterval); return;
+    }
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000) / 60000);
+    if (days > 0)       { el.textContent = `${days} day${days>1?'s':''} ${hours}h left`; }
+    else if (hours > 0) { el.textContent = `${hours}h ${mins}m left`; el.classList.add('urgent'); }
+    else                { el.textContent = `${mins} min left`; el.classList.add('urgent'); }
+  }
+  update();
+  countdownInterval = setInterval(update, 60000);
+}
+
+// Teacher panel
+function toggleCls(btn) { btn.classList.toggle('selected'); }
+
+function prefillTeacherPanel(d) {
+  document.getElementById('tpDate').value  = d.date  || '';
+  document.getElementById('tpTitle').value = d.title || '';
+  document.getElementById('tpStudy').value = d.study || '';
+  document.querySelectorAll('.cls-btn').forEach(b => {
+    b.classList.toggle('selected', (d.classes||[]).includes(b.dataset.cls));
+  });
+}
+
+async function saveSumm() {
+  const date    = document.getElementById('tpDate').value;
+  const title   = document.getElementById('tpTitle').value.trim();
+  const study   = document.getElementById('tpStudy').value.trim();
+  const classes = [...document.querySelectorAll('.cls-btn.selected')].map(b => b.dataset.cls);
+  if (!date)  { showToast('Please pick a date', 'err'); return; }
+  if (!title) { showToast('Please enter a title', 'err'); return; }
+  const data = { date, title, study, classes };
+  try {
+    const res = await apiGet({action:'setSummative', username:savedUser, password:savedPass, data:JSON.stringify(data)});
+    if (res.success) {
+      currentData = data; renderExam(data); showToast('✅ Published!', 'ok');
+    } else { showToast('Error: '+res.error, 'err'); }
+  } catch(e) { showToast('Failed to save', 'err'); }
+}
+
+async function clearSumm() {
+  if (!confirm('Remove the summative info?')) return;
+  try {
+    const res = await apiGet({action:'clearSummative', username:savedUser, password:savedPass});
+    if (res.success) {
+      currentData = null; renderEmpty();
+      document.getElementById('tpDate').value  = '';
+      document.getElementById('tpTitle').value = '';
+      document.getElementById('tpStudy').value = '';
+      document.querySelectorAll('.cls-btn').forEach(b => b.classList.remove('selected'));
+      showToast('Cleared', 'ok');
+    } else { showToast('Error: '+res.error, 'err'); }
+  } catch(e) { showToast('Failed to clear', 'err'); }
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast '+(type||'');
+  setTimeout(()=>t.classList.add('show'), 10);
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
