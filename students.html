@@ -570,7 +570,7 @@ async function openActModal(name, cls) {
     // Update avatar with nickname if available
     if (student.nickname) document.getElementById('actAvatar').textContent = student.nickname[0].toUpperCase();
 
-    const total   = (student.VocabularyBox||0) + (student.Answering||0) + (student.Presenting||0) + (student.DoingTaskOnTime||0) + (student.HelpingHand||0);
+    const total   = (student.VocabularyBox||0)*1 + (student.Answering||0)*2 + (student.Presenting||0)*5 + (student.DoingTaskOnTime||0)*2 + (student.HelpingHand||0)*1;
     const indClass = student.Indicator.includes('Hyperactive') ? 'ind-hyper' :
       student.Indicator.includes('Super') ? 'ind-super' :
       student.Indicator.includes('Active') && !student.Indicator.includes('Not') ? 'ind-active' :
