@@ -91,10 +91,12 @@
 
     /* Indicator badge */
     .card-indicator { margin: 0 12px 12px; font-size: 0.72rem; font-family: 'DM Mono', monospace; padding: 4px 10px; border-radius: 6px; text-align: center; font-weight: 600; }
-    .ind-super  { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
-    .ind-active { background: rgba(139,92,246,0.15); color: var(--purple-bright); border: 1px solid rgba(139,92,246,0.3); }
+    .ind-ultra  { background: linear-gradient(135deg,rgba(239,68,68,0.15),rgba(251,191,36,0.15)); color: #F97316; border: 1px solid rgba(249,115,22,0.5); }
+    .ind-hyper  { background: rgba(251,191,36,0.15);  color: #FBBF24; border: 1px solid rgba(251,191,36,0.4); }
+    .ind-super  { background: rgba(16,185,129,0.15);  color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+    .ind-active { background: rgba(139,92,246,0.15);  color: var(--purple-bright); border: 1px solid rgba(139,92,246,0.3); }
     .ind-okay   { background: rgba(245,158,11,0.15);  color: var(--accent); border: 1px solid rgba(245,158,11,0.3); }
-    .ind-not    { background: rgba(239,68,68,0.1);   color: var(--red);    border: 1px solid rgba(239,68,68,0.2); }
+    .ind-not    { background: rgba(239,68,68,0.1);    color: var(--red);    border: 1px solid rgba(239,68,68,0.2); }
 
     /* Loading */
     .loading { text-align: center; padding: 60px; color: var(--muted); }
@@ -272,7 +274,11 @@
     studentsData.forEach(s => {
       const total = (s.VocabularyBox || 0) + (s.Answering || 0) + (s.Presenting || 0) + (s.DoingTaskOnTime || 0) + (s.HelpingHand || 0);
       const totalClass = total >= 30 ? 'high' : total >= 10 ? 'mid' : 'low';
-      const indClass   = s.Indicator.includes('Super') ? 'ind-super' : s.Indicator.includes('Active (+') && !s.Indicator.includes('Not') ? 'ind-active' : s.Indicator.includes('Okay') ? 'ind-okay' : 'ind-not';
+      const indClass   = s.Indicator.includes('Plus Ultra') ? 'ind-ultra' :
+        s.Indicator.includes('Hyperactive') ? 'ind-hyper' :
+        s.Indicator.includes('Super') ? 'ind-super' :
+        s.Indicator.includes('Active') && !s.Indicator.includes('Not') ? 'ind-active' :
+        s.Indicator.includes('Okay') ? 'ind-okay' : 'ind-not';
 
       const vals = {
         'Vocabulary Box':     s.VocabularyBox    || 0,
