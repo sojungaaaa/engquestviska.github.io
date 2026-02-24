@@ -515,9 +515,136 @@
     .cls-e10 { background: #FFF7ED; color: #9A3412; }
     .cls-e11 { background: #F5F3FF; color: #4C1D95; }
 
+
+    /* ── SUMMATIVE BANNER ── */
+    .summ-banner {
+      position: sticky; top: 0; z-index: 200;
+      background: linear-gradient(135deg, #DC2626 0%, #991B1B 50%, #7F1D1D 100%);
+      border-bottom: 2px solid #FCA5A5;
+      padding: 0;
+      display: none; /* shown by JS when data exists */
+    }
+    .summ-banner.visible { display: block; }
+    .summ-banner-inner {
+      max-width: 960px; margin: 0 auto;
+      padding: 10px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .summ-pulse { width: 10px; height: 10px; border-radius: 50%; background: #FCA5A5; flex-shrink: 0;
+      animation: sumPulse 1.4s ease-in-out infinite; }
+    @keyframes sumPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(252,165,165,0.7); }
+      50% { box-shadow: 0 0 0 8px rgba(252,165,165,0); }
+    }
+    .summ-label { font-size: 0.7rem; font-weight: 800; color: #FCA5A5; text-transform: uppercase;
+      letter-spacing: 0.1em; font-family: 'IBM Plex Mono', monospace; flex-shrink: 0; }
+    .summ-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.2); flex-shrink: 0; }
+    .summ-text { flex: 1; font-size: 0.88rem; color: #fff; font-weight: 600; line-height: 1.4; }
+    .summ-text strong { color: #FCA5A5; }
+    .summ-countdown { font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; font-weight: 700;
+      background: rgba(0,0,0,0.25); color: #fff; padding: 4px 12px; border-radius: 999px;
+      white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
+    .summ-countdown.urgent { background: rgba(255,255,255,0.15); color: #FEF2F2; animation: urgentBlink 1s ease-in-out infinite; }
+    @keyframes urgentBlink { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    .summ-edit-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 999px;
+      cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; flex-shrink: 0; display: none; }
+    .summ-edit-btn.visible { display: block; }
+    .summ-edit-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* Teacher panel modal */
+    .summ-overlay { position: fixed; inset: 0; background: rgba(15,10,40,0.7); backdrop-filter: blur(6px);
+      z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .summ-overlay.hidden { display: none; }
+    .summ-modal { background: #fff; border-radius: 24px; padding: 32px 28px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+    .summ-modal-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; color: #1E1040; }
+    .summ-modal-sub { font-size: 0.85rem; color: #6B5B95; margin-bottom: 24px; }
+    .summ-field { margin-bottom: 16px; }
+    .summ-field label { display: block; font-size: 0.75rem; font-weight: 700; color: #6B5B95;
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .summ-field input, .summ-field textarea, .summ-field select {
+      width: 100%; padding: 12px 16px; border: 1.5px solid #E5DEFF; border-radius: 12px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 0.95rem; outline: none; color: #1E1040;
+      background: #F9F7FF; }
+    .summ-field input:focus, .summ-field textarea:focus, .summ-field select:focus { border-color: #A78BFA; }
+    .summ-field textarea { resize: none; height: 80px; }
+    .summ-classes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .summ-cls-btn { padding: 8px 6px; border: 1.5px solid #E5DEFF; border-radius: 10px; font-size: 0.78rem;
+      font-weight: 700; cursor: pointer; background: #F9F7FF; color: #6B5B95; font-family: 'IBM Plex Mono', monospace;
+      text-align: center; transition: all 0.15s; }
+    .summ-cls-btn.selected { background: #EDE9FE; border-color: #7C3AED; color: #5B21B6; }
+    .summ-modal-btns { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+    .summ-btn-save { flex: 1; padding: 13px; background: linear-gradient(135deg, #DC2626, #991B1B);
+      color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 0.95rem;
+      border: none; border-radius: 12px; cursor: pointer; }
+    .summ-btn-clear { padding: 13px 18px; background: #F9F7FF; border: 1.5px solid #E5DEFF;
+      border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; cursor: pointer; color: #6B5B95; }
+    .summ-btn-cancel { padding: 13px 18px; background: #F9F7FF; border: 1.5px solid #E5DEFF;
+      border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; cursor: pointer; color: #6B5B95; }
+
+    /* Toast */
+    .summ-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: #1E1040; color: #fff; padding: 12px 24px; border-radius: 999px; font-size: 0.9rem;
+      font-weight: 500; transition: transform 0.3s; z-index: 999; white-space: nowrap; pointer-events: none; }
+    .summ-toast.show { transform: translateX(-50%) translateY(0); }
+    .summ-toast.ok  { background: #059669; }
+    .summ-toast.err { background: #DC2626; }
+
   </style>
 </head>
 <body>
+
+<!-- ── SUMMATIVE STICKY BANNER ── -->
+<div class="summ-banner" id="summBanner">
+  <div class="summ-banner-inner">
+    <div class="summ-pulse"></div>
+    <div class="summ-label">📝 Summative</div>
+    <div class="summ-divider"></div>
+    <div class="summ-text" id="summBannerText">Loading...</div>
+    <div class="summ-countdown" id="summCountdown"></div>
+    <button class="summ-edit-btn" id="summEditBtn" onclick="openSummModal()">✏️ Edit</button>
+  </div>
+</div>
+
+<!-- SUMMATIVE TEACHER MODAL -->
+<div class="summ-overlay hidden" id="summOverlay">
+  <div class="summ-modal">
+    <div class="summ-modal-title">📝 Summative Info</div>
+    <div class="summ-modal-sub">Set the exam details students will see in the banner.</div>
+    <div class="summ-field">
+      <label>Exam Date</label>
+      <input type="date" id="summDate"/>
+    </div>
+    <div class="summ-field">
+      <label>Exam Title / Topic</label>
+      <input type="text" id="summTitle" placeholder="e.g. Chapter 4 & 5 — Present Perfect"/>
+    </div>
+    <div class="summ-field">
+      <label>What to Study</label>
+      <textarea id="summStudy" placeholder="e.g. Grammar: Present Perfect, Vocabulary Box words, Chapter 4 & 5 reading texts..."></textarea>
+    </div>
+    <div class="summ-field">
+      <label>Which Classes</label>
+      <div class="summ-classes-grid" id="summClasses">
+        <div class="summ-cls-btn" data-cls="XE1" onclick="toggleCls(this)">X E-1</div>
+        <div class="summ-cls-btn" data-cls="XE4" onclick="toggleCls(this)">X E-4</div>
+        <div class="summ-cls-btn" data-cls="XE5" onclick="toggleCls(this)">X E-5</div>
+        <div class="summ-cls-btn" data-cls="XE6" onclick="toggleCls(this)">X E-6</div>
+        <div class="summ-cls-btn" data-cls="XE7" onclick="toggleCls(this)">X E-7</div>
+        <div class="summ-cls-btn" data-cls="XE8" onclick="toggleCls(this)">X E-8</div>
+        <div class="summ-cls-btn" data-cls="XE9" onclick="toggleCls(this)">X E-9</div>
+        <div class="summ-cls-btn" data-cls="XE10" onclick="toggleCls(this)">X E-10</div>
+        <div class="summ-cls-btn" data-cls="XE11" onclick="toggleCls(this)">X E-11</div>
+      </div>
+    </div>
+    <div class="summ-modal-btns">
+      <button class="summ-btn-cancel" onclick="closeSummModal()">Cancel</button>
+      <button class="summ-btn-clear" onclick="clearSumm()">🗑 Clear</button>
+      <button class="summ-btn-save" onclick="saveSumm()">💾 Save & Publish</button>
+    </div>
+  </div>
+</div>
+
+<div class="summ-toast" id="summToast"></div>
 
 <!-- ── HEADER ── -->
 <header>
@@ -985,6 +1112,151 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('schedSub').textContent = `Today: ${today} · ${count} class${count !== 1 ? 'es' : ''}`;
   }
 });
+</script>
+
+
+<script>
+// ── SUMMATIVE BANNER ──────────────────────────────────────────
+const SUMM_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
+let summData = null;
+let summTeacher = false;
+let summUser = '', summPass = '';
+let countdownInterval = null;
+
+// Share session with other pages
+summUser = sessionStorage.getItem('eq_tu') || '';
+summPass = sessionStorage.getItem('eq_tp') || '';
+if (summUser && summPass) {
+  // Verify silently
+  summApiGet({ action:'checkLogin', username:summUser, password:summPass })
+    .then(d => { if(d.ok) { summTeacher=true; document.getElementById('summEditBtn').classList.add('visible'); } })
+    .catch(()=>{});
+}
+
+async function summApiGet(params) {
+  const url = SUMM_API + '?' + new URLSearchParams(params);
+  try { const r = await fetch(url); if(r.ok) return await r.json(); } catch(e){}
+  return new Promise((resolve,reject) => {
+    const cb = 'summ_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const p  = {...params, callback:cb, _t:Date.now()};
+    const s  = document.createElement('script'); s.async=true;
+    const t  = setTimeout(()=>{cleanup();reject(new Error('Timeout'));},15000);
+    function cleanup(){delete window[cb];try{if(s.parentNode)s.parentNode.removeChild(s);}catch(e){}clearTimeout(t);}
+    window[cb]=d=>{cleanup();resolve(d);};
+    s.onerror=()=>{cleanup();reject(new Error('Network error'));};
+    s.src=SUMM_API+'?'+new URLSearchParams(p);
+    (document.head||document.body).appendChild(s);
+  });
+}
+
+// Load summative on page open
+async function loadSummative() {
+  try {
+    const res = await summApiGet({ action:'getSummative' });
+    if (res.exists && res.data) {
+      summData = res.data;
+      renderBanner(res.data);
+    }
+  } catch(e) { /* fail silently */ }
+}
+loadSummative();
+
+function renderBanner(d) {
+  if (!d || !d.date || !d.title) return;
+  const banner = document.getElementById('summBanner');
+  const textEl  = document.getElementById('summBannerText');
+  const cdEl    = document.getElementById('summCountdown');
+  banner.classList.add('visible');
+
+  // Format classes
+  const clsLabel = d.classes && d.classes.length > 0
+    ? d.classes.map(c => c.replace('XE','X E-')).join(', ')
+    : 'All classes';
+
+  // Study info
+  const studyPart = d.study ? ` · Study: <strong>${d.study}</strong>` : '';
+  textEl.innerHTML = `<strong>${d.title}</strong> · ${clsLabel} · ${formatDate(d.date)}${studyPart}`;
+
+  // Countdown
+  startCountdown(d.date, cdEl);
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+}
+
+function startCountdown(dateStr, el) {
+  if (countdownInterval) clearInterval(countdownInterval);
+  function update() {
+    const now    = new Date();
+    const target = new Date(dateStr + 'T00:00:00');
+    const diff   = target - now;
+    if (diff <= 0) { el.textContent = '🔴 Exam Day!'; el.classList.add('urgent'); return; }
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000) / 60000);
+    if (days > 0) el.textContent = `⏳ ${days}d ${hours}h left`;
+    else if (hours > 0) { el.textContent = `⚠️ ${hours}h ${mins}m left`; el.classList.add('urgent'); }
+    else { el.textContent = `🚨 ${mins}m left`; el.classList.add('urgent'); }
+  }
+  update();
+  countdownInterval = setInterval(update, 60000);
+}
+
+// ── TEACHER MODAL ─────────────────────────────────────────────
+function openSummModal() {
+  if (!summTeacher) return;
+  // Pre-fill if data exists
+  if (summData) {
+    document.getElementById('summDate').value  = summData.date || '';
+    document.getElementById('summTitle').value = summData.title || '';
+    document.getElementById('summStudy').value = summData.study || '';
+    document.querySelectorAll('.summ-cls-btn').forEach(b => {
+      b.classList.toggle('selected', (summData.classes||[]).includes(b.dataset.cls));
+    });
+  }
+  document.getElementById('summOverlay').classList.remove('hidden');
+}
+function closeSummModal() { document.getElementById('summOverlay').classList.add('hidden'); }
+function toggleCls(btn) { btn.classList.toggle('selected'); }
+
+async function saveSumm() {
+  const date  = document.getElementById('summDate').value;
+  const title = document.getElementById('summTitle').value.trim();
+  const study = document.getElementById('summStudy').value.trim();
+  const classes = [...document.querySelectorAll('.summ-cls-btn.selected')].map(b => b.dataset.cls);
+  if (!date)  { showSummToast('Please pick an exam date', 'err'); return; }
+  if (!title) { showSummToast('Please enter a title/topic', 'err'); return; }
+  const data = { date, title, study, classes };
+  try {
+    const res = await summApiGet({ action:'setSummative', username:summUser, password:summPass, data: JSON.stringify(data) });
+    if (res.success) {
+      summData = data; renderBanner(data); closeSummModal();
+      showSummToast('✅ Summative published!', 'ok');
+    } else { showSummToast('Error: ' + res.error, 'err'); }
+  } catch(e) { showSummToast('Failed to save', 'err'); }
+}
+
+async function clearSumm() {
+  if (!confirm('Remove the summative banner?')) return;
+  try {
+    const res = await summApiGet({ action:'clearSummative', username:summUser, password:summPass });
+    if (res.success) {
+      summData = null;
+      document.getElementById('summBanner').classList.remove('visible');
+      closeSummModal();
+      showSummToast('Banner cleared', 'ok');
+    } else { showSummToast('Error: ' + res.error, 'err'); }
+  } catch(e) { showSummToast('Failed to clear', 'err'); }
+}
+
+function showSummToast(msg, type) {
+  const t = document.getElementById('summToast');
+  t.textContent = msg; t.className = 'summ-toast ' + (type||'');
+  setTimeout(()=>t.classList.add('show'), 10);
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
 </script>
 
 </body>
