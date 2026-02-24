@@ -551,6 +551,20 @@
     .summ-edit-btn.visible { display: block; }
     .summ-edit-btn:hover { background: rgba(255,255,255,0.25); }
 
+
+    /* Floating summative set button for teacher */
+    .summ-float-btn {
+      position: fixed; bottom: 24px; right: 20px; z-index: 300;
+      background: linear-gradient(135deg, #DC2626, #991B1B);
+      color: #fff; border: none; border-radius: 999px;
+      padding: 12px 20px; font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.85rem; font-weight: 700; cursor: pointer;
+      display: none; align-items: center; gap: 8px;
+      box-shadow: 0 4px 20px rgba(220,38,38,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .summ-float-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(220,38,38,0.5); }
+
     /* Teacher panel modal */
     .summ-overlay { position: fixed; inset: 0; background: rgba(15,10,40,0.7); backdrop-filter: blur(6px);
       z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -592,6 +606,22 @@
   </style>
 </head>
 <body>
+
+<!-- HOMEPAGE TEACHER LOGIN MODAL -->
+<div id="headerLoginModal" style="position:fixed;inset:0;background:rgba(30,16,64,0.65);backdrop-filter:blur(8px);z-index:600;display:none;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:24px;padding:36px 28px;width:100%;max-width:380px;text-align:center;">
+    <div style="font-size:2rem;margin-bottom:12px;">🔐</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;margin-bottom:6px;color:#1E1040;">Teacher Login</div>
+    <div style="font-size:0.85rem;color:#6B5B95;margin-bottom:24px;">Login once to access all teacher features across the site.</div>
+    <input type="text" id="hlUser" placeholder="Username" style="width:100%;padding:13px 16px;border:1.5px solid #E5DEFF;border-radius:12px;font-family:'IBM Plex Sans',sans-serif;font-size:0.95rem;outline:none;margin-bottom:12px;background:#F9F7FF;color:#1E1040;"/>
+    <input type="password" id="hlPass" placeholder="Password" onkeydown="if(event.key==='Enter')doHeaderLogin()" style="width:100%;padding:13px 16px;border:1.5px solid #E5DEFF;border-radius:12px;font-family:'IBM Plex Sans',sans-serif;font-size:0.95rem;outline:none;margin-bottom:8px;background:#F9F7FF;color:#1E1040;"/>
+    <div id="hlError" style="font-size:0.82rem;color:#DC2626;margin-bottom:12px;display:none;">Incorrect username or password.</div>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button onclick="closeHeaderLogin()" style="flex:1;padding:13px;background:#F9F7FF;border:1.5px solid #E5DEFF;border-radius:12px;font-family:'IBM Plex Sans',sans-serif;cursor:pointer;color:#6B5B95;font-size:0.95rem;">Cancel</button>
+      <button onclick="doHeaderLogin()" style="flex:2;padding:13px;background:linear-gradient(135deg,#7C3AED,#5B21B6);color:#fff;font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:0.95rem;border:none;border-radius:12px;cursor:pointer;">Login</button>
+    </div>
+  </div>
+</div>
 
 <!-- ── SUMMATIVE STICKY BANNER ── -->
 <div class="summ-banner" id="summBanner">
@@ -645,6 +675,9 @@
 </div>
 
 <div class="summ-toast" id="summToast"></div>
+<button class="summ-float-btn" id="summFloatBtn" onclick="openSummModal()">
+  📝 Set Summative
+</button>
 
 <!-- ── HEADER ── -->
 <header>
@@ -663,6 +696,12 @@
   <div class="header-tags">
     <span class="tag">📖 English Class</span>
     <span class="tag">🏫 SMAVISKA</span>
+  </div>
+  <div id="headerLoginArea" style="margin-top:14px;position:relative;z-index:2;">
+    <button id="headerLoginBtn" onclick="openHeaderLogin()" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.35);color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:0.82rem;font-weight:700;padding:8px 20px;border-radius:999px;cursor:pointer;">🔑 Teacher Login</button>
+    <div id="headerTeacherBadge" style="display:none;background:var(--accent);color:#fff;font-size:0.82rem;font-weight:700;padding:8px 18px;border-radius:999px;display:none;align-items:center;gap:8px;">
+      🎓 Logged in as Teacher <span style="cursor:pointer;opacity:0.8" onclick="headerLogout()">✕</span>
+    </div>
   </div>
 </header>
 
@@ -1127,10 +1166,15 @@ let countdownInterval = null;
 summUser = sessionStorage.getItem('eq_tu') || '';
 summPass = sessionStorage.getItem('eq_tp') || '';
 if (summUser && summPass) {
-  // Verify silently
   summApiGet({ action:'checkLogin', username:summUser, password:summPass })
-    .then(d => { if(d.ok) { summTeacher=true; document.getElementById('summEditBtn').classList.add('visible'); } })
-    .catch(()=>{});
+    .then(d => {
+      if (d.ok) {
+        summTeacher = true;
+        document.getElementById('summEditBtn').classList.add('visible');
+        // Also show floating set button in case banner is hidden
+        document.getElementById('summFloatBtn').style.display = 'flex';
+      }
+    }).catch(()=>{});
 }
 
 async function summApiGet(params) {
@@ -1167,6 +1211,7 @@ function renderBanner(d) {
   const textEl  = document.getElementById('summBannerText');
   const cdEl    = document.getElementById('summCountdown');
   banner.classList.add('visible');
+  document.getElementById('summFloatBtn').style.display = 'none'; // banner visible, float not needed
 
   // Format classes
   const clsLabel = d.classes && d.classes.length > 0
@@ -1245,6 +1290,7 @@ async function clearSumm() {
     if (res.success) {
       summData = null;
       document.getElementById('summBanner').classList.remove('visible');
+      if (summTeacher) document.getElementById('summFloatBtn').style.display = 'flex';
       closeSummModal();
       showSummToast('Banner cleared', 'ok');
     } else { showSummToast('Error: ' + res.error, 'err'); }
@@ -1256,6 +1302,73 @@ function showSummToast(msg, type) {
   t.textContent = msg; t.className = 'summ-toast ' + (type||'');
   setTimeout(()=>t.classList.add('show'), 10);
   setTimeout(()=>t.classList.remove('show'), 3000);
+}
+</script>
+
+
+<script>
+// ── HOMEPAGE TEACHER LOGIN ─────────────────────────────────────
+(function() {
+  const u = sessionStorage.getItem('eq_tu') || '';
+  const p = sessionStorage.getItem('eq_tp') || '';
+  if (u && p) {
+    // Already logged in — verify and show badge
+    fetch('https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec?action=checkLogin&username=' + encodeURIComponent(u) + '&password=' + encodeURIComponent(p))
+      .then(r => r.json()).then(d => { if (d.ok) showTeacherBadge(); }).catch(()=>{});
+  }
+})();
+
+function openHeaderLogin() {
+  document.getElementById('headerLoginModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('hlUser').focus(), 100);
+}
+function closeHeaderLogin() {
+  document.getElementById('headerLoginModal').style.display = 'none';
+  document.getElementById('hlError').style.display = 'none';
+}
+
+async function doHeaderLogin() {
+  const u = document.getElementById('hlUser').value.trim();
+  const p = document.getElementById('hlPass').value.trim();
+  if (!u || !p) return;
+  try {
+    const res = await fetch('https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec?action=checkLogin&username=' + encodeURIComponent(u) + '&password=' + encodeURIComponent(p));
+    const data = await res.json();
+    if (data.ok) {
+      sessionStorage.setItem('eq_tu', u);
+      sessionStorage.setItem('eq_tp', p);
+      closeHeaderLogin();
+      showTeacherBadge();
+      // Trigger summative float button if exists
+      if (typeof summTeacher !== 'undefined') {
+        summTeacher = true; summUser = u; summPass = p;
+        document.getElementById('summFloatBtn').style.display = 'flex';
+        document.getElementById('summEditBtn').classList.add('visible');
+      }
+      showSummToast('✅ Logged in as Teacher!', 'ok');
+    } else {
+      document.getElementById('hlError').style.display = 'block';
+    }
+  } catch(e) { document.getElementById('hlError').textContent = 'Connection error.'; document.getElementById('hlError').style.display = 'block'; }
+}
+
+function showTeacherBadge() {
+  document.getElementById('headerLoginBtn').style.display = 'none';
+  const badge = document.getElementById('headerTeacherBadge');
+  badge.style.display = 'inline-flex';
+}
+
+function headerLogout() {
+  sessionStorage.removeItem('eq_tu');
+  sessionStorage.removeItem('eq_tp');
+  document.getElementById('headerLoginBtn').style.display = 'inline-block';
+  document.getElementById('headerTeacherBadge').style.display = 'none';
+  // Hide summative controls
+  if (typeof summTeacher !== 'undefined') {
+    summTeacher = false;
+    document.getElementById('summFloatBtn').style.display = 'none';
+    document.getElementById('summEditBtn').classList.remove('visible');
+  }
 }
 </script>
 
