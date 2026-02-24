@@ -429,6 +429,98 @@
     }
 
 
+
+    /* ── STRIKE INFO MODAL ── */
+    .strike-info-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:400; display:flex; align-items:flex-end; justify-content:center; padding:0; }
+    .strike-info-overlay.hidden { display:none; }
+    .strike-info-sheet { background:#fff; border-radius:28px 28px 0 0; width:100%; max-width:540px; max-height:88vh; overflow-y:auto; padding:0 0 40px; animation:sheetUp 0.35s cubic-bezier(0.34,1.2,0.64,1); }
+    @keyframes sheetUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+    .si-handle { width:40px; height:4px; background:#E5DEFF; border-radius:999px; margin:14px auto 0; }
+    .si-head { padding:20px 24px 16px; border-bottom:1.5px solid #FEE2E2; background:linear-gradient(135deg,#DC2626,#991B1B); border-radius:28px 28px 0 0; }
+    .si-head-title { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:800; color:#fff; margin-bottom:4px; }
+    .si-head-sub { font-size:0.8rem; color:rgba(255,255,255,0.7); }
+    .si-close { float:right; background:rgba(255,255,255,0.2); border:none; color:#fff; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:0.9rem; margin-top:-2px; }
+
+    .si-body { padding:20px 24px 0; }
+
+    /* Consequences */
+    .si-cons-title { font-size:0.7rem; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.1em; font-family:'IBM Plex Mono',monospace; margin-bottom:12px; }
+    .si-con-row { display:flex; gap:12px; align-items:flex-start; padding:12px 14px; border-radius:14px; margin-bottom:8px; }
+    .si-con-row.one   { background:#FEF3C7; border:1.5px solid #FCD34D; }
+    .si-con-row.three { background:#FEE2E2; border:1.5px solid #FCA5A5; }
+    .si-con-icon { font-size:1.3rem; flex-shrink:0; }
+    .si-con-label { font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; font-family:'IBM Plex Mono',monospace; margin-bottom:3px; }
+    .si-con-row.one   .si-con-label { color:#92400E; }
+    .si-con-row.three .si-con-label { color:#991B1B; }
+    .si-con-text { font-size:0.88rem; font-weight:600; color:var(--text-dark); line-height:1.4; }
+    .si-con-sub  { font-size:0.75rem; color:var(--text-muted); margin-top:3px; }
+
+    /* Divider */
+    .si-divider { display:flex; align-items:center; gap:10px; margin:18px 0; }
+    .si-divider-line { flex:1; height:1px; background:var(--border); }
+    .si-divider-label { font-size:0.7rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; white-space:nowrap; }
+
+    /* Clearance steps */
+    .si-step { display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
+    .si-step:last-child { border-bottom:none; }
+    .si-step-num { width:26px; height:26px; border-radius:50%; background:var(--purple-soft); color:var(--purple); font-size:0.75rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'IBM Plex Mono',monospace; }
+    .si-step-text { font-size:0.88rem; color:var(--text-dark); line-height:1.5; padding-top:3px; }
+    .si-step-text strong { color:var(--purple); }
+    .si-step-text span { display:block; font-size:0.78rem; color:var(--text-muted); margin-top:3px; }
+
+    /* Full guide link */
+    .si-full-link { display:block; text-align:center; margin-top:18px; padding:13px; background:var(--purple-soft); border:1.5px solid var(--purple-mid); border-radius:14px; font-size:0.88rem; font-weight:700; color:var(--purple); text-decoration:none; }
+    .si-full-link:hover { background:var(--purple-mid); }
+
+
+    /* ── STRIKE INFO MODAL ── */
+    .si-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:400; display:flex; align-items:flex-end; justify-content:center; }
+    .si-overlay.hidden { display:none; }
+    .si-sheet { background:#fff; border-radius:28px 28px 0 0; width:100%; max-width:540px; max-height:90vh; overflow-y:auto; padding-bottom:32px; animation:siUp 0.35s cubic-bezier(0.34,1.2,0.64,1); }
+    @keyframes siUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+    .si-handle { width:40px; height:4px; background:#E5DEFF; border-radius:999px; margin:12px auto 0; }
+    .si-head { padding:20px 24px 16px; border-bottom:1.5px solid #FEE2E2; display:flex; align-items:center; gap:14px; }
+    .si-head-icon { font-size:1.8rem; }
+    .si-head-title { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:800; color:#1E1040; }
+    .si-head-sub { font-size:0.78rem; color:#6B5B95; margin-top:2px; }
+    .si-close { margin-left:auto; width:32px; height:32px; border-radius:50%; background:#F9F7FF; border:1.5px solid #E5DEFF; color:#6B5B95; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+    /* Consequence cards */
+    .si-consequences { padding:18px 20px; display:flex; flex-direction:column; gap:10px; border-bottom:1.5px solid #E5DEFF; }
+    .si-cons-title { font-size:0.7rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-bottom:4px; }
+    .si-cons-card { border-radius:14px; padding:14px 16px; display:flex; gap:12px; align-items:flex-start; border:1.5px solid; }
+    .si-cons-card.c1 { background:#FEF3C7; border-color:#FCD34D; }
+    .si-cons-card.c2 { background:#FEE2E2; border-color:#FCA5A5; }
+    .si-cons-card.c3 { background:#7C3AED; border-color:#5B21B6; }
+    .si-cons-icon { font-size:1.4rem; flex-shrink:0; }
+    .si-cons-strikes { font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-bottom:3px; }
+    .c1 .si-cons-strikes { color:#92400E; }
+    .c2 .si-cons-strikes { color:#991B1B; }
+    .c3 .si-cons-strikes { color:rgba(255,255,255,0.7); }
+    .si-cons-text { font-size:0.88rem; font-weight:700; }
+    .c1 .si-cons-text { color:#92400E; }
+    .c2 .si-cons-text { color:#991B1B; }
+    .c3 .si-cons-text { color:#fff; }
+    .si-cons-sub { font-size:0.75rem; margin-top:2px; }
+    .c1 .si-cons-sub { color:#92400E; opacity:0.75; }
+    .c2 .si-cons-sub { color:#991B1B; opacity:0.75; }
+    .c3 .si-cons-sub { color:rgba(255,255,255,0.65); }
+
+    /* Clearance steps */
+    .si-clear { padding:18px 20px; }
+    .si-clear-title { font-size:0.7rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-bottom:14px; }
+    .si-step { display:flex; gap:12px; align-items:flex-start; margin-bottom:14px; }
+    .si-step:last-child { margin-bottom:0; }
+    .si-step-num { width:28px; height:28px; border-radius:50%; background:#EDE9FE; color:#5B21B6; font-size:0.78rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'IBM Plex Mono',monospace; }
+    .si-step-text { font-size:0.88rem; color:#1E1040; line-height:1.5; padding-top:4px; }
+    .si-step-text strong { color:#7C3AED; }
+    .si-step-text span { display:block; font-size:0.78rem; color:#6B5B95; margin-top:3px; }
+
+    /* Chapter badge */
+    .si-chapter { display:inline-flex; align-items:center; gap:8px; background:#EDE9FE; border:1.5px solid #C4B5FD; border-radius:10px; padding:6px 12px; margin-top:6px; }
+    .si-chapter-label { font-size:0.65rem; font-weight:700; color:#A78BFA; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; }
+    .si-chapter-val { font-size:0.82rem; font-weight:700; color:#5B21B6; }
+
     /* ── STRIKE LIST ── */
     .strike-list-section { margin-bottom: 40px; }
     .strike-list-wrap { background: var(--white); border: 1.5px solid #FCA5A5; border-radius: 20px; overflow: hidden; }
@@ -781,7 +873,7 @@
         <div class="hof-loading"><div class="hof-spinner" style="border-top-color:#DC2626"></div><br/>Loading...</div>
       </div>
       <div class="strike-list-footer">
-        <a href="strikes.html">📝 How to clear your strike →</a>
+        <a href="javascript:void(0)" onclick="openStrikeInfo()">📝 How to clear your strike →</a>
       </div>
     </div>
   </div>
@@ -1502,7 +1594,174 @@ async function loadStrikeBoard() {
 }
 
 loadStrikeBoard();
+
+function openStrikeInfo() {
+  document.getElementById('strikeInfoOverlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeStrikeInfo(e) {
+  if (e && e.target !== document.getElementById('strikeInfoOverlay')) return;
+  document.getElementById('strikeInfoOverlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { document.getElementById('strikeInfoOverlay').classList.add('hidden'); document.body.style.overflow = ''; }
+});
 </script>
+
+
+<!-- STRIKE INFO MODAL -->
+<div class="strike-info-overlay hidden" id="strikeInfoOverlay" onclick="closeStrikeInfo(event)">
+  <div class="strike-info-sheet" id="strikeInfoSheet">
+    <div class="si-handle"></div>
+    <div class="si-head">
+      <button class="si-close" onclick="closeStrikeInfo()">✕</button>
+      <div class="si-head-title">⚠️ Strike Information</div>
+      <div class="si-head-sub">Consequences & how to clear your strike</div>
+    </div>
+    <div class="si-body">
+
+      <div class="si-cons-title">🚨 Consequences</div>
+      <div class="si-con-row one">
+        <div class="si-con-icon">📝</div>
+        <div>
+          <div class="si-con-label">1 Strike or more</div>
+          <div class="si-con-text">You cannot join the Summative Test</div>
+          <div class="si-con-sub">Your strike must be cleared before the exam date.</div>
+        </div>
+      </div>
+      <div class="si-con-row three">
+        <div class="si-con-icon">🚫</div>
+        <div>
+          <div class="si-con-label">3 Strikes or more</div>
+          <div class="si-con-text">You cannot join the class</div>
+          <div class="si-con-sub">You will be asked to leave until your strikes are resolved.</div>
+        </div>
+      </div>
+
+      <div class="si-divider">
+        <div class="si-divider-line"></div>
+        <div class="si-divider-label">How to clear your strike</div>
+        <div class="si-divider-line"></div>
+      </div>
+
+      <div class="si-step">
+        <div class="si-step-num">1</div>
+        <div class="si-step-text">
+          Write a <strong>text based on the current chapter</strong>
+          <span>Chapter 4 → Analytical Exposition · Chapter 5 → Narrative Text</span>
+        </div>
+      </div>
+      <div class="si-step">
+        <div class="si-step-num">2</div>
+        <div class="si-step-text">
+          Minimum <strong>3 paragraphs</strong>, each with at least <strong>5 sentences</strong>
+          <span>All text structure parts must be included.</span>
+        </div>
+      </div>
+      <div class="si-step">
+        <div class="si-step-num">3</div>
+        <div class="si-step-text">
+          <strong>Submit on paper</strong> directly to your teacher
+          <span>Handwritten or printed — your teacher will review it in class.</span>
+        </div>
+      </div>
+      <div class="si-step">
+        <div class="si-step-num">4</div>
+        <div class="si-step-text">
+          Your teacher will <strong>clear your strike</strong> once it's approved
+          <span>Check back here after submission to see it removed from the board.</span>
+        </div>
+      </div>
+
+      <a href="strikes.html" class="si-full-link">📖 See full text structure guide →</a>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- STRIKE INFO MODAL -->
+<div class="si-overlay hidden" id="siOverlay" onclick="closeStrikeInfo(event)">
+  <div class="si-sheet" id="siSheet">
+    <div class="si-handle"></div>
+    <div class="si-head">
+      <div class="si-head-icon">⚠️</div>
+      <div>
+        <div class="si-head-title">Strikes — What You Need to Know</div>
+        <div class="si-head-sub">Consequences & how to clear your record</div>
+      </div>
+      <button class="si-close" onclick="closeStrikeInfo()">✕</button>
+    </div>
+
+    <!-- CONSEQUENCES -->
+    <div class="si-consequences">
+      <div class="si-cons-title">📋 Consequences</div>
+      <div class="si-cons-card c1">
+        <div class="si-cons-icon">📝</div>
+        <div>
+          <div class="si-cons-strikes">1 Strike</div>
+          <div class="si-cons-text">Cannot join the Summative Test</div>
+          <div class="si-cons-sub">You will not be allowed to take the summative exam until your strike is cleared.</div>
+        </div>
+      </div>
+      <div class="si-cons-card c2">
+        <div class="si-cons-icon">🚨</div>
+        <div>
+          <div class="si-cons-strikes">2 Strikes</div>
+          <div class="si-cons-text">Final warning — clear both strikes immediately</div>
+          <div class="si-cons-sub">Both strikes must be cleared before you can join any assessment.</div>
+        </div>
+      </div>
+      <div class="si-cons-card c3">
+        <div class="si-cons-icon">❌</div>
+        <div>
+          <div class="si-cons-strikes">3 Strikes</div>
+          <div class="si-cons-text">Cannot join the class</div>
+          <div class="si-cons-sub">You will not be permitted to attend English class until all strikes are cleared with your teacher.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW TO CLEAR -->
+    <div class="si-clear">
+      <div class="si-clear-title">✍️ How to Clear Your Strike</div>
+      <div class="si-step">
+        <div class="si-step-num">1</div>
+        <div class="si-step-text">
+          Write a <strong>clearance text</strong> based on the current chapter
+          <div class="si-chapter">
+            <span class="si-chapter-label">Current Chapter</span>
+            <span class="si-chapter-val">Chapter 4 · Analytical Exposition</span>
+          </div>
+        </div>
+      </div>
+      <div class="si-step">
+        <div class="si-step-num">2</div>
+        <div class="si-step-text">
+          Your writing must meet these requirements:
+          <span>✅ Minimum <strong>3 paragraphs</strong></span>
+          <span>✅ Minimum <strong>5 sentences</strong> per paragraph</span>
+          <span>✅ Include <strong>all text structure parts</strong> (Thesis → Arguments → Reiteration)</span>
+        </div>
+      </div>
+      <div class="si-step">
+        <div class="si-step-num">3</div>
+        <div class="si-step-text">
+          <strong>Submit on paper</strong> directly to your teacher
+          <span>Hand it in during class or find your teacher before/after class.</span>
+        </div>
+      </div>
+      <div class="si-step">
+        <div class="si-step-num">4</div>
+        <div class="si-step-text">
+          Your teacher will review and <strong>clear the strike</strong> if it meets all requirements
+          <span>Each strike requires one separate clearance text submission.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
