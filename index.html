@@ -430,6 +430,50 @@
 
 
 
+
+    /* ── POPUPS (HOF + STRIKE) ── */
+    .info-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:400; display:flex; align-items:flex-end; justify-content:center; }
+    .info-overlay.hidden { display:none; }
+    .info-sheet { background:#fff; border-radius:28px 28px 0 0; width:100%; max-width:480px; max-height:88vh; overflow-y:auto; animation:infoUp 0.35s cubic-bezier(0.34,1.2,0.64,1); padding-bottom:28px; }
+    @keyframes infoUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+    .info-handle { width:40px; height:4px; background:#E5DEFF; border-radius:999px; margin:12px auto 0; }
+    .info-head { padding:18px 20px 14px; border-bottom:1.5px solid #E5DEFF; display:flex; align-items:center; gap:12px; }
+    .info-avatar { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:800; font-size:1.2rem; color:#fff; flex-shrink:0; }
+    .info-head-name { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:#1E1040; }
+    .info-head-sub { font-size:0.75rem; color:#6B5B95; margin-top:2px; }
+    .info-close { margin-left:auto; width:30px; height:30px; border-radius:50%; background:#F9F7FF; border:1.5px solid #E5DEFF; color:#6B5B95; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .info-body { padding:16px 20px; }
+
+    /* HOF stats */
+    .hof-popup-total { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .hof-popup-total-label { font-size:0.72rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; }
+    .hof-popup-total-val { font-size:0.95rem; font-weight:700; color:#7C3AED; font-family:'IBM Plex Mono',monospace; }
+    .hof-popup-bar-wrap { background:#E5DEFF; border-radius:999px; height:8px; overflow:hidden; margin-bottom:18px; }
+    .hof-popup-bar { height:8px; border-radius:999px; background:linear-gradient(90deg,#7C3AED,#A78BFA); transition:width 0.7s ease; }
+    .hof-stat-cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .hof-stat-card { background:#F9F7FF; border:1.5px solid #E5DEFF; border-radius:12px; padding:10px 12px; }
+    .hof-stat-card-top { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+    .hof-stat-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .hof-stat-cat { font-size:0.65rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.04em; font-family:'IBM Plex Mono',monospace; }
+    .hof-stat-nums { display:flex; justify-content:space-between; align-items:flex-end; }
+    .hof-stat-times { font-size:1.1rem; font-weight:800; color:#1E1040; font-family:'Playfair Display',serif; line-height:1; }
+    .hof-stat-times small { font-size:0.6rem; color:#6B5B95; font-weight:500; font-family:'IBM Plex Sans',sans-serif; display:block; margin-top:1px; }
+    .hof-stat-pts { font-size:0.8rem; font-weight:700; font-family:'IBM Plex Mono',monospace; }
+    .hof-popup-indicator { margin-top:14px; padding:10px 14px; border-radius:12px; font-size:0.82rem; font-weight:700; text-align:center; }
+
+    /* Strike popup */
+    .strike-popup-dots { display:flex; gap:10px; margin-bottom:14px; }
+    .strike-popup-dot { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; border:2px solid; }
+    .strike-popup-dot.hit  { background:#FEE2E2; border-color:#FCA5A5; }
+    .strike-popup-dot.miss { background:#F9F7FF; border-color:#E5DEFF; }
+    .strike-popup-detail { background:#F9F7FF; border:1.5px solid #E5DEFF; border-radius:12px; padding:12px 14px; }
+    .strike-popup-row { display:flex; gap:10px; margin-bottom:8px; align-items:flex-start; }
+    .strike-popup-row:last-child { margin-bottom:0; }
+    .strike-popup-label { font-size:0.7rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.06em; font-family:'IBM Plex Mono',monospace; min-width:55px; flex-shrink:0; padding-top:1px; }
+    .strike-popup-val { font-size:0.88rem; color:#1E1040; font-weight:500; }
+    .hof-row, .strike-list-row { cursor:pointer; }
+    .hof-row:hover .hof-name, .strike-list-row:hover .sl-name { color:var(--purple); }
+
     /* ── STRIKE INFO MODAL ── */
     .strike-info-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:400; display:flex; align-items:flex-end; justify-content:center; padding:0; }
     .strike-info-overlay.hidden { display:none; }
@@ -472,6 +516,50 @@
     .si-full-link { display:block; text-align:center; margin-top:18px; padding:13px; background:var(--purple-soft); border:1.5px solid var(--purple-mid); border-radius:14px; font-size:0.88rem; font-weight:700; color:var(--purple); text-decoration:none; }
     .si-full-link:hover { background:var(--purple-mid); }
 
+
+
+    /* ── POPUPS (HOF + STRIKE) ── */
+    .info-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:400; display:flex; align-items:flex-end; justify-content:center; }
+    .info-overlay.hidden { display:none; }
+    .info-sheet { background:#fff; border-radius:28px 28px 0 0; width:100%; max-width:480px; max-height:88vh; overflow-y:auto; animation:infoUp 0.35s cubic-bezier(0.34,1.2,0.64,1); padding-bottom:28px; }
+    @keyframes infoUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+    .info-handle { width:40px; height:4px; background:#E5DEFF; border-radius:999px; margin:12px auto 0; }
+    .info-head { padding:18px 20px 14px; border-bottom:1.5px solid #E5DEFF; display:flex; align-items:center; gap:12px; }
+    .info-avatar { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:800; font-size:1.2rem; color:#fff; flex-shrink:0; }
+    .info-head-name { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:#1E1040; }
+    .info-head-sub { font-size:0.75rem; color:#6B5B95; margin-top:2px; }
+    .info-close { margin-left:auto; width:30px; height:30px; border-radius:50%; background:#F9F7FF; border:1.5px solid #E5DEFF; color:#6B5B95; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .info-body { padding:16px 20px; }
+
+    /* HOF stats */
+    .hof-popup-total { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .hof-popup-total-label { font-size:0.72rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; }
+    .hof-popup-total-val { font-size:0.95rem; font-weight:700; color:#7C3AED; font-family:'IBM Plex Mono',monospace; }
+    .hof-popup-bar-wrap { background:#E5DEFF; border-radius:999px; height:8px; overflow:hidden; margin-bottom:18px; }
+    .hof-popup-bar { height:8px; border-radius:999px; background:linear-gradient(90deg,#7C3AED,#A78BFA); transition:width 0.7s ease; }
+    .hof-stat-cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .hof-stat-card { background:#F9F7FF; border:1.5px solid #E5DEFF; border-radius:12px; padding:10px 12px; }
+    .hof-stat-card-top { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+    .hof-stat-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .hof-stat-cat { font-size:0.65rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.04em; font-family:'IBM Plex Mono',monospace; }
+    .hof-stat-nums { display:flex; justify-content:space-between; align-items:flex-end; }
+    .hof-stat-times { font-size:1.1rem; font-weight:800; color:#1E1040; font-family:'Playfair Display',serif; line-height:1; }
+    .hof-stat-times small { font-size:0.6rem; color:#6B5B95; font-weight:500; font-family:'IBM Plex Sans',sans-serif; display:block; margin-top:1px; }
+    .hof-stat-pts { font-size:0.8rem; font-weight:700; font-family:'IBM Plex Mono',monospace; }
+    .hof-popup-indicator { margin-top:14px; padding:10px 14px; border-radius:12px; font-size:0.82rem; font-weight:700; text-align:center; }
+
+    /* Strike popup */
+    .strike-popup-dots { display:flex; gap:10px; margin-bottom:14px; }
+    .strike-popup-dot { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; border:2px solid; }
+    .strike-popup-dot.hit  { background:#FEE2E2; border-color:#FCA5A5; }
+    .strike-popup-dot.miss { background:#F9F7FF; border-color:#E5DEFF; }
+    .strike-popup-detail { background:#F9F7FF; border:1.5px solid #E5DEFF; border-radius:12px; padding:12px 14px; }
+    .strike-popup-row { display:flex; gap:10px; margin-bottom:8px; align-items:flex-start; }
+    .strike-popup-row:last-child { margin-bottom:0; }
+    .strike-popup-label { font-size:0.7rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.06em; font-family:'IBM Plex Mono',monospace; min-width:55px; flex-shrink:0; padding-top:1px; }
+    .strike-popup-val { font-size:0.88rem; color:#1E1040; font-weight:500; }
+    .hof-row, .strike-list-row { cursor:pointer; }
+    .hof-row:hover .hof-name, .strike-list-row:hover .sl-name { color:var(--purple); }
 
     /* ── STRIKE INFO MODAL ── */
     .si-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:400; display:flex; align-items:flex-end; justify-content:center; }
@@ -1080,7 +1168,8 @@ async function loadHallOfFame() {
       const initial  = (s.nickname || s.name)[0].toUpperCase();
       const dispName = s.nickname || s.name.split(' ')[0];
       const clsLabel = s.cls.replace('XE','X E-');
-      return `<div class="hof-row">
+      const sd = encodeURIComponent(JSON.stringify(s));
+      return `<div class="hof-row" onclick="openHofPopup('${sd}')" style="cursor:pointer;">
         <div class="hof-rank ${rankClasses[i]}">${rankIcons[i]}</div>
         <div class="hof-avatar" style="background:${avatarBg}">${initial}</div>
         <div class="hof-info">
@@ -1576,7 +1665,8 @@ async function loadStrikeBoard() {
       const dots = [1,2,3,4].map(n =>
         `<div class="sl-dot ${n <= s.total ? 'hit' : 'miss'}">${n <= s.total ? '⚠️' : ''}</div>`
       ).join('');
-      return `<div class="strike-list-row">
+      const sd2 = encodeURIComponent(JSON.stringify(s));
+      return `<div class="strike-list-row" onclick="openStrikePopup('${sd2}')" style="cursor:pointer;">
         <div class="sl-num">${i+1}</div>
         <div class="sl-avatar">${initial}</div>
         <div class="sl-info">
@@ -1609,6 +1699,39 @@ document.addEventListener('keydown', e => {
 });
 </script>
 
+
+
+<!-- HOF STATS POPUP -->
+<div class="info-overlay hidden" id="hofPopupOverlay" onclick="closeHofPopup(event)">
+  <div class="info-sheet" id="hofPopupSheet">
+    <div class="info-handle"></div>
+    <div class="info-head">
+      <div class="info-avatar" id="hofPopupAvatar"></div>
+      <div>
+        <div class="info-head-name" id="hofPopupName">—</div>
+        <div class="info-head-sub" id="hofPopupSub">—</div>
+      </div>
+      <button class="info-close" onclick="closeHofPopup()">✕</button>
+    </div>
+    <div class="info-body" id="hofPopupBody"></div>
+  </div>
+</div>
+
+<!-- STRIKE DETAIL POPUP -->
+<div class="info-overlay hidden" id="strikePopupOverlay" onclick="closeStrikePopup(event)">
+  <div class="info-sheet" id="strikePopupSheet">
+    <div class="info-handle"></div>
+    <div class="info-head">
+      <div class="info-avatar" id="strikePopupAvatar" style="background:#DC2626;"></div>
+      <div>
+        <div class="info-head-name" id="strikePopupName">—</div>
+        <div class="info-head-sub" id="strikePopupSub">—</div>
+      </div>
+      <button class="info-close" onclick="closeStrikePopup()">✕</button>
+    </div>
+    <div class="info-body" id="strikePopupBody"></div>
+  </div>
+</div>
 
 <!-- STRIKE INFO MODAL -->
 <div class="strike-info-overlay hidden" id="strikeInfoOverlay" onclick="closeStrikeInfo(event)">
@@ -1680,6 +1803,39 @@ document.addEventListener('keydown', e => {
   </div>
 </div>
 
+
+
+<!-- HOF STATS POPUP -->
+<div class="info-overlay hidden" id="hofPopupOverlay" onclick="closeHofPopup(event)">
+  <div class="info-sheet" id="hofPopupSheet">
+    <div class="info-handle"></div>
+    <div class="info-head">
+      <div class="info-avatar" id="hofPopupAvatar"></div>
+      <div>
+        <div class="info-head-name" id="hofPopupName">—</div>
+        <div class="info-head-sub" id="hofPopupSub">—</div>
+      </div>
+      <button class="info-close" onclick="closeHofPopup()">✕</button>
+    </div>
+    <div class="info-body" id="hofPopupBody"></div>
+  </div>
+</div>
+
+<!-- STRIKE DETAIL POPUP -->
+<div class="info-overlay hidden" id="strikePopupOverlay" onclick="closeStrikePopup(event)">
+  <div class="info-sheet" id="strikePopupSheet">
+    <div class="info-handle"></div>
+    <div class="info-head">
+      <div class="info-avatar" id="strikePopupAvatar" style="background:#DC2626;"></div>
+      <div>
+        <div class="info-head-name" id="strikePopupName">—</div>
+        <div class="info-head-sub" id="strikePopupSub">—</div>
+      </div>
+      <button class="info-close" onclick="closeStrikePopup()">✕</button>
+    </div>
+    <div class="info-body" id="strikePopupBody"></div>
+  </div>
+</div>
 
 <!-- STRIKE INFO MODAL -->
 <div class="si-overlay hidden" id="siOverlay" onclick="closeStrikeInfo(event)">
@@ -1762,6 +1918,122 @@ document.addEventListener('keydown', e => {
     </div>
   </div>
 </div>
+
+
+<script>
+const HOF_ACT_DEFS = [
+  { key:'VocabularyBox',   label:'Vocab Box',    color:'#8B5CF6', pts:1 },
+  { key:'Answering',       label:'Answering',    color:'#3B82F6', pts:2 },
+  { key:'Presenting',      label:'Presenting',   color:'#10B981', pts:5 },
+  { key:'DoingTaskOnTime', label:'Task On Time', color:'#F59E0B', pts:2 },
+  { key:'HelpingHand',     label:'Helping Hand', color:'#EC4899', pts:1 },
+];
+const HOF_AVATAR_COLORS = ['#7C3AED','#2563EB','#059669','#D97706','#DC2626','#7C3AED','#0891B2','#9333EA','#16A34A'];
+const HOF_CLS_LIST = ['XE1','XE4','XE5','XE6','XE7','XE8','XE9','XE10','XE11'];
+
+function openHofPopup(encoded) {
+  const s = JSON.parse(decodeURIComponent(encoded));
+  const clsIdx   = HOF_CLS_LIST.indexOf(s.cls);
+  const avatarBg = HOF_AVATAR_COLORS[clsIdx] || '#7C3AED';
+  const initial  = (s.nickname || s.name)[0].toUpperCase();
+  const dispName = s.nickname || s.name.split(' ')[0];
+  const clsLabel = s.cls.replace('XE','X E-');
+  const barPct   = Math.min(100, Math.round((s.total / 100) * 100));
+
+  document.getElementById('hofPopupAvatar').textContent = initial;
+  document.getElementById('hofPopupAvatar').style.background = avatarBg;
+  document.getElementById('hofPopupName').textContent = s.name;
+  document.getElementById('hofPopupSub').textContent  = clsLabel + ' · Activeness Stats';
+
+  const indClass = s.Indicator && s.Indicator.includes('Plus Ultra') ? 'ind-ultra' :
+    s.Indicator && s.Indicator.includes('Hyperactive') ? 'ind-hyper' :
+    s.Indicator && s.Indicator.includes('Super') ? 'ind-super' :
+    s.Indicator && s.Indicator.includes('Active') && !s.Indicator.includes('Not') ? 'ind-active' :
+    s.Indicator && s.Indicator.includes('Okay') ? 'ind-okay' : 'ind-not';
+
+  const indColors = {
+    'ind-ultra':'#F97316','ind-hyper':'#FBBF24','ind-super':'#10B981',
+    'ind-active':'#A78BFA','ind-okay':'#F59E0B','ind-not':'#EF4444'
+  };
+  const indBgs = {
+    'ind-ultra':'rgba(249,115,22,0.1)','ind-hyper':'rgba(251,191,36,0.12)',
+    'ind-super':'rgba(16,185,129,0.1)','ind-active':'rgba(139,92,246,0.1)',
+    'ind-okay':'rgba(245,158,11,0.1)','ind-not':'rgba(239,68,68,0.08)'
+  };
+
+  const statsHtml = HOF_ACT_DEFS.map(a => {
+    const times = s[a.key] || 0;
+    const pts   = times * a.pts;
+    return `<div class="hof-stat-card">
+      <div class="hof-stat-card-top">
+        <div class="hof-stat-dot" style="background:${a.color}"></div>
+        <div class="hof-stat-cat">${a.label}</div>
+      </div>
+      <div class="hof-stat-nums">
+        <div class="hof-stat-times">${times}<small>times</small></div>
+        <div class="hof-stat-pts" style="color:${a.color}">+${pts}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('hofPopupBody').innerHTML = `
+    <div class="hof-popup-total">
+      <span class="hof-popup-total-label">Total Points</span>
+      <span class="hof-popup-total-val">${s.total} pts</span>
+    </div>
+    <div class="hof-popup-bar-wrap"><div class="hof-popup-bar" style="width:${barPct}%"></div></div>
+    <div class="hof-stat-cards">${statsHtml}</div>
+    <div class="hof-popup-indicator" style="background:${indBgs[indClass]||'#F9F7FF'};color:${indColors[indClass]||'#6B5B95'};border:1.5px solid ${indColors[indClass]||'#E5DEFF'}33;margin-top:14px;">
+      ${s.Indicator || '—'}
+    </div>`;
+
+  document.getElementById('hofPopupOverlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeHofPopup(e) {
+  if (e && e.target !== document.getElementById('hofPopupOverlay')) return;
+  document.getElementById('hofPopupOverlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function openStrikePopup(encoded) {
+  const s = JSON.parse(decodeURIComponent(encoded));
+  const initial  = (s.nickname || s.name)[0].toUpperCase();
+  const clsLabel = s.cls.replace('XE','X E-');
+
+  document.getElementById('strikePopupAvatar').textContent = initial;
+  document.getElementById('strikePopupName').textContent   = s.name;
+  document.getElementById('strikePopupSub').textContent    = clsLabel + ' · ' + s.total + ' strike' + (s.total !== 1 ? 's' : '');
+
+  const dots = [1,2,3,4].map(n =>
+    `<div class="strike-popup-dot ${n <= s.total ? 'hit' : 'miss'}">${n <= s.total ? '⚠️' : ''}</div>`
+  ).join('');
+
+  document.getElementById('strikePopupBody').innerHTML = `
+    <div class="strike-popup-dots">${dots}</div>
+    <div class="strike-popup-detail">
+      ${s.date   ? `<div class="strike-popup-row"><span class="strike-popup-label">Date</span><span class="strike-popup-val">${s.date}</span></div>` : ''}
+      ${s.reason ? `<div class="strike-popup-row"><span class="strike-popup-label">Reason</span><span class="strike-popup-val">${s.reason}</span></div>` : ''}
+      ${!s.date && !s.reason ? '<div style="color:#6B5B95;font-size:0.85rem;">No details recorded.</div>' : ''}
+    </div>`;
+
+  document.getElementById('strikePopupOverlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeStrikePopup(e) {
+  if (e && e.target !== document.getElementById('strikePopupOverlay')) return;
+  document.getElementById('strikePopupOverlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('hofPopupOverlay').classList.add('hidden');
+    document.getElementById('strikePopupOverlay').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+});
+</script>
 
 </body>
 </html>
