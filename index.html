@@ -727,6 +727,45 @@
     .cls-e11 { background: #F5F3FF; color: #4C1D95; }
 
 
+
+    /* ── SIDEBAR NAV ── */
+    .hamburger { position:absolute; top:20px; right:20px; z-index:10; background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); border-radius:10px; width:40px; height:40px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; cursor:pointer; padding:0; }
+    .hamburger span { display:block; width:18px; height:2px; background:#fff; border-radius:999px; transition:all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity:0; }
+    .hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+    .sidebar-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.6); backdrop-filter:blur(6px); z-index:300; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+    .sidebar-overlay.open { opacity:1; pointer-events:all; }
+
+    .sidebar { position:fixed; top:0; right:0; height:100%; width:min(320px,85vw); background:#1E1040; z-index:301; transform:translateX(100%); transition:transform 0.35s cubic-bezier(0.34,1.1,0.64,1); display:flex; flex-direction:column; overflow-y:auto; }
+    .sidebar.open { transform:translateX(0); }
+
+    .sidebar-head { padding:24px 20px 16px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:12px; }
+    .sidebar-logo { width:36px; height:36px; border-radius:10px; object-fit:cover; }
+    .sidebar-head-text { flex:1; }
+    .sidebar-head-title { font-family:'Playfair Display',serif; font-size:1rem; font-weight:800; color:#fff; }
+    .sidebar-head-sub { font-size:0.7rem; color:rgba(255,255,255,0.45); margin-top:1px; }
+    .sidebar-close { width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.08); border:none; color:rgba(255,255,255,0.5); cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; }
+
+    .sidebar-section { padding:14px 16px 4px; }
+    .sidebar-section-label { font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.12em; font-family:'IBM Plex Mono',monospace; padding:0 4px; margin-bottom:6px; }
+    .sidebar-item { display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:12px; text-decoration:none; transition:background 0.15s; margin-bottom:2px; }
+    .sidebar-item:hover, .sidebar-item:active { background:rgba(255,255,255,0.08); }
+    .sidebar-item-icon { width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:0.95rem; flex-shrink:0; }
+    .sidebar-item-name { font-size:0.88rem; font-weight:600; color:#fff; flex:1; }
+    .sidebar-item-badge { font-size:0.6rem; font-weight:800; padding:2px 7px; border-radius:999px; font-family:'IBM Plex Mono',monospace; }
+    .badge-soon { background:rgba(245,158,11,0.2); color:#FCD34D; }
+    .badge-new  { background:rgba(16,185,129,0.2); color:#6EE7B7; }
+
+    .sidebar-divider { height:1px; background:rgba(255,255,255,0.07); margin:8px 16px; }
+
+    .sidebar-teacher { margin:12px 16px; background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.35); border-radius:14px; padding:12px 14px; }
+    .sidebar-teacher-label { font-size:0.68rem; font-weight:700; color:#A78BFA; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-bottom:8px; }
+    .sidebar-teacher-btn { width:100%; padding:10px; background:linear-gradient(135deg,#7C3AED,#5B21B6); color:#fff; font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:0.85rem; border:none; border-radius:10px; cursor:pointer; }
+    .sidebar-teacher-logged { font-size:0.82rem; color:#A78BFA; font-weight:600; display:flex; align-items:center; gap:8px; }
+    .sidebar-teacher-logged span { cursor:pointer; color:rgba(255,255,255,0.4); font-size:0.75rem; margin-left:auto; }
+
     /* ── SUMMATIVE BANNER ── */
     .summ-banner {
       position: sticky; top: 0; z-index: 200;
@@ -895,6 +934,9 @@
   <div class="dot-grid"></div>
   <div class="header-blob"></div>
 
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
   <div class="logo-wrap">
     <img src="logo.jpg" alt="English Quest Logo" />
     <span class="logo-badge">SMAVISKA</span>
@@ -2033,6 +2075,129 @@ document.addEventListener('keydown', e => {
     document.body.style.overflow = '';
   }
 });
+</script>
+
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-head">
+    <img class="sidebar-logo" src="logo.jpg" alt="Logo"/>
+    <div class="sidebar-head-text">
+      <div class="sidebar-head-title">English Quest</div>
+      <div class="sidebar-head-sub">SMA Negeri 6 Surakarta</div>
+    </div>
+    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+  </div>
+
+  <!-- Teacher login area in sidebar -->
+  <div class="sidebar-teacher">
+    <div class="sidebar-teacher-label">🔑 Teacher Access</div>
+    <div id="sbTeacherLoggedOut">
+      <button class="sidebar-teacher-btn" onclick="closeSidebar();openHeaderLogin();">Login as Teacher</button>
+    </div>
+    <div id="sbTeacherLoggedIn" style="display:none;">
+      <div class="sidebar-teacher-logged">🎓 Logged in as Teacher <span onclick="headerLogout();updateSidebarTeacher()">Logout</span></div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">📂 Documents</div>
+    <a href="lessons.html" class="sidebar-item">
+      <div class="sidebar-item-icon" style="background:rgba(124,58,237,0.2)">📑</div>
+      <div class="sidebar-item-name">Lesson Materials</div>
+    </a>
+    <a href="assignments.html" class="sidebar-item">
+      <div class="sidebar-item-icon" style="background:rgba(59,130,246,0.2)">📋</div>
+      <div class="sidebar-item-name">Assignments</div>
+    </a>
+    <a href="submission.html" class="sidebar-item" style="opacity:0.5;pointer-events:none;">
+      <div class="sidebar-item-icon" style="background:rgba(245,158,11,0.2)">📝</div>
+      <div class="sidebar-item-name">Submission</div>
+      <span class="sidebar-item-badge badge-soon">SOON</span>
+    </a>
+  </div>
+
+  <div class="sidebar-divider"></div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">👥 Student Data</div>
+    <a href="students.html" class="sidebar-item">
+      <div class="sidebar-item-icon" style="background:rgba(236,72,153,0.2)">👨‍🎓</div>
+      <div class="sidebar-item-name">Student List</div>
+    </a>
+    <a href="attendance.html" class="sidebar-item">
+      <div class="sidebar-item-icon" style="background:rgba(20,184,166,0.2)">✅</div>
+      <div class="sidebar-item-name">Attendance</div>
+    </a>
+    <a href="scores.html" class="sidebar-item">
+      <div class="sidebar-item-icon" style="background:rgba(249,115,22,0.2)">🏆</div>
+      <div class="sidebar-item-name">Student Scores</div>
+    </a>
+    <a href="tasks.html" class="sidebar-item">
+      <div class="sidebar-item-icon" style="background:rgba(16,185,129,0.2)">✅</div>
+      <div class="sidebar-item-name">Task Status</div>
+    </a>
+    <a href="activeness.html" class="sidebar-item">
+      <div class="sidebar-item-icon" style="background:rgba(245,158,11,0.2)">⚡</div>
+      <div class="sidebar-item-name">Activeness</div>
+    </a>
+    <a href="strikes.html" class="sidebar-item">
+      <div class="sidebar-item-icon" style="background:rgba(220,38,38,0.2)">⚠️</div>
+      <div class="sidebar-item-name">Strikes</div>
+    </a>
+  </div>
+
+  <div class="sidebar-divider"></div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">📢 Info</div>
+    <a href="summative.html" class="sidebar-item">
+      <div class="sidebar-item-icon" style="background:rgba(16,185,129,0.2)">🎯</div>
+      <div class="sidebar-item-name">Summative</div>
+    </a>
+    <a href="https://www.instagram.com/engquest.viska/" target="_blank" class="sidebar-item">
+      <div class="sidebar-item-icon" style="background:rgba(124,58,237,0.2)">📸</div>
+      <div class="sidebar-item-name">Instagram</div>
+    </a>
+    <a href="#" class="sidebar-item" style="opacity:0.5;pointer-events:none;">
+      <div class="sidebar-item-icon" style="background:rgba(59,130,246,0.2)">🖼️</div>
+      <div class="sidebar-item-name">Photo Gallery</div>
+      <span class="sidebar-item-badge badge-soon">SOON</span>
+    </a>
+    <a href="#" class="sidebar-item" style="opacity:0.5;pointer-events:none;">
+      <div class="sidebar-item-icon" style="background:rgba(245,158,11,0.2)">🏅</div>
+      <div class="sidebar-item-name">Achievements</div>
+      <span class="sidebar-item-badge badge-soon">SOON</span>
+    </a>
+  </div>
+
+</nav>
+
+
+<script>
+function toggleSidebar() {
+  const open = document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open', open);
+  document.getElementById('hamburgerBtn').classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+  updateSidebarTeacher();
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  document.getElementById('hamburgerBtn').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function updateSidebarTeacher() {
+  const loggedIn = !!sessionStorage.getItem('eq_tu');
+  document.getElementById('sbTeacherLoggedOut').style.display = loggedIn ? 'none' : 'block';
+  document.getElementById('sbTeacherLoggedIn').style.display  = loggedIn ? 'block' : 'none';
+}
+updateSidebarTeacher();
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
 </script>
 
 </body>
