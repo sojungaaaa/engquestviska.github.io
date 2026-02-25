@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz · English Quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple:#7C3AED; --purple-light:#A78BFA; --purple-soft:#EDE9FE;
+      --white:#fff; --off-white:#F9F7FF; --text-dark:#1E1040;
+      --text-muted:#6B5B95; --border:#E5DEFF; --accent:#F59E0B;
+      --green:#10B981; --red:#DC2626;
+    }
+    body { font-family:'IBM Plex Sans',sans-serif; background:var(--off-white); color:var(--text-dark); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* HEADER */
+    header { background:linear-gradient(135deg,#7C3AED 0%,#5B21B6 50%,#4C1D95 100%); padding:36px 20px 52px; text-align:center; position:relative; overflow:hidden; }
+    header::before { content:''; position:absolute; inset:0; background-image:radial-gradient(circle,rgba(255,255,255,0.07) 1px,transparent 1px); background-size:28px 28px; pointer-events:none; }
+    .back-btn { position:absolute; top:20px; left:20px; z-index:2; background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); color:#fff; font-family:'IBM Plex Sans',sans-serif; font-size:0.88rem; font-weight:600; padding:8px 18px; border-radius:999px; cursor:pointer; text-decoration:none; }
+    header h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,5vw,2.6rem); font-weight:800; color:#fff; position:relative; z-index:1; margin-bottom:8px; }
+    header h1 span { color:#C4B5FD; font-style:italic; }
+    .header-sub { color:rgba(255,255,255,0.65); font-size:0.9rem; position:relative; z-index:1; }
+    .wave { display:block; width:100%; margin-top:-2px; }
+
+    main { flex:1; max-width:640px; margin:0 auto; padding:24px 16px 80px; width:100%; }
+
+    /* STEP CARDS */
+    .step-card { background:var(--white); border:1.5px solid var(--border); border-radius:24px; padding:28px 24px; margin-bottom:16px; animation:slideUp 0.4s cubic-bezier(0.34,1.2,0.64,1); }
+    @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .step-label { font-size:0.7rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; font-family:'IBM Plex Mono',monospace; margin-bottom:16px; }
+    .step-title { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:800; margin-bottom:20px; color:var(--text-dark); }
+
+    /* Select boxes */
+    .select-wrap { margin-bottom:14px; }
+    .select-wrap label { display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
+    .select-wrap select { width:100%; padding:13px 16px; border:1.5px solid var(--border); border-radius:12px; font-family:'IBM Plex Sans',sans-serif; font-size:0.95rem; outline:none; background:var(--off-white); color:var(--text-dark); appearance:none; }
+    .select-wrap select:focus { border-color:var(--purple-light); }
+
+    /* Chapter cards */
+    .chapter-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
+    .chapter-card { border:2px solid var(--border); border-radius:16px; padding:16px; cursor:pointer; transition:all 0.2s; background:var(--off-white); text-align:center; }
+    .chapter-card:hover { border-color:var(--purple-light); background:var(--purple-soft); }
+    .chapter-card.selected { border-color:var(--purple); background:var(--purple-soft); }
+    .chapter-card-num { font-family:'IBM Plex Mono',monospace; font-size:0.7rem; font-weight:700; color:var(--purple-light); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+    .chapter-card-name { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--text-dark); }
+    .chapter-card.selected .chapter-card-name { color:var(--purple); }
+    .chapter-card-type { font-size:0.75rem; color:var(--text-muted); margin-top:4px; }
+
+    /* Already attempted warning */
+    .attempted-box { background:#FEF3C7; border:1.5px solid #FCD34D; border-radius:14px; padding:14px 16px; display:flex; gap:12px; align-items:flex-start; margin-bottom:16px; }
+    .attempted-box-icon { font-size:1.3rem; flex-shrink:0; }
+    .attempted-box-text { font-size:0.85rem; color:#92400E; line-height:1.5; }
+    .attempted-box-text strong { display:block; margin-bottom:3px; }
+
+    /* Btn */
+    .btn-primary { width:100%; padding:15px; background:linear-gradient(135deg,var(--purple),#5B21B6); color:#fff; font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:1rem; border:none; border-radius:14px; cursor:pointer; transition:opacity 0.2s; }
+    .btn-primary:disabled { opacity:0.4; cursor:not-allowed; }
+    .btn-primary:hover:not(:disabled) { opacity:0.9; }
+
+    /* GENERATING STATE */
+    .gen-state { text-align:center; padding:48px 20px; }
+    .gen-icon { font-size:3rem; margin-bottom:16px; animation:genPulse 1.5s ease-in-out infinite; }
+    @keyframes genPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
+    .gen-title { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; margin-bottom:8px; }
+    .gen-sub { font-size:0.85rem; color:var(--text-muted); }
+    .gen-dots span { animation:genDot 1.2s ease-in-out infinite; }
+    .gen-dots span:nth-child(2) { animation-delay:0.2s; }
+    .gen-dots span:nth-child(3) { animation-delay:0.4s; }
+    @keyframes genDot { 0%,80%,100%{opacity:0} 40%{opacity:1} }
+
+    /* QUIZ */
+    .quiz-progress { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+    .quiz-progress-bar-wrap { flex:1; background:var(--border); border-radius:999px; height:6px; }
+    .quiz-progress-bar { height:6px; border-radius:999px; background:linear-gradient(90deg,var(--purple),var(--purple-light)); transition:width 0.4s ease; }
+    .quiz-progress-label { font-size:0.78rem; font-weight:700; color:var(--text-muted); font-family:'IBM Plex Mono',monospace; white-space:nowrap; }
+
+    .question-card { background:var(--white); border:1.5px solid var(--border); border-radius:20px; padding:24px; margin-bottom:14px; animation:slideUp 0.3s ease; }
+    .q-num { font-size:0.7rem; font-weight:700; color:var(--purple-light); text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-bottom:10px; }
+    .q-text { font-size:0.98rem; font-weight:600; color:var(--text-dark); line-height:1.5; margin-bottom:18px; }
+    .q-options { display:flex; flex-direction:column; gap:8px; }
+    .q-option { display:flex; align-items:center; gap:12px; padding:12px 16px; border:1.5px solid var(--border); border-radius:12px; cursor:pointer; transition:all 0.15s; background:var(--off-white); }
+    .q-option:hover { border-color:var(--purple-light); background:var(--purple-soft); }
+    .q-option.selected { border-color:var(--purple); background:var(--purple-soft); }
+    .q-option.correct { border-color:var(--green); background:rgba(16,185,129,0.08); }
+    .q-option.wrong { border-color:var(--red); background:rgba(220,38,38,0.05); }
+    .q-option-letter { width:28px; height:28px; border-radius:50%; background:var(--border); display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:800; color:var(--text-muted); flex-shrink:0; font-family:'IBM Plex Mono',monospace; transition:all 0.15s; }
+    .q-option.selected .q-option-letter { background:var(--purple); color:#fff; }
+    .q-option.correct .q-option-letter { background:var(--green); color:#fff; }
+    .q-option.wrong   .q-option-letter { background:var(--red);   color:#fff; }
+    .q-option-text { font-size:0.88rem; color:var(--text-dark); line-height:1.4; }
+    .q-explanation { margin-top:12px; padding:10px 14px; background:rgba(124,58,237,0.06); border:1px solid var(--border); border-radius:10px; font-size:0.8rem; color:var(--text-muted); line-height:1.5; display:none; }
+    .q-explanation.show { display:block; }
+
+    /* RESULT */
+    .result-header { text-align:center; padding:28px 20px 20px; border-bottom:1.5px solid var(--border); margin-bottom:20px; }
+    .result-score-ring { width:100px; height:100px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-family:'Playfair Display',serif; font-size:2rem; font-weight:800; border:4px solid; }
+    .result-score-ring.great  { background:rgba(16,185,129,0.1);  color:#059669; border-color:#6EE7B7; }
+    .result-score-ring.good   { background:rgba(124,58,237,0.1); color:var(--purple); border-color:var(--purple-light); }
+    .result-score-ring.okay   { background:rgba(245,158,11,0.1);  color:#D97706; border-color:#FCD34D; }
+    .result-score-ring.low    { background:rgba(220,38,38,0.08);  color:var(--red); border-color:#FCA5A5; }
+    .result-title { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:800; margin-bottom:6px; }
+    .result-sub { font-size:0.88rem; color:var(--text-muted); }
+    .result-pts-badge { display:inline-flex; align-items:center; gap:8px; background:var(--purple-soft); border:1.5px solid var(--purple-light); border-radius:12px; padding:8px 16px; margin-top:14px; font-size:0.9rem; font-weight:700; color:var(--purple); }
+
+    /* Saving state */
+    .saving-box { background:var(--off-white); border:1.5px solid var(--border); border-radius:14px; padding:14px 16px; text-align:center; font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; }
+    .saving-box.saved { background:rgba(16,185,129,0.08); border-color:rgba(16,185,129,0.3); color:#059669; }
+    .saving-box.err   { background:rgba(220,38,38,0.05); border-color:#FCA5A5; color:var(--red); }
+
+    footer { background:var(--text-dark); color:rgba(255,255,255,0.5); text-align:center; padding:20px; font-size:0.85rem; }
+    footer strong { color:var(--purple-light); }
+
+    .hidden { display:none !important; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="back-btn" href="index.html">← Back</a>
+  <h1>English Quest <span>Quiz</span></h1>
+  <p class="header-sub">AI-generated · Unique to you · 10 questions</p>
+</header>
+<svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" preserveAspectRatio="none">
+  <path fill="#4C1D95" d="M0,32 C360,0 1080,64 1440,32 L1440,0 L0,0 Z"/>
+  <path fill="#F9F7FF" d="M0,48 C360,16 1080,64 1440,32 L1440,48 Z"/>
+</svg>
+
+<main id="mainArea">
+
+  <!-- STEP 1: SELECT -->
+  <div id="stepSelect" class="step-card">
+    <div class="step-label">Step 1 of 2 · Identity</div>
+    <div class="step-title">Who are you?</div>
+
+    <div class="select-wrap">
+      <label>Class</label>
+      <select id="classSelect" onchange="onClassChange()">
+        <option value="">— Select your class —</option>
+        <option value="XE1">X E-1</option>
+        <option value="XE4">X E-4</option>
+        <option value="XE5">X E-5</option>
+        <option value="XE6">X E-6</option>
+        <option value="XE7">X E-7</option>
+        <option value="XE8">X E-8</option>
+        <option value="XE9">X E-9</option>
+        <option value="XE10">X E-10</option>
+        <option value="XE11">X E-11</option>
+      </select>
+    </div>
+
+    <div class="select-wrap">
+      <label>Your Name</label>
+      <select id="nameSelect" disabled>
+        <option value="">— Select your class first —</option>
+      </select>
+    </div>
+
+    <div class="step-label" style="margin-top:20px;">Step 2 of 2 · Chapter</div>
+    <div class="step-title">Which chapter?</div>
+
+    <div class="chapter-grid">
+      <div class="chapter-card" id="ch4card" onclick="selectChapter(4)">
+        <div class="chapter-card-num">Chapter 4</div>
+        <div class="chapter-card-name">Analytical Exposition</div>
+        <div class="chapter-card-type">Text structure, grammar, vocabulary</div>
+      </div>
+      <div class="chapter-card" id="ch5card" onclick="selectChapter(5)">
+        <div class="chapter-card-num">Chapter 5</div>
+        <div class="chapter-card-name">Narrative Text</div>
+        <div class="chapter-card-type">Text structure, grammar, vocabulary</div>
+      </div>
+    </div>
+
+    <div id="attemptedWarning" class="attempted-box hidden">
+      <div class="attempted-box-icon">⚠️</div>
+      <div class="attempted-box-text">
+        <strong>Already attempted!</strong>
+        You have already taken this quiz. Each quiz can only be taken once per chapter.
+        Your score: <span id="attemptedScore">—</span>/10
+      </div>
+    </div>
+
+    <button class="btn-primary" id="startBtn" onclick="startQuiz()" disabled>
+      🚀 Generate My Quiz
+    </button>
+  </div>
+
+</main>
+
+<footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
+
+<script>
+const API    = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
+const ANTH   = 'https://api.anthropic.com/v1/messages';
+
+let selectedClass   = '';
+let selectedStudent = null; // { no, name, nickname }
+let selectedChapter = null;
+let questions       = [];
+let answers         = {};
+let submitted       = false;
+let studentList     = {};
+
+// ── API HELPERS ──────────────────────────────────────────────
+async function apiGet(params) {
+  const url = API + '?' + new URLSearchParams(params);
+  try { const r = await fetch(url); if (r.ok) return await r.json(); } catch(e) {}
+  return new Promise((resolve, reject) => {
+    const cb = 'cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const s  = document.createElement('script'); s.async = true;
+    const t  = setTimeout(()=>{cleanup();reject(new Error('Timeout'));}, 20000);
+    function cleanup(){delete window[cb];try{if(s.parentNode)s.parentNode.removeChild(s);}catch(e){}clearTimeout(t);}
+    window[cb] = d=>{cleanup();resolve(d);};
+    s.onerror  = ()=>{cleanup();reject();};
+    s.src = API+'?'+new URLSearchParams({...params, callback:cb, _t:Date.now()});
+    (document.head||document.body).appendChild(s);
+  });
+}
+
+// ── LOAD STUDENTS ────────────────────────────────────────────
+async function onClassChange() {
+  const cls = document.getElementById('classSelect').value;
+  selectedClass = cls;
+  selectedStudent = null;
+  selectedChapter = null;
+  document.getElementById('ch4card').classList.remove('selected');
+  document.getElementById('ch5card').classList.remove('selected');
+  document.getElementById('attemptedWarning').classList.add('hidden');
+  document.getElementById('startBtn').disabled = true;
+
+  const nameSelect = document.getElementById('nameSelect');
+  nameSelect.innerHTML = '<option value="">Loading...</option>';
+  nameSelect.disabled  = true;
+
+  if (!cls) { nameSelect.innerHTML = '<option value="">— Select your class first —</option>'; return; }
+
+  try {
+    if (!studentList[cls]) {
+      const res = await apiGet({ action:'getAllActiveness', className:cls });
+      studentList[cls] = res.students || [];
+    }
+    const students = studentList[cls];
+    nameSelect.innerHTML = '<option value="">— Select your name —</option>' +
+      students.map(s => `<option value="${s.no}">${s.name}${s.nickname ? ' ('+s.nickname+')' : ''}</option>`).join('');
+    nameSelect.disabled = false;
+    nameSelect.onchange = onStudentChange;
+  } catch(e) {
+    nameSelect.innerHTML = '<option value="">Failed to load — try again</option>';
+  }
+}
+
+function onStudentChange() {
+  const no  = document.getElementById('nameSelect').value;
+  const cls = selectedClass;
+  if (!no) { selectedStudent = null; checkStartReady(); return; }
+  const s = studentList[cls].find(x => String(x.no) === String(no));
+  selectedStudent = s;
+  checkAttempt();
+}
+
+async function checkAttempt() {
+  if (!selectedStudent || !selectedChapter) { checkStartReady(); return; }
+  try {
+    const res = await apiGet({ action:'getQuizAttempt', className:selectedClass, studentNo:selectedStudent.no, chapter:selectedChapter });
+    if (res.attempted) {
+      document.getElementById('attemptedScore').textContent = res.score;
+      document.getElementById('attemptedWarning').classList.remove('hidden');
+      document.getElementById('startBtn').disabled = true;
+    } else {
+      document.getElementById('attemptedWarning').classList.add('hidden');
+      checkStartReady();
+    }
+  } catch(e) { checkStartReady(); }
+}
+
+function selectChapter(ch) {
+  selectedChapter = ch;
+  document.getElementById('ch4card').classList.toggle('selected', ch === 4);
+  document.getElementById('ch5card').classList.toggle('selected', ch === 5);
+  document.getElementById('attemptedWarning').classList.add('hidden');
+  checkAttempt();
+}
+
+function checkStartReady() {
+  const ready = selectedClass && selectedStudent && selectedChapter;
+  document.getElementById('startBtn').disabled = !ready;
+}
+
+// ── GENERATE QUIZ ────────────────────────────────────────────
+async function startQuiz() {
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="step-card gen-state">
+      <div class="gen-icon">🤖</div>
+      <div class="gen-title">Generating your quiz<span class="gen-dots"><span>.</span><span>.</span><span>.</span></span></div>
+      <div class="gen-sub">Creating 10 unique questions just for ${selectedStudent.nickname || selectedStudent.name.split(' ')[0]}.<br/>This takes about 10–15 seconds.</div>
+    </div>`;
+
+  const chapterInfo = selectedChapter === 4
+    ? 'Chapter 4: Analytical Exposition Text. Topics: text structure (Thesis, Arguments, Reiteration), purpose of analytical exposition, language features (present tense, logical connectives like "furthermore", "therefore", "in addition"), vocabulary related to argumentation, identifying thesis and arguments in a passage.'
+    : 'Chapter 5: Narrative Text. Topics: text structure (Orientation, Complication, Resolution, Coda), purpose of narrative text, language features (past tense, time connectives like "once upon a time", "suddenly", "finally"), vocabulary related to storytelling, identifying story elements.';
+
+  const prompt = `You are an English teacher at an Indonesian high school. Generate exactly 10 multiple choice quiz questions for a 10th grade student about ${chapterInfo}
+
+Mix of question types:
+- Text structure identification (what part of the text is this?)
+- Grammar in context (choose the correct form)
+- Vocabulary meaning
+- Reading comprehension (give a short 3-4 sentence passage, ask about it)
+- Purpose/function of text elements
+
+Rules:
+- Each question has exactly 5 options labeled A, B, C, D, E
+- Only ONE correct answer per question
+- Make questions varied and not repetitive
+- Use clear, simple English appropriate for 10th graders
+- Make wrong answers plausible but clearly wrong to someone who studied
+
+Respond ONLY with a valid JSON array, no markdown, no explanation, exactly this structure:
+[
+  {
+    "q": "Question text here?",
+    "options": ["A. option", "B. option", "C. option", "D. option", "E. option"],
+    "answer": "A",
+    "explanation": "Brief explanation of why A is correct."
+  }
+]`;
+
+  try {
+    const res = await fetch(ANTH, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const raw  = data.content?.[0]?.text || '';
+    // Strip any accidental markdown fences
+    const clean = raw.replace(/```json|```/g, '').trim();
+    questions = JSON.parse(clean);
+
+    if (!Array.isArray(questions) || questions.length === 0) throw new Error('Bad response');
+
+    renderQuiz();
+  } catch(e) {
+    main.innerHTML = `
+      <div class="step-card" style="text-align:center;padding:40px 20px;">
+        <div style="font-size:2.5rem;margin-bottom:16px;">😕</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;">Generation Failed</div>
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:24px;">Something went wrong generating your quiz. Please try again.</div>
+        <a href="quiz.html" class="btn-primary" style="display:block;text-decoration:none;text-align:center;">Try Again</a>
+      </div>`;
+  }
+}
+
+// ── RENDER QUIZ ──────────────────────────────────────────────
+function renderQuiz() {
+  const main = document.getElementById('mainArea');
+  const name = selectedStudent.nickname || selectedStudent.name.split(' ')[0];
+  const chLabel = selectedChapter === 4 ? 'Chapter 4 · Analytical Exposition' : 'Chapter 5 · Narrative Text';
+
+  const questionsHtml = questions.map((q, qi) => {
+    const letters = ['A','B','C','D','E'];
+    const optHtml  = q.options.map((opt, oi) => `
+      <div class="q-option" id="opt_${qi}_${oi}" onclick="selectAnswer(${qi}, ${oi})">
+        <div class="q-option-letter">${letters[oi]}</div>
+        <div class="q-option-text">${opt.replace(/^[A-E]\.\s*/,'')}</div>
+      </div>`).join('');
+    return `
+      <div class="question-card" id="qcard_${qi}">
+        <div class="q-num">Question ${qi+1} of ${questions.length}</div>
+        <div class="q-text">${q.q}</div>
+        <div class="q-options">${optHtml}</div>
+        <div class="q-explanation" id="exp_${qi}">${q.explanation || ''}</div>
+      </div>`;
+  }).join('');
+
+  main.innerHTML = `
+    <div style="margin-bottom:16px;">
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text-dark);margin-bottom:4px;">Hey ${name}! 👋</div>
+      <div style="font-size:0.82rem;color:var(--text-muted);">${chLabel} · 10 questions · 1 pt each</div>
+    </div>
+    <div class="quiz-progress">
+      <div class="quiz-progress-bar-wrap"><div class="quiz-progress-bar" id="progressBar" style="width:0%"></div></div>
+      <div class="quiz-progress-label" id="progressLabel">0 / ${questions.length}</div>
+    </div>
+    ${questionsHtml}
+    <button class="btn-primary" id="submitBtn" onclick="submitQuiz()" disabled style="margin-top:8px;">
+      Submit Quiz
+    </button>`;
+}
+
+function selectAnswer(qi, oi) {
+  if (submitted) return;
+  // Deselect previous
+  const prev = answers[qi];
+  if (prev !== undefined) {
+    document.getElementById(`opt_${qi}_${prev}`).classList.remove('selected');
+    document.getElementById(`opt_${qi}_${prev}`).querySelector('.q-option-letter').style.background = '';
+    document.getElementById(`opt_${qi}_${prev}`).querySelector('.q-option-letter').style.color = '';
+  }
+  answers[qi] = oi;
+  document.getElementById(`opt_${qi}_${oi}`).classList.add('selected');
+
+  // Update progress
+  const answered = Object.keys(answers).length;
+  const pct = Math.round((answered / questions.length) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = answered + ' / ' + questions.length;
+  document.getElementById('submitBtn').disabled = answered < questions.length;
+}
+
+// ── SUBMIT ───────────────────────────────────────────────────
+async function submitQuiz() {
+  submitted = true;
+  document.getElementById('submitBtn').disabled = true;
+
+  let score = 0;
+  const letters = ['A','B','C','D','E'];
+
+  questions.forEach((q, qi) => {
+    const chosen     = answers[qi];
+    const chosenLetter = letters[chosen];
+    const correct    = q.answer.toUpperCase().replace('.','').trim();
+    const isCorrect  = chosenLetter === correct;
+    if (isCorrect) score++;
+
+    // Color all options
+    q.options.forEach((_, oi) => {
+      const el = document.getElementById(`opt_${qi}_${oi}`);
+      el.style.pointerEvents = 'none';
+      if (letters[oi] === correct) {
+        el.classList.remove('selected'); el.classList.add('correct');
+      } else if (oi === chosen && !isCorrect) {
+        el.classList.remove('selected'); el.classList.add('wrong');
+      } else {
+        el.classList.remove('selected');
+        el.style.opacity = '0.5';
+      }
+    });
+    // Show explanation
+    document.getElementById(`exp_${qi}`).classList.add('show');
+  });
+
+  // Scroll to top of questions
+  window.scrollTo({top: document.querySelector('.quiz-progress').offsetTop - 20, behavior:'smooth'});
+
+  // Show result
+  showResult(score);
+}
+
+function showResult(score) {
+  const pct = score / questions.length;
+  const ringClass = pct >= 0.9 ? 'great' : pct >= 0.7 ? 'good' : pct >= 0.5 ? 'okay' : 'low';
+  const msg = pct >= 0.9 ? 'Outstanding! 🎉' : pct >= 0.7 ? 'Great job! 👏' : pct >= 0.5 ? 'Good effort! 💪' : 'Keep studying! 📚';
+
+  const resultDiv = document.createElement('div');
+  resultDiv.className = 'step-card';
+  resultDiv.id = 'resultCard';
+  resultDiv.innerHTML = `
+    <div class="result-header">
+      <div class="result-score-ring ${ringClass}">${score}/${questions.length}</div>
+      <div class="result-title">${msg}</div>
+      <div class="result-sub">${selectedStudent.nickname || selectedStudent.name.split(' ')[0]} · ${selectedChapter === 4 ? 'Chapter 4' : 'Chapter 5'}</div>
+      <div class="result-pts-badge">⚡ +${score} activeness points</div>
+    </div>
+    <div class="saving-box" id="savingBox">💾 Saving your score...</div>
+    <a href="quiz.html" style="display:block;text-decoration:none;margin-top:10px;">
+      <button class="btn-primary" style="background:var(--off-white);color:var(--purple);border:1.5px solid var(--border);">← Back to Quiz Menu</button>
+    </a>`;
+
+  document.getElementById('mainArea').prepend(resultDiv);
+  resultDiv.scrollIntoView({ behavior:'smooth', block:'start' });
+
+  saveScore(score);
+}
+
+// ── SAVE SCORE ───────────────────────────────────────────────
+async function saveScore(score) {
+  try {
+    // We need teacher credentials to save — use stored session
+    const u = sessionStorage.getItem('eq_tu') || '';
+    const p = sessionStorage.getItem('eq_tp') || '';
+
+    if (!u || !p) {
+      // No teacher session — show manual save instruction
+      document.getElementById('savingBox').className = 'saving-box err';
+      document.getElementById('savingBox').innerHTML = `⚠️ Score not auto-saved — no teacher session found. Please show this result to your teacher: <strong>${selectedStudent.name} scored ${score}/10 on Chapter ${selectedChapter} quiz.</strong>`;
+      return;
+    }
+
+    const res = await apiGet({
+      action: 'saveQuizScore',
+      username: u,
+      password: p,
+      className: selectedClass,
+      studentNo: selectedStudent.no,
+      chapter: selectedChapter,
+      score: score
+    });
+
+    if (res.success) {
+      document.getElementById('savingBox').className = 'saving-box saved';
+      document.getElementById('savingBox').innerHTML = `✅ Score saved! +${score} points added to your activeness record.`;
+    } else if (res.error === 'Already attempted') {
+      document.getElementById('savingBox').className = 'saving-box err';
+      document.getElementById('savingBox').innerHTML = `⚠️ Your previous attempt was already recorded. This result won't overwrite it.`;
+    } else {
+      throw new Error(res.error);
+    }
+  } catch(e) {
+    document.getElementById('savingBox').className = 'saving-box err';
+    document.getElementById('savingBox').innerHTML = `⚠️ Couldn't save automatically. Show this to your teacher: <strong>${selectedStudent.name} · Ch${selectedChapter} · Score: ${score}/10</strong>`;
+  }
+}
+</script>
+</body>
+</html>
