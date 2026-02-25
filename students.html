@@ -571,7 +571,7 @@ async function openActModal(name, cls) {
     // Update avatar with nickname if available
     if (student.nickname) document.getElementById('actAvatar').textContent = student.nickname[0].toUpperCase();
 
-    const total   = (student.VocabularyBox||0)*1 + (student.Answering||0)*2 + (student.Presenting||0)*5 + (student.DoingTaskOnTime||0)*2 + (student.HelpingHand||0)*1;
+    const total   = (student.VocabularyBox||0)*1 + (student.Answering||0)*2 + (student.Presenting||0)*5 + (student.DoingTaskOnTime||0)*2 + (student.HelpingHand||0)*1 + (student.QuizCh4||0) + (student.QuizCh5||0);
     const indClass = student.Indicator.includes('Plus Ultra') ? 'ind-ultra' :
       student.Indicator.includes('Hyperactive') ? 'ind-hyper' :
       student.Indicator.includes('Super') ? 'ind-super' :
@@ -586,6 +586,8 @@ async function openActModal(name, cls) {
       Presenting:       { pts: 5,  unit: 'pts each',  info: 'Each presentation done' },
       DoingTaskOnTime:  { pts: 2,  unit: 'pts each',  info: 'Tasks submitted on time' },
       HelpingHand:      { pts: 1,  unit: 'pt each',  info: 'Helping classmates' },
+      QuizCh4:          { pts: 1,  unit: 'pts total', info: 'Quiz score out of 10' },
+      QuizCh5:          { pts: 1,  unit: 'pts total', info: 'Quiz score out of 10' },
     };
 
     const statsHtml = ACTS.map(a => {
