@@ -318,11 +318,52 @@ async function startQuiz() {
     </div>`;
 
   try {
-    // Route through Apps Script to avoid CORS issues
-    const res = await apiGet({ action: 'generateQuiz', chapter: selectedChapter });
-    if (res.error) throw new Error(res.error);
-    questions = res.questions;
-    if (!Array.isArray(questions) || questions.length === 0) throw new Error('No questions returned');
+    // Step 1: Get Gemini key from Apps Script
+    const keyRes = await apiGet({ action: 'getGeminiKey' });
+    if (keyRes.error) throw new Error(keyRes.error);
+    const geminiKey = keyRes.key;
+
+    // Step 2: Call Gemini directly from browser (no CORS issue with Gemini)
+    const chapterInfo = selectedChapter === 4
+      ? 'Chapter 4: Analytical Exposition Text. Topics: text structure (Thesis, Arguments, Reiteration), purpose of analytical exposition, language features (present tense, logical connectives like furthermore, therefore, in addition), vocabulary related to argumentation, identifying thesis and arguments in a passage.'
+      : 'Chapter 5: Narrative Text. Topics: text structure (Orientation, Complication, Resolution, Coda), purpose of narrative text, language features (past tense, time connectives like once upon a time, suddenly, finally), vocabulary related to storytelling, identifying story elements.';
+
+    const prompt = `You are an English teacher at an Indonesian high school. Generate exactly 10 multiple choice quiz questions for a 10th grade student about ${chapterInfo}
+
+Mix of question types:
+- Text structure identification
+- Grammar in context
+- Vocabulary meaning
+- Short reading comprehension (3-4 sentence passage)
+- Purpose/function of text elements
+
+Rules:
+- Each question has exactly 5 options labeled A, B, C, D, E
+- Only ONE correct answer per question
+- Make questions varied
+- Use clear English for 10th graders
+
+Respond ONLY with a valid JSON array, no markdown, no backticks, no extra text:
+[{"q":"...","options":["A. ...","B. ...","C. ...","D. ...","E. ..."],"answer":"A","explanation":"..."}]`;
+
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.9, maxOutputTokens: 4000 }
+        })
+      }
+    );
+
+    const geminiData = await geminiRes.json();
+    if (geminiData.error) throw new Error(geminiData.error.message);
+    const raw   = geminiData.candidates[0].content.parts[0].text;
+    const clean = raw.replace(/```json|```/g, '').trim();
+    questions   = JSON.parse(clean);
+    if (!Array.isArray(questions) || questions.length === 0) throw new Error('Invalid response');
     renderQuiz();
   } catch(e) {
     main.innerHTML = `
