@@ -113,6 +113,20 @@
     footer strong { color:var(--purple-light); }
 
     .hidden { display:none !important; }
+
+    /* Teacher results */
+    .results-table-wrap { overflow-x:auto; }
+    .results-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+    .results-table th { padding:10px 12px; background:var(--purple-soft); color:var(--purple); font-weight:700; text-align:left; font-family:'IBM Plex Mono',monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; white-space:nowrap; }
+    .results-table td { padding:10px 12px; border-bottom:1px solid var(--border); color:var(--text-dark); }
+    .results-table tr:last-child td { border-bottom:none; }
+    .results-table tr:hover td { background:var(--off-white); }
+    .score-chip { display:inline-block; padding:2px 10px; border-radius:999px; font-weight:700; font-size:0.78rem; font-family:'IBM Plex Mono',monospace; }
+    .score-great { background:rgba(16,185,129,0.12); color:#059669; }
+    .score-good  { background:rgba(124,58,237,0.1); color:var(--purple); }
+    .score-okay  { background:rgba(245,158,11,0.1); color:#D97706; }
+    .score-low   { background:rgba(220,38,38,0.08); color:var(--red); }
+    .score-none  { background:var(--border); color:var(--text-muted); }
   </style>
 </head>
 <body>
@@ -185,6 +199,12 @@
     <button class="btn-primary" id="startBtn" onclick="startQuiz()" disabled>
       🚀 Generate My Quiz
     </button>
+
+    <div id="teacherResultsBtn" style="display:none;margin-top:12px;">
+      <button class="btn-primary" onclick="showTeacherResults()" style="background:var(--off-white);color:var(--purple);border:1.5px solid var(--border);">
+        📊 View All Quiz Results (Teacher)
+      </button>
+    </div>
   </div>
 
 </main>
@@ -193,7 +213,6 @@
 
 <script>
 const API    = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
-const ANTH   = 'https://api.anthropic.com/v1/messages';
 
 let selectedClass   = '';
 let selectedStudent = null; // { no, name, nickname }
@@ -298,62 +317,19 @@ async function startQuiz() {
       <div class="gen-sub">Creating 10 unique questions just for ${selectedStudent.nickname || selectedStudent.name.split(' ')[0]}.<br/>This takes about 10–15 seconds.</div>
     </div>`;
 
-  const chapterInfo = selectedChapter === 4
-    ? 'Chapter 4: Analytical Exposition Text. Topics: text structure (Thesis, Arguments, Reiteration), purpose of analytical exposition, language features (present tense, logical connectives like "furthermore", "therefore", "in addition"), vocabulary related to argumentation, identifying thesis and arguments in a passage.'
-    : 'Chapter 5: Narrative Text. Topics: text structure (Orientation, Complication, Resolution, Coda), purpose of narrative text, language features (past tense, time connectives like "once upon a time", "suddenly", "finally"), vocabulary related to storytelling, identifying story elements.';
-
-  const prompt = `You are an English teacher at an Indonesian high school. Generate exactly 10 multiple choice quiz questions for a 10th grade student about ${chapterInfo}
-
-Mix of question types:
-- Text structure identification (what part of the text is this?)
-- Grammar in context (choose the correct form)
-- Vocabulary meaning
-- Reading comprehension (give a short 3-4 sentence passage, ask about it)
-- Purpose/function of text elements
-
-Rules:
-- Each question has exactly 5 options labeled A, B, C, D, E
-- Only ONE correct answer per question
-- Make questions varied and not repetitive
-- Use clear, simple English appropriate for 10th graders
-- Make wrong answers plausible but clearly wrong to someone who studied
-
-Respond ONLY with a valid JSON array, no markdown, no explanation, exactly this structure:
-[
-  {
-    "q": "Question text here?",
-    "options": ["A. option", "B. option", "C. option", "D. option", "E. option"],
-    "answer": "A",
-    "explanation": "Brief explanation of why A is correct."
-  }
-]`;
-
   try {
-    const res = await fetch(ANTH, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    const data = await res.json();
-    const raw  = data.content?.[0]?.text || '';
-    // Strip any accidental markdown fences
-    const clean = raw.replace(/```json|```/g, '').trim();
-    questions = JSON.parse(clean);
-
-    if (!Array.isArray(questions) || questions.length === 0) throw new Error('Bad response');
-
+    // Route through Apps Script to avoid CORS issues
+    const res = await apiGet({ action: 'generateQuiz', chapter: selectedChapter });
+    if (res.error) throw new Error(res.error);
+    questions = res.questions;
+    if (!Array.isArray(questions) || questions.length === 0) throw new Error('No questions returned');
     renderQuiz();
   } catch(e) {
     main.innerHTML = `
       <div class="step-card" style="text-align:center;padding:40px 20px;">
         <div style="font-size:2.5rem;margin-bottom:16px;">😕</div>
         <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;">Generation Failed</div>
-        <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:24px;">Something went wrong generating your quiz. Please try again.</div>
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:24px;">${e.message || 'Something went wrong. Please try again.'}</div>
         <a href="quiz.html" class="btn-primary" style="display:block;text-decoration:none;text-align:center;">Try Again</a>
       </div>`;
   }
@@ -517,6 +493,75 @@ async function saveScore(score) {
   } catch(e) {
     document.getElementById('savingBox').className = 'saving-box err';
     document.getElementById('savingBox').innerHTML = `⚠️ Couldn't save automatically. Show this to your teacher: <strong>${selectedStudent.name} · Ch${selectedChapter} · Score: ${score}/10</strong>`;
+  }
+}
+
+// ── TEACHER RESULTS ──────────────────────────────────────────
+(function checkTeacherSession() {
+  const u = sessionStorage.getItem('eq_tu');
+  const p = sessionStorage.getItem('eq_tp');
+  if (u && p) {
+    apiGet({ action:'checkLogin', username:u, password:p })
+      .then(d => { if (d.ok) document.getElementById('teacherResultsBtn').style.display = 'block'; })
+      .catch(()=>{});
+  }
+})();
+
+async function showTeacherResults() {
+  const u = sessionStorage.getItem('eq_tu');
+  const p = sessionStorage.getItem('eq_tp');
+  const cls = document.getElementById('classSelect').value;
+  if (!cls) { alert('Please select a class first.'); return; }
+
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `<div class="step-card gen-state"><div class="gen-icon">📊</div><div class="gen-title">Loading results...</div></div>`;
+
+  try {
+    const res = await apiGet({ action:'getQuizResults', username:u, password:p, className:cls });
+    if (!res.success) throw new Error(res.error);
+
+    const clsLabel = cls.replace('XE','X E-');
+    const chapters = res.quizCols.length > 0 ? res.quizCols : ['Quiz Ch4','Quiz Ch5'];
+
+    const colHeaders = chapters.map(c => `<th>${c.replace('Quiz ','')}</th>`).join('');
+    const rows = res.results.length === 0
+      ? `<tr><td colspan="${chapters.length + 2}" style="text-align:center;color:var(--text-muted);padding:24px;">No quiz attempts yet for ${clsLabel}</td></tr>`
+      : res.results.map((s, i) => {
+          const scoreCells = chapters.map(col => {
+            const sc = s.quizzes[col];
+            if (sc === undefined) return `<td><span class="score-chip score-none">—</span></td>`;
+            const cls2 = sc >= 9 ? 'score-great' : sc >= 7 ? 'score-good' : sc >= 5 ? 'score-okay' : 'score-low';
+            return `<td><span class="score-chip ${cls2}">${sc}/10</span></td>`;
+          }).join('');
+          return `<tr>
+            <td>${i+1}</td>
+            <td><strong>${s.nickname || s.name.split(' ').slice(0,2).join(' ')}</strong><br/><span style="font-size:0.75rem;color:var(--text-muted)">${s.name}</span></td>
+            ${scoreCells}
+          </tr>`;
+        }).join('');
+
+    main.innerHTML = `
+      <div class="step-card" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;">📊 Quiz Results · ${clsLabel}</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:3px;">${res.results.length} student${res.results.length !== 1 ? 's' : ''} attempted</div>
+          </div>
+          <button onclick="location.reload()" style="padding:8px 16px;background:var(--off-white);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;color:var(--text-muted);">← Back</button>
+        </div>
+        <div class="results-table-wrap">
+          <table class="results-table">
+            <thead><tr><th>#</th><th>Student</th>${colHeaders}</tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>`;
+  } catch(e) {
+    main.innerHTML = `<div class="step-card" style="text-align:center;padding:40px;">
+      <div style="font-size:2rem;margin-bottom:12px;">😕</div>
+      <div style="font-size:0.95rem;color:var(--text-muted);">${e.message || 'Failed to load results'}</div>
+      <button onclick="location.reload()" style="margin-top:16px;padding:10px 20px;background:var(--purple);color:#fff;border:none;border-radius:10px;cursor:pointer;">Try Again</button>
+    </div>`;
   }
 }
 </script>
