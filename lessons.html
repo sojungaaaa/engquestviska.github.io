@@ -11,12 +11,12 @@
       --purple: #7C3AED; --purple-light: #A78BFA; --purple-soft: #EDE9FE;
       --purple-mid: #C4B5FD; --white: #FFFFFF; --off-white: #F9F7FF;
       --text-dark: #1E1040; --text-muted: #6B5B95; --border: #E5DEFF;
-      --accent: #F59E0B; --green: #10B981;
+      --accent: #F59E0B; --green: #10B981; --red: #EF4444;
     }
     body { font-family: 'IBM Plex Sans', sans-serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; }
     header { background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 50%, #4C1D95 100%); padding: 36px 24px 52px; text-align: center; position: relative; overflow: hidden; }
     header::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size: 28px 28px; pointer-events: none; }
-    .back-btn { position: absolute; top: 20px; left: 20px; z-index: 2; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.88rem; font-weight: 600; padding: 8px 18px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .back-btn { position: absolute; top: 20px; left: 20px; z-index: 2; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); color: #fff; font-size: 0.88rem; font-weight: 600; padding: 8px 18px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
     .back-btn:hover { background: rgba(255,255,255,0.25); }
     header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 800; color: #fff; position: relative; z-index: 1; }
     header h1 span { color: var(--accent); font-style: italic; }
@@ -28,8 +28,10 @@
     .chapter-badge { background: linear-gradient(135deg, var(--purple), #5B21B6); color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; flex-shrink: 0; letter-spacing: 0.05em; }
     .chapter-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; }
     .chapter-line { flex: 1; height: 1.5px; background: var(--border); }
+    .add-material-btn { display: none; align-items: center; gap: 6px; padding: 7px 14px; background: rgba(124,58,237,0.1); border: 1.5px solid var(--purple-mid); border-radius: 999px; color: var(--purple); font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: all 0.15s; flex-shrink: 0; }
+    .add-material-btn:hover { background: var(--purple-soft); }
     .pdf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-    .pdf-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+    .pdf-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
     .pdf-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(124,58,237,0.12); }
     .pdf-preview { width: 100%; aspect-ratio: 4/3; background: var(--purple-soft); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; border-bottom: 1.5px solid var(--border); cursor: pointer; }
     .pdf-preview iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
@@ -45,6 +47,8 @@
     .btn-view:hover { background: var(--purple-mid); }
     .btn-download { padding: 10px 14px; background: var(--purple); color: #fff; border: none; border-radius: 10px; font-size: 0.85rem; font-weight: 700; cursor: pointer; font-family: inherit; text-decoration: none; display: flex; align-items: center; transition: opacity 0.15s; }
     .btn-download:hover { opacity: 0.85; }
+    .btn-delete { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: rgba(239,68,68,0.9); color: #fff; border: none; font-size: 0.75rem; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 5; }
+    .teacher-active .btn-delete { display: flex; }
     .coming-soon-card { background: var(--white); border: 1.5px dashed var(--border); border-radius: 20px; padding: 32px 24px; display: flex; align-items: center; gap: 20px; }
     .cs-icon { width: 56px; height: 56px; background: var(--off-white); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; border: 1.5px solid var(--border); }
     .cs-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
@@ -59,8 +63,6 @@
     .btn-modal-close { background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); color: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .modal-iframe-wrap { width: 100%; max-width: 900px; flex: 1; max-height: 80vh; border-radius: 16px; overflow: hidden; background: #fff; }
     .modal-iframe-wrap iframe { width: 100%; height: 100%; border: none; min-height: 70vh; }
-    .add-material-btn { display: none; align-items: center; gap: 6px; padding: 7px 14px; background: rgba(124,58,237,0.1); border: 1.5px solid var(--purple-mid); border-radius: 999px; color: var(--purple); font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: all 0.15s; flex-shrink: 0; }
-    .add-material-btn:hover { background: var(--purple-soft); }
     .am-overlay { position: fixed; inset: 0; background: rgba(15,10,40,0.7); backdrop-filter: blur(8px); z-index: 300; display: flex; align-items: flex-end; justify-content: center; }
     .am-overlay.hidden { display: none; }
     .am-sheet { background: #fff; border-radius: 28px 28px 0 0; width: 100%; max-width: 540px; padding-bottom: 32px; }
@@ -77,6 +79,9 @@
     .am-err { background: #FEE2E2; border: 1.5px solid #FCA5A5; border-radius: 10px; padding: 10px 14px; font-size: 0.82rem; color: #991B1B; display: none; }
     .am-err.show { display: block; }
     .am-submit { width: 100%; padding: 14px; background: linear-gradient(135deg, #7C3AED, #5B21B6); color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 0.95rem; border: none; border-radius: 14px; cursor: pointer; }
+    .am-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .spinner-sm { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
     footer { background: #1E1040; color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 0.85rem; }
     footer strong { color: #A78BFA; }
   </style>
@@ -87,8 +92,8 @@
   <div class="modal-top">
     <div class="modal-title" id="modalTitle">Document</div>
     <div class="modal-actions">
-      <a class="btn-modal-download" id="modalDownload" href="#" target="_blank">⬇ Download</a>
-      <button class="btn-modal-close" onclick="closeModal()">✕</button>
+      <a class="btn-modal-download" id="modalDownload" href="#" target="_blank">&#8595; Download</a>
+      <button class="btn-modal-close" onclick="closeModal()">&#10005;</button>
     </div>
   </div>
   <div class="modal-iframe-wrap">
@@ -101,7 +106,7 @@
     <div class="am-handle"></div>
     <div class="am-head">
       <div class="am-head-title" id="amTitle">Add Material</div>
-      <button class="am-close-btn" id="amCloseBtn">✕</button>
+      <button class="am-close-btn" id="amCloseBtn">&#10005;</button>
     </div>
     <div class="am-body">
       <div class="am-field">
@@ -111,9 +116,7 @@
       <div class="am-field">
         <label>Google Drive File ID or URL</label>
         <input type="text" id="amFileId" placeholder="Paste Drive link or just the file ID"/>
-        <div class="am-hint">
-          From your share link: <code>drive.google.com/file/d/<strong>COPY_THIS</strong>/view</code>
-        </div>
+        <div class="am-hint">From your share link: <code>drive.google.com/file/d/<strong>COPY_THIS</strong>/view</code></div>
       </div>
       <div class="am-field">
         <label>File Type</label>
@@ -125,15 +128,15 @@
         </select>
       </div>
       <div class="am-err" id="amErr"></div>
-      <button class="am-submit" id="amSubmitBtn">＋ Add Material</button>
+      <button class="am-submit" id="amSubmitBtn">&#65291; Add Material</button>
     </div>
   </div>
 </div>
 
 <header>
-  <a class="back-btn" href="index.html">← Back</a>
+  <a class="back-btn" href="index.html">&#8592; Back</a>
   <h1>Lesson <span>Materials</span></h1>
-  <p class="header-sub">English Quest · SMA Negeri 6 Surakarta</p>
+  <p class="header-sub">English Quest &middot; SMA Negeri 6 Surakarta</p>
 </header>
 <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" preserveAspectRatio="none">
   <path fill="#4C1D95" d="M0,32 C360,0 1080,64 1440,32 L1440,0 L0,0 Z"/>
@@ -146,14 +149,16 @@
       <div class="chapter-badge">CHAPTER 4</div>
       <div class="chapter-title">Analytical Exposition</div>
       <div class="chapter-line"></div>
-      <button class="add-material-btn" id="addBtn4">&#xFF0B; Add</button>
+      <button class="add-material-btn" id="addBtn4">&#65291; Add</button>
     </div>
     <div class="pdf-grid" id="grid-ch4">
-      <div class="pdf-card">
+      <!-- hardcoded defaults -->
+      <div class="pdf-card" data-fileid="12CCKNiZ2uU9eOmKJ_vxkRGE5rAmAQWRx">
+        <button class="btn-delete" onclick="deleteMaterial(4,'12CCKNiZ2uU9eOmKJ_vxkRGE5rAmAQWRx',this)">&#10005;</button>
         <div class="pdf-preview" onclick="openPDF('Fact vs Opinion','https://drive.google.com/file/d/12CCKNiZ2uU9eOmKJ_vxkRGE5rAmAQWRx/preview','https://drive.google.com/uc?export=download&id=12CCKNiZ2uU9eOmKJ_vxkRGE5rAmAQWRx')">
           <span class="pdf-icon">&#128196;</span>
           <iframe src="https://drive.google.com/file/d/12CCKNiZ2uU9eOmKJ_vxkRGE5rAmAQWRx/preview" title="Fact vs Opinion"></iframe>
-          <div class="pdf-overlay"><div class="pdf-overlay-btn">&#128065; View</div></div>
+          <div class="pdf-overlay"><div class="pdf-overlay-btn">View</div></div>
         </div>
         <div class="pdf-info">
           <div class="pdf-name">Fact vs Opinion</div>
@@ -164,11 +169,12 @@
           </div>
         </div>
       </div>
-      <div class="pdf-card">
+      <div class="pdf-card" data-fileid="1iNKhUJeCStmsQahqrL7lwDBg4Wl72ePQ">
+        <button class="btn-delete" onclick="deleteMaterial(4,'1iNKhUJeCStmsQahqrL7lwDBg4Wl72ePQ',this)">&#10005;</button>
         <div class="pdf-preview" onclick="openPDF('Argument','https://drive.google.com/file/d/1iNKhUJeCStmsQahqrL7lwDBg4Wl72ePQ/preview','https://drive.google.com/uc?export=download&id=1iNKhUJeCStmsQahqrL7lwDBg4Wl72ePQ')">
           <span class="pdf-icon">&#128196;</span>
           <iframe src="https://drive.google.com/file/d/1iNKhUJeCStmsQahqrL7lwDBg4Wl72ePQ/preview" title="Argument"></iframe>
-          <div class="pdf-overlay"><div class="pdf-overlay-btn">&#128065; View</div></div>
+          <div class="pdf-overlay"><div class="pdf-overlay-btn">View</div></div>
         </div>
         <div class="pdf-info">
           <div class="pdf-name">Argument</div>
@@ -187,7 +193,7 @@
       <div class="chapter-badge">CHAPTER 5</div>
       <div class="chapter-title">Narrative Text</div>
       <div class="chapter-line"></div>
-      <button class="add-material-btn" id="addBtn5">&#xFF0B; Add</button>
+      <button class="add-material-btn" id="addBtn5">&#65291; Add</button>
     </div>
     <div class="pdf-grid" id="grid-ch5">
       <div class="coming-soon-card" id="ch5-empty">
@@ -205,6 +211,28 @@
 <footer>&#169; 2025 <strong>English Quest</strong> &middot; SMA Negeri 6 Surakarta &middot; Built with &#10084;&#65039; by <strong>LaksMedia</strong></footer>
 
 <script>
+var SCORES_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
+var savedUser = localStorage.getItem('eq_tu') || '';
+var savedPass = localStorage.getItem('eq_tp') || '';
+var isTeacher = !!savedUser;
+var amChapter = 4;
+
+function apiGet(params) {
+  var url = SCORES_API + '?';
+  var parts = [];
+  for (var k in params) parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k]));
+  url += parts.join('&');
+  return new Promise(function(resolve, reject) {
+    var cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    var s = document.createElement('script');
+    window[cb] = function(d) { delete window[cb]; document.head.removeChild(s); resolve(d); };
+    s.onerror = function() { reject(new Error('Network error')); };
+    s.src = url + '&callback=' + cb;
+    document.head.appendChild(s);
+  });
+}
+
+// ── PDF VIEWER ──────────────────────────────────────────────
 function openPDF(title, previewUrl, downloadUrl) {
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalIframe').src = previewUrl;
@@ -212,18 +240,79 @@ function openPDF(title, previewUrl, downloadUrl) {
   document.getElementById('pdfModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
-
 function closeModal() {
   document.getElementById('pdfModal').classList.add('hidden');
   document.getElementById('modalIframe').src = '';
   document.body.style.overflow = '';
 }
+document.getElementById('pdfModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
-document.getElementById('pdfModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
+// ── TEACHER BUTTONS ─────────────────────────────────────────
+if (isTeacher) {
+  document.body.classList.add('teacher-active');
+  document.getElementById('addBtn4').style.display = 'flex';
+  document.getElementById('addBtn5').style.display = 'flex';
+}
 
-var amChapter = 4;
+// ── LOAD SAVED MATERIALS ON PAGE LOAD ───────────────────────
+function loadSavedMaterials() {
+  [4, 5].forEach(function(ch) {
+    apiGet({ action: 'getMaterials', chapter: ch }).then(function(res) {
+      if (res.materials && res.materials.length > 0) {
+        res.materials.forEach(function(m) {
+          appendCard(ch, m.title, m.fileId, m.fileType, false);
+        });
+      }
+    }).catch(function() {});
+  });
+}
+
+function appendCard(ch, name, fileId, fileType, animate) {
+  var previewUrl  = 'https://drive.google.com/file/d/' + fileId + '/preview';
+  var downloadUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;
+  var chLabel = 'Chapter ' + ch;
+
+  // Don't duplicate existing hardcoded cards
+  var existing = document.querySelector('[data-fileid="' + fileId + '"]');
+  if (existing) return;
+
+  var empty = document.getElementById('ch' + ch + '-empty');
+  if (empty) empty.remove();
+
+  var card = document.createElement('div');
+  card.className = 'pdf-card';
+  card.setAttribute('data-fileid', fileId);
+
+  var delBtn = document.createElement('button');
+  delBtn.className = 'btn-delete';
+  delBtn.innerHTML = '&#10005;';
+  delBtn.onclick = function() { deleteMaterial(ch, fileId, delBtn); };
+
+  var preview = document.createElement('div');
+  preview.className = 'pdf-preview';
+  preview.innerHTML = '<span class="pdf-icon">&#128196;</span><iframe src="' + previewUrl + '" title="' + name + '"></iframe><div class="pdf-overlay"><div class="pdf-overlay-btn">View</div></div>';
+  preview.onclick = function() { openPDF(name, previewUrl, downloadUrl); };
+
+  var info = document.createElement('div');
+  info.className = 'pdf-info';
+
+  var pName = document.createElement('div'); pName.className = 'pdf-name'; pName.textContent = name;
+  var pMeta = document.createElement('div'); pMeta.className = 'pdf-meta'; pMeta.textContent = (fileType || 'PDF') + ' - ' + chLabel;
+  var pActions = document.createElement('div'); pActions.className = 'pdf-actions';
+  var btnView = document.createElement('button'); btnView.className = 'btn-view'; btnView.textContent = 'View'; btnView.onclick = function() { openPDF(name, previewUrl, downloadUrl); };
+  var btnDl = document.createElement('a'); btnDl.className = 'btn-download'; btnDl.href = downloadUrl; btnDl.target = '_blank'; btnDl.textContent = 'Download';
+  pActions.appendChild(btnView); pActions.appendChild(btnDl);
+  info.appendChild(pName); info.appendChild(pMeta); info.appendChild(pActions);
+  card.appendChild(delBtn); card.appendChild(preview); card.appendChild(info);
+
+  document.getElementById('grid-ch' + ch).appendChild(card);
+}
+
+// ── ADD MATERIAL ─────────────────────────────────────────────
+document.getElementById('addBtn4').onclick = function() { openAddMaterial(4); };
+document.getElementById('addBtn5').onclick = function() { openAddMaterial(5); };
+document.getElementById('amCloseBtn').onclick = closeAddMaterial;
+document.getElementById('amOverlay').onclick = function(e) { if (e.target === this) closeAddMaterial(); };
 
 function openAddMaterial(ch) {
   amChapter = ch;
@@ -232,125 +321,88 @@ function openAddMaterial(ch) {
   document.getElementById('amFileId').value = '';
   document.getElementById('amType').value = 'PDF';
   document.getElementById('amErr').className = 'am-err';
+  document.getElementById('amSubmitBtn').disabled = false;
+  document.getElementById('amSubmitBtn').innerHTML = '&#65291; Add Material';
   document.getElementById('amOverlay').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
-
 function closeAddMaterial() {
   document.getElementById('amOverlay').classList.add('hidden');
   document.body.style.overflow = '';
 }
 
-function submitAddMaterial() {
-  var raw  = document.getElementById('amFileId').value.trim();
-  var name = document.getElementById('amName').value.trim();
-  var type = document.getElementById('amType').value;
-  var err  = document.getElementById('amErr');
+document.getElementById('amSubmitBtn').onclick = function() {
+  var raw    = document.getElementById('amFileId').value.trim();
+  var name   = document.getElementById('amName').value.trim();
+  var type   = document.getElementById('amType').value;
+  var err    = document.getElementById('amErr');
+  var btn    = document.getElementById('amSubmitBtn');
 
   var fileId = raw;
   var m = raw.match(/\/d\/([a-zA-Z0-9_-]+)/);
   if (m) fileId = m[1];
 
-  if (!name) {
-    err.textContent = 'Please enter a title.';
-    err.className = 'am-err show';
-    return;
-  }
-  if (!fileId || fileId.length < 10) {
-    err.textContent = 'Please enter a valid Drive file ID or link.';
-    err.className = 'am-err show';
-    return;
-  }
+  if (!name) { err.textContent = 'Please enter a title.'; err.className = 'am-err show'; return; }
+  if (!fileId || fileId.length < 10) { err.textContent = 'Please enter a valid Drive file ID or link.'; err.className = 'am-err show'; return; }
   err.className = 'am-err';
 
-  var previewUrl  = 'https://drive.google.com/file/d/' + fileId + '/preview';
-  var downloadUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;
-  var chLabel = 'Chapter ' + amChapter;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-sm"></span>Saving...';
 
-  var card = document.createElement('div');
-  card.className = 'pdf-card';
-
-  var preview = document.createElement('div');
-  preview.className = 'pdf-preview';
-  var iframe = document.createElement('iframe');
-  iframe.src = previewUrl;
-  iframe.title = name;
-  var icon = document.createElement('span');
-  icon.className = 'pdf-icon';
-  icon.textContent = 'PDF';
-  icon.style.cssText = 'font-size:1rem;font-weight:700;color:#7C3AED;opacity:0.5;font-family:monospace;';
-  var overlay = document.createElement('div');
-  overlay.className = 'pdf-overlay';
-  overlay.innerHTML = '<div class="pdf-overlay-btn">View</div>';
-  preview.appendChild(icon);
-  preview.appendChild(iframe);
-  preview.appendChild(overlay);
-  preview.onclick = function() { openPDF(name, previewUrl, downloadUrl); };
-
-  var info = document.createElement('div');
-  info.className = 'pdf-info';
-
-  var pName = document.createElement('div');
-  pName.className = 'pdf-name';
-  pName.textContent = name;
-
-  var pMeta = document.createElement('div');
-  pMeta.className = 'pdf-meta';
-  pMeta.textContent = type + ' - ' + chLabel;
-
-  var pActions = document.createElement('div');
-  pActions.className = 'pdf-actions';
-
-  var btnView = document.createElement('button');
-  btnView.className = 'btn-view';
-  btnView.textContent = 'View';
-  btnView.onclick = function() { openPDF(name, previewUrl, downloadUrl); };
-
-  var btnDl = document.createElement('a');
-  btnDl.className = 'btn-download';
-  btnDl.href = downloadUrl;
-  btnDl.target = '_blank';
-  btnDl.textContent = 'Download';
-
-  pActions.appendChild(btnView);
-  pActions.appendChild(btnDl);
-  info.appendChild(pName);
-  info.appendChild(pMeta);
-  info.appendChild(pActions);
-
-  card.appendChild(preview);
-  card.appendChild(info);
-
-  var empty = document.getElementById('ch' + amChapter + '-empty');
-  if (empty) empty.remove();
-
-  document.getElementById('grid-ch' + amChapter).appendChild(card);
-  closeAddMaterial();
-
-  var toast = document.createElement('div');
-  toast.textContent = 'Added: ' + name;
-  toast.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1E1040;color:#fff;padding:12px 22px;border-radius:999px;font-size:0.85rem;font-weight:600;z-index:9999;';
-  document.body.appendChild(toast);
-  setTimeout(function() { document.body.removeChild(toast); }, 3000);
-}
-
-document.getElementById('amCloseBtn').onclick = function() { closeAddMaterial(); };
-document.getElementById('amSubmitBtn').onclick = function() { submitAddMaterial(); };
-document.getElementById('addBtn4').onclick = function() { openAddMaterial(4); };
-document.getElementById('addBtn5').onclick = function() { openAddMaterial(5); };
-
-document.getElementById('amOverlay').onclick = function(e) {
-  if (e.target === this) closeAddMaterial();
+  apiGet({ action: 'addMaterial', username: savedUser, password: savedPass, chapter: amChapter, title: name, fileId: fileId, fileType: type })
+    .then(function(res) {
+      if (res.success) {
+        appendCard(amChapter, name, fileId, type, true);
+        closeAddMaterial();
+        showToast('Added: ' + name);
+      } else {
+        err.textContent = res.error || 'Failed to save.';
+        err.className = 'am-err show';
+        btn.disabled = false;
+        btn.innerHTML = '&#65291; Add Material';
+      }
+    }).catch(function() {
+      err.textContent = 'Network error. Please try again.';
+      err.className = 'am-err show';
+      btn.disabled = false;
+      btn.innerHTML = '&#65291; Add Material';
+    });
 };
 
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') { closeModal(); closeAddMaterial(); }
-});
-
-if (localStorage.getItem('eq_tu')) {
-  document.getElementById('addBtn4').style.display = 'flex';
-  document.getElementById('addBtn5').style.display = 'flex';
+// ── DELETE MATERIAL ─────────────────────────────────────────
+function deleteMaterial(ch, fileId, btn) {
+  if (!confirm('Remove this material?')) return;
+  apiGet({ action: 'deleteMaterial', username: savedUser, password: savedPass, chapter: ch, fileId: fileId })
+    .then(function(res) {
+      if (res.success) {
+        var card = document.querySelector('[data-fileid="' + fileId + '"]');
+        if (card) card.remove();
+        // Show coming soon if grid is empty
+        var grid = document.getElementById('grid-ch' + ch);
+        if (grid && grid.children.length === 0) {
+          var cs = document.createElement('div');
+          cs.className = 'coming-soon-card';
+          cs.id = 'ch' + ch + '-empty';
+          cs.innerHTML = '<div class="cs-icon">&#128218;</div><div><div class="cs-title">Chapter ' + ch + ' Materials</div><div class="cs-sub">No materials yet.</div></div><div class="cs-badge">EMPTY</div>';
+          grid.appendChild(cs);
+        }
+        showToast('Removed!');
+      }
+    });
 }
+
+function showToast(msg) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1E1040;color:#fff;padding:12px 22px;border-radius:999px;font-size:0.85rem;font-weight:600;z-index:9999;white-space:nowrap;';
+  document.body.appendChild(t);
+  setTimeout(function() { if (t.parentNode) t.parentNode.removeChild(t); }, 3000);
+}
+
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeModal(); closeAddMaterial(); } });
+
+// Load saved materials on startup
+loadSavedMaterials();
 </script>
 </body>
 </html>
