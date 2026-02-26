@@ -195,7 +195,7 @@
   </style>
 <script>
   // Run ASAP before body renders to avoid flash
-  if (sessionStorage.getItem('eq_tu')) {
+  if (localStorage.getItem('eq_tu')) {
     document.addEventListener('DOMContentLoaded', function() {
       document.body.classList.add('teacher-active');
       document.querySelectorAll('.add-material-btn').forEach(b => b.style.display = 'flex');
@@ -369,8 +369,8 @@
 <script>
   // Teacher session check
   (function() {
-    const u = sessionStorage.getItem('eq_tu');
-    const p = sessionStorage.getItem('eq_tp');
+    const u = localStorage.getItem('eq_tu');
+    const p = localStorage.getItem('eq_tp');
     if (u && p) {
       document.body.classList.add('teacher-active');
       // Also show buttons directly in case CSS class fails
