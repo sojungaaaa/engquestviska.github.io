@@ -132,6 +132,52 @@
     .toast.ok  { background:#059669; }
     .toast.err { background:#DC2626; }
 
+
+    /* ── STRIKE CLEARANCE GUIDE ── */
+    .clearance-guide { background:var(--white); border:1.5px solid var(--border); border-radius:20px; overflow:hidden; margin-top:16px; }
+    .clearance-header { background:linear-gradient(135deg,#7C3AED,#5B21B6); padding:16px 20px; display:flex; align-items:center; gap:12px; }
+    .clearance-header-icon { font-size:1.4rem; }
+    .clearance-header-title { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:#fff; }
+    .clearance-header-sub { font-size:0.75rem; color:rgba(255,255,255,0.7); margin-top:2px; }
+
+    .clearance-body { padding:20px; }
+    .clearance-intro { font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin-bottom:18px; padding-bottom:18px; border-bottom:1.5px solid var(--border); }
+    .clearance-intro strong { color:var(--text-dark); }
+
+    /* Chapter badge */
+    .chapter-badge { display:inline-flex; align-items:center; gap:8px; background:var(--purple-soft); border:1.5px solid var(--purple-mid); border-radius:12px; padding:8px 14px; margin-bottom:18px; }
+    .chapter-badge-label { font-size:0.7rem; font-weight:700; color:var(--purple-light); text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; }
+    .chapter-badge-val { font-size:0.95rem; font-weight:700; color:var(--purple); font-family:'Playfair Display',serif; }
+
+    /* Requirements */
+    .req-title { font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-bottom:10px; }
+    .req-item { display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
+    .req-item:last-child { border-bottom:none; }
+    .req-num { width:24px; height:24px; border-radius:50%; background:var(--purple-soft); color:var(--purple); font-size:0.75rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'IBM Plex Mono',monospace; }
+    .req-text { font-size:0.88rem; color:var(--text-dark); line-height:1.5; }
+    .req-text span { color:var(--text-muted); font-size:0.8rem; display:block; margin-top:2px; }
+
+    /* Structure section */
+    .structure-wrap { background:var(--off-white); border:1.5px solid var(--border); border-radius:14px; padding:16px; margin-top:16px; }
+    .structure-title { font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-bottom:12px; }
+    .structure-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; }
+    .structure-item:last-child { margin-bottom:0; }
+    .structure-tag { font-size:0.68rem; font-weight:800; padding:3px 10px; border-radius:999px; white-space:nowrap; flex-shrink:0; font-family:'IBM Plex Mono',monospace; }
+    .structure-tag.thesis    { background:#EDE9FE; color:#5B21B6; }
+    .structure-tag.arg       { background:#DBEAFE; color:#1D4ED8; }
+    .structure-tag.reit      { background:#D1FAE5; color:#065F46; }
+    .structure-tag.orient    { background:#FEF3C7; color:#92400E; }
+    .structure-tag.compl     { background:#FCE7F3; color:#9D174D; }
+    .structure-tag.resol     { background:#FEE2E2; color:#991B1B; }
+    .structure-desc { font-size:0.82rem; color:var(--text-dark); line-height:1.4; }
+    .structure-desc span { font-size:0.75rem; color:var(--text-muted); display:block; margin-top:2px; }
+
+    /* Submit section */
+    .submit-box { background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(245,158,11,0.03)); border:1.5px solid rgba(245,158,11,0.3); border-radius:14px; padding:16px 18px; margin-top:16px; display:flex; gap:12px; align-items:flex-start; }
+    .submit-box-icon { font-size:1.3rem; flex-shrink:0; }
+    .submit-box-title { font-size:0.85rem; font-weight:700; color:#92400E; margin-bottom:4px; }
+    .submit-box-text { font-size:0.82rem; color:#92400E; line-height:1.5; opacity:0.85; }
+
     .hidden { display:none !important; }
     footer { background:var(--text-dark); color:rgba(255,255,255,0.5); text-align:center; padding:20px; font-size:0.85rem; }
     footer strong { color:var(--purple-light); }
@@ -251,8 +297,8 @@
   let pendingStrike = null; // { studentNo, cls }
 
   // Restore session
-  savedUser = sessionStorage.getItem('eq_tu') || '';
-  savedPass = sessionStorage.getItem('eq_tp') || '';
+  savedUser = localStorage.getItem('eq_tu') || '';
+  savedPass = localStorage.getItem('eq_tp') || '';
   if (savedUser && savedPass) verifyLogin(savedUser, savedPass, true);
 
   // ── API ──────────────────────────────────────────────────────
@@ -293,7 +339,7 @@
       const data = await apiGet({ action: 'checkLogin', username: u, password: p });
       if (data.ok) {
         isTeacher = true; savedUser = u; savedPass = p;
-        sessionStorage.setItem('eq_tu', u); sessionStorage.setItem('eq_tp', p);
+        localStorage.setItem('eq_tu', u); localStorage.setItem('eq_tp', p);
         document.getElementById('loginModal').classList.add('hidden');
         document.getElementById('headerRight').innerHTML = `<div class="teacher-badge">🎓 Teacher <span style="cursor:pointer;margin-left:4px" onclick="logout()">✕</span></div>`;
         document.getElementById('tabTeacher').classList.remove('hidden');
@@ -305,7 +351,7 @@
   }
   function logout() {
     isTeacher = false; savedUser = ''; savedPass = '';
-    sessionStorage.removeItem('eq_tu'); sessionStorage.removeItem('eq_tp');
+    localStorage.removeItem('eq_tu'); localStorage.removeItem('eq_tp');
     document.getElementById('headerRight').innerHTML = `<button class="teacher-btn" onclick="openLogin()">🔑 Teacher</button>`;
     document.getElementById('tabTeacher').classList.add('hidden');
     switchTab('student');
@@ -377,6 +423,7 @@
         ${data.reason ? `<div class="strike-detail-row"><span class="strike-detail-label">Reason</span><span class="strike-detail-val">${data.reason}</span></div>` : ''}
       </div>` : '';
 
+    const showClearance = total > 0;
     document.getElementById('studentResult').innerHTML = `
       <div class="strike-card">
         <div class="profile-strip">
@@ -398,7 +445,91 @@
           </div>
           ${detailHtml}
         </div>
-      </div>`;
+      </div>
+      ${showClearance ? `
+      <div class="clearance-guide" id="clearanceGuide">
+        <div class="clearance-header">
+          <div class="clearance-header-icon">📝</div>
+          <div>
+            <div class="clearance-header-title">How to Clear Your Strike</div>
+            <div class="clearance-header-sub">Complete this writing task to remove your strike</div>
+          </div>
+        </div>
+        <div class="clearance-body">
+          <div class="clearance-intro">
+            To clear your strike, you must submit a <strong>writing task</strong> to your teacher.
+            The writing must meet all the requirements below. Once your teacher reviews and approves it,
+            your strike will be removed.
+          </div>
+
+          <div class="chapter-badge">
+            <div class="chapter-badge-label">Active Chapter</div>
+            <div class="chapter-badge-val">Chapter 4 · Analytical Exposition Text</div>
+          </div>
+
+          <div class="req-title">✅ Requirements</div>
+          <div class="req-item">
+            <div class="req-num">1</div>
+            <div class="req-text">Write a <strong>Analytical Exposition Text</strong>
+              <span>An Analytical Exposition is a text that presents an argument or point of view and aims to persuade the reader that something is important or true.</span>
+            </div>
+          </div>
+          <div class="req-item">
+            <div class="req-num">2</div>
+            <div class="req-text">Minimum <strong>3 paragraphs</strong>
+              <span>Each paragraph must cover a different part of the text structure.</span>
+            </div>
+          </div>
+          <div class="req-item">
+            <div class="req-num">3</div>
+            <div class="req-text">Minimum <strong>5 sentences per paragraph</strong>
+              <span>Short, one-line sentences don't count. Make them meaningful!</span>
+            </div>
+          </div>
+          <div class="req-item">
+            <div class="req-num">4</div>
+            <div class="req-text">Include <strong>all text structure parts</strong>
+              <span>See the structure guide below — every part must appear in your writing.</span>
+            </div>
+          </div>
+
+          <div class="structure-wrap">
+            <div class="structure-title">📐 Text Structure Guide</div>
+            <div class="structure-item">
+        <span class="structure-tag thesis">Thesis</span>
+        <div class="structure-desc">State your main argument or point of view.<span>e.g. "Social media has more negative impacts on teenagers."</span></div>
+      </div>
+<div class="structure-item">
+        <span class="structure-tag arg">Argument 1</span>
+        <div class="structure-desc">Give your first reason to support the thesis.<span>Include facts, examples, or logical reasoning.</span></div>
+      </div>
+<div class="structure-item">
+        <span class="structure-tag arg">Argument 2</span>
+        <div class="structure-desc">Give your second reason to support the thesis.<span>The more specific, the stronger your argument.</span></div>
+      </div>
+<div class="structure-item">
+        <span class="structure-tag arg">Argument 3</span>
+        <div class="structure-desc">Optional: Give a third reason.<span>More arguments = stronger text. Aim for at least 2.</span></div>
+      </div>
+<div class="structure-item">
+        <span class="structure-tag reit">Reiteration</span>
+        <div class="structure-desc">Restate your thesis and summarize your arguments.<span>Do NOT introduce new ideas here.</span></div>
+      </div>
+          </div>
+
+          <div class="submit-box">
+            <div class="submit-box-icon">📬</div>
+            <div>
+              <div class="submit-box-title">How to Submit</div>
+              <div class="submit-box-text">
+                Write your text on paper or digitally, then submit it directly to your teacher
+                (in class or via WhatsApp). Your teacher will review it and clear your strike if it meets all requirements.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>` : ''}`;
   }
 
   // ── TEACHER — LOAD STRIKES ────────────────────────────────────
