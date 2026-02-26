@@ -160,7 +160,7 @@
     /* ADD MATERIAL (TEACHER) */
     .add-material-btn { display:none; align-items:center; gap:6px; padding:7px 14px; background:rgba(124,58,237,0.1); border:1.5px solid var(--purple-mid); border-radius:999px; color:var(--purple); font-size:0.78rem; font-weight:700; cursor:pointer; font-family:'IBM Plex Mono',monospace; transition:all 0.15s; flex-shrink:0; }
     .add-material-btn:hover { background:var(--purple-soft); }
-    body.teacher-active .add-material-btn { display:flex; }
+    body.teacher-active .add-material-btn { display:flex !important; }
 
     /* ADD MATERIAL MODAL */
     .am-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:200; display:flex; align-items:flex-end; justify-content:center; }
@@ -193,6 +193,15 @@
       .modal-title { font-size: 1rem; }
     }
   </style>
+<script>
+  // Run ASAP before body renders to avoid flash
+  if (sessionStorage.getItem('eq_tu')) {
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.classList.add('teacher-active');
+      document.querySelectorAll('.add-material-btn').forEach(b => b.style.display = 'flex');
+    });
+  }
+</script>
 </head>
 <body>
 
@@ -362,7 +371,11 @@
   (function() {
     const u = sessionStorage.getItem('eq_tu');
     const p = sessionStorage.getItem('eq_tp');
-    if (u && p) document.body.classList.add('teacher-active');
+    if (u && p) {
+      document.body.classList.add('teacher-active');
+      // Also show buttons directly in case CSS class fails
+      document.querySelectorAll('.add-material-btn').forEach(b => b.style.display = 'flex');
+    }
   })();
 
   let amChapter = 4;
