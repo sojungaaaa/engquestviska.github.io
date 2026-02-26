@@ -198,8 +198,8 @@
   let studentsData = [];
 
   // Restore session
-  savedUser = sessionStorage.getItem('eq_tu') || '';
-  savedPass = sessionStorage.getItem('eq_tp') || '';
+  savedUser = localStorage.getItem('eq_tu') || '';
+  savedPass = localStorage.getItem('eq_tp') || '';
   if (savedUser && savedPass) verifyLogin(savedUser, savedPass, true);
 
   // ── API ───────────────────────────────────────────────────
@@ -232,7 +232,7 @@
       const data = await apiGet({ action: 'checkLogin', username: u, password: p });
       if (data.ok) {
         savedUser = u; savedPass = p;
-        sessionStorage.setItem('eq_tu', u); sessionStorage.setItem('eq_tp', p);
+        localStorage.setItem('eq_tu', u); localStorage.setItem('eq_tp', p);
         document.getElementById('loginWall').classList.add('hidden');
         document.getElementById('mainPanel').classList.remove('hidden');
         document.getElementById('headerRight').innerHTML = `<div class="teacher-badge">🎓 Teacher <span class="logout-x" onclick="logout()">✕</span></div>`;
@@ -245,7 +245,7 @@
 
   function logout() {
     savedUser = ''; savedPass = '';
-    sessionStorage.removeItem('eq_tu'); sessionStorage.removeItem('eq_tp');
+    localStorage.removeItem('eq_tu'); localStorage.removeItem('eq_tp');
     document.getElementById('loginWall').classList.remove('hidden');
     document.getElementById('mainPanel').classList.add('hidden');
     document.getElementById('headerRight').innerHTML = '';
