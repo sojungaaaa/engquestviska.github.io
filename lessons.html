@@ -325,7 +325,7 @@
   });
 
   // Close on Escape
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); document.getElementById('amOverlay').classList.add('hidden'); document.body.style.overflow = ''; } });
 </script>
 
 <!-- ADD MATERIAL MODAL -->
@@ -405,7 +405,7 @@
     const err    = document.getElementById('amErr');
 
     if (!name || !fileId) { err.textContent = 'Please fill in all fields.'; err.classList.add('show'); return; }
-    if (fileId.length < 10) { err.textContent = 'That doesn't look like a valid Drive file ID.'; err.classList.add('show'); return; }
+    if (fileId.length < 10) { err.textContent = "That doesn't look like a valid Drive file ID."; err.classList.add('show'); return; }
     err.classList.remove('show');
 
     const previewUrl  = 'https://drive.google.com/file/d/' + fileId + '/preview';
@@ -459,9 +459,7 @@
     t._to = setTimeout(() => t.style.opacity = '0', 2800);
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeAddMaterial();
-  });
+
 </script>
 
 </body>
