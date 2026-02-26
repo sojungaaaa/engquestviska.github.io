@@ -169,8 +169,8 @@
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
 let isTeacher = false;
-let savedUser = sessionStorage.getItem('eq_tu') || '';
-let savedPass = sessionStorage.getItem('eq_tp') || '';
+let savedUser = localStorage.getItem('eq_tu') || '';
+let savedPass = localStorage.getItem('eq_tp') || '';
 let countdownInterval = null;
 let currentData = null;
 
