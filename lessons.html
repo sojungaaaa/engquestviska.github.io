@@ -156,6 +156,32 @@
     }
     .modal-iframe-wrap iframe { width: 100%; height: 100%; border: none; min-height: 70vh; }
 
+
+    /* ADD MATERIAL (TEACHER) */
+    .add-material-btn { display:none; align-items:center; gap:6px; padding:7px 14px; background:rgba(124,58,237,0.1); border:1.5px solid var(--purple-mid); border-radius:999px; color:var(--purple); font-size:0.78rem; font-weight:700; cursor:pointer; font-family:'IBM Plex Mono',monospace; transition:all 0.15s; flex-shrink:0; }
+    .add-material-btn:hover { background:var(--purple-soft); }
+    body.teacher-active .add-material-btn { display:flex; }
+
+    /* ADD MATERIAL MODAL */
+    .am-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:200; display:flex; align-items:flex-end; justify-content:center; }
+    .am-overlay.hidden { display:none; }
+    .am-sheet { background:#fff; border-radius:28px 28px 0 0; width:100%; max-width:540px; padding:0 0 32px; animation:amUp 0.35s cubic-bezier(0.34,1.2,0.64,1); }
+    @keyframes amUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+    .am-handle { width:40px; height:4px; background:var(--border); border-radius:999px; margin:12px auto 0; }
+    .am-head { padding:18px 24px 14px; border-bottom:1.5px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .am-head-title { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:800; color:var(--text-dark); }
+    .am-close { width:30px; height:30px; border-radius:50%; background:var(--off-white); border:1.5px solid var(--border); color:var(--text-muted); cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; }
+    .am-body { padding:20px 24px; display:flex; flex-direction:column; gap:14px; }
+    .am-field label { display:block; font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:7px; font-family:'IBM Plex Mono',monospace; }
+    .am-field input, .am-field select { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-family:'IBM Plex Sans',sans-serif; font-size:0.92rem; color:var(--text-dark); background:var(--off-white); outline:none; }
+    .am-field input:focus, .am-field select:focus { border-color:var(--purple-light); background:#fff; }
+    .am-hint { font-size:0.75rem; color:var(--text-muted); margin-top:5px; line-height:1.4; }
+    .am-hint code { background:var(--purple-soft); color:var(--purple); padding:1px 5px; border-radius:4px; font-family:'IBM Plex Mono',monospace; font-size:0.72rem; }
+    .am-submit { width:100%; padding:14px; background:linear-gradient(135deg,var(--purple),#5B21B6); color:#fff; font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:0.95rem; border:none; border-radius:14px; cursor:pointer; margin-top:4px; }
+    .am-submit:hover { opacity:0.9; }
+    .am-err { background:#FEE2E2; border:1.5px solid #FCA5A5; border-radius:10px; padding:10px 14px; font-size:0.82rem; color:#991B1B; display:none; }
+    .am-err.show { display:block; }
+
     footer { background: var(--text-dark); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 0.85rem; }
     footer strong { color: var(--purple-light); }
 
@@ -204,8 +230,9 @@
       <div class="chapter-badge">CHAPTER 4</div>
       <div class="chapter-title">Analytical Exposition</div>
       <div class="chapter-line"></div>
+      <button class="add-material-btn" onclick="openAddMaterial(4)">＋ Add</button>
     </div>
-    <div class="pdf-grid">
+    <div class="pdf-grid" id="grid-ch4">
 
       <!-- Fact vs Opinion -->
       <div class="pdf-card">
@@ -244,20 +271,23 @@
     </div>
   </div>
 
-  <!-- CHAPTER 5 — COMING SOON -->
+  <!-- CHAPTER 5 -->
   <div class="chapter-section">
     <div class="chapter-header">
       <div class="chapter-badge">CHAPTER 5</div>
-      <div class="chapter-title">Coming Soon</div>
+      <div class="chapter-title">Narrative Text</div>
       <div class="chapter-line"></div>
+      <button class="add-material-btn" onclick="openAddMaterial(5)">＋ Add</button>
     </div>
-    <div class="coming-soon-card">
-      <div class="cs-icon">📚</div>
-      <div>
-        <div class="cs-title">Chapter 5 Materials</div>
-        <div class="cs-sub">Will be uploaded soon — stay tuned!</div>
+    <div class="pdf-grid" id="grid-ch5">
+      <div class="coming-soon-card" id="ch5-empty">
+        <div class="cs-icon">📚</div>
+        <div>
+          <div class="cs-title">Chapter 5 Materials</div>
+          <div class="cs-sub">Will be uploaded soon — stay tuned!</div>
+        </div>
+        <div class="cs-badge">COMING SOON</div>
       </div>
-      <div class="cs-badge">COMING SOON</div>
     </div>
   </div>
 
@@ -288,5 +318,138 @@
   // Close on Escape
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
+
+<!-- ADD MATERIAL MODAL -->
+<div class="am-overlay hidden" id="amOverlay" onclick="closeAddMaterial(event)">
+  <div class="am-sheet">
+    <div class="am-handle"></div>
+    <div class="am-head">
+      <div class="am-head-title" id="amTitle">Add Material — Chapter 4</div>
+      <button class="am-close" onclick="closeAddMaterial()">✕</button>
+    </div>
+    <div class="am-body">
+      <div class="am-field">
+        <label>Material Title</label>
+        <input type="text" id="amName" placeholder="e.g. Present Perfect Exercise"/>
+      </div>
+      <div class="am-field">
+        <label>Google Drive File ID</label>
+        <input type="text" id="amFileId" placeholder="e.g. 1aBcDeFgHiJkLmNoPqRsTuVwXyZ"/>
+        <div class="am-hint">
+          From the Drive share link:<br/>
+          <code>drive.google.com/file/d/<strong>FILE_ID</strong>/view</code><br/>
+          Copy only the bold part between <code>/d/</code> and <code>/view</code>
+        </div>
+      </div>
+      <div class="am-field">
+        <label>File Type</label>
+        <select id="amType">
+          <option value="PDF">PDF</option>
+          <option value="PPT">PPT / Slides</option>
+          <option value="DOC">Word Document</option>
+          <option value="IMG">Image</option>
+        </select>
+      </div>
+      <div class="am-err" id="amErr">Please fill in all fields.</div>
+      <button class="am-submit" onclick="submitAddMaterial()">＋ Add Material</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Teacher session check
+  (function() {
+    const u = sessionStorage.getItem('eq_tu');
+    const p = sessionStorage.getItem('eq_tp');
+    if (u && p) document.body.classList.add('teacher-active');
+  })();
+
+  let amChapter = 4;
+
+  function openAddMaterial(ch) {
+    amChapter = ch;
+    document.getElementById('amTitle').textContent = 'Add Material — Chapter ' + ch;
+    document.getElementById('amName').value   = '';
+    document.getElementById('amFileId').value = '';
+    document.getElementById('amType').value   = 'PDF';
+    document.getElementById('amErr').classList.remove('show');
+    document.getElementById('amOverlay').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('amName').focus(), 300);
+  }
+
+  function closeAddMaterial(e) {
+    if (e && e.target !== document.getElementById('amOverlay')) return;
+    document.getElementById('amOverlay').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function submitAddMaterial() {
+    const name   = document.getElementById('amName').value.trim();
+    const fileId = document.getElementById('amFileId').value.trim().replace(/^.*\/d\/([^\/]+).*$/, '$1');
+    const type   = document.getElementById('amType').value;
+    const err    = document.getElementById('amErr');
+
+    if (!name || !fileId) { err.textContent = 'Please fill in all fields.'; err.classList.add('show'); return; }
+    if (fileId.length < 10) { err.textContent = 'That doesn't look like a valid Drive file ID.'; err.classList.add('show'); return; }
+    err.classList.remove('show');
+
+    const previewUrl  = 'https://drive.google.com/file/d/' + fileId + '/preview';
+    const downloadUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;
+    const chLabel     = 'Chapter ' + amChapter;
+    const gridId      = 'grid-ch' + amChapter;
+
+    const card = document.createElement('div');
+    card.className = 'pdf-card';
+    card.innerHTML = \`
+      <div class="pdf-preview">
+        <span class="pdf-icon">📄</span>
+        <iframe src="\${previewUrl}" title="\${name} preview"></iframe>
+        <div class="pdf-overlay"><div class="pdf-overlay-btn">👁 View</div></div>
+      </div>
+      <div class="pdf-info">
+        <div class="pdf-name">\${name}</div>
+        <div class="pdf-meta">\${type} · \${chLabel}</div>
+        <div class="pdf-actions">
+          <button class="btn-view" onclick="openPDF('\${name}', '\${previewUrl}', '\${downloadUrl}')">👁 View</button>
+          <a class="btn-download" href="\${downloadUrl}" target="_blank">⬇</a>
+        </div>
+      </div>\`;
+
+    // Make card clickable to open PDF
+    card.querySelector('.pdf-preview').onclick = () => openPDF(name, previewUrl, downloadUrl);
+
+    // Remove coming soon if present
+    const empty = document.getElementById('ch' + amChapter + '-empty');
+    if (empty) empty.remove();
+
+    document.getElementById(gridId).appendChild(card);
+    closeAddMaterial();
+
+    // Show a quick toast
+    showToast('✅ "' + name + '" added to Chapter ' + amChapter + '!');
+  }
+
+  // Toast notification
+  function showToast(msg) {
+    let t = document.getElementById('lsToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'lsToast';
+      t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1E1040;color:#fff;padding:12px 22px;border-radius:999px;font-size:0.85rem;font-weight:600;z-index:500;opacity:0;transition:opacity 0.3s;white-space:nowrap;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._to);
+    t._to = setTimeout(() => t.style.opacity = '0', 2800);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeAddMaterial();
+  });
+</script>
+
 </body>
 </html>
