@@ -234,8 +234,8 @@
   let studentsCache = {}, currentTeacherClass = '';
 
   // Restore session
-  savedUser = sessionStorage.getItem('eq_tu') || '';
-  savedPass = sessionStorage.getItem('eq_tp') || '';
+  savedUser = localStorage.getItem('eq_tu') || '';
+  savedPass = localStorage.getItem('eq_tp') || '';
   if (savedUser && savedPass) verifyLogin(savedUser, savedPass, true);
 
   // ── API ──────────────────────────────────────────────────────
@@ -290,7 +290,7 @@
       const data = await apiGet({ action: 'checkLogin', username: u, password: p });
       if (data.ok) {
         isTeacher = true; savedUser = u; savedPass = p;
-        sessionStorage.setItem('eq_tu', u); sessionStorage.setItem('eq_tp', p);
+        localStorage.setItem('eq_tu', u); localStorage.setItem('eq_tp', p);
         closeLogin();
         document.getElementById('headerRight').innerHTML = `<div class="teacher-badge">🎓 Teacher <span class="logout-x" onclick="logout()">✕</span></div>`;
         document.getElementById('tabTeacher').classList.remove('hidden');
@@ -303,7 +303,7 @@
 
   function logout() {
     isTeacher = false; savedUser = ''; savedPass = '';
-    sessionStorage.removeItem('eq_tu'); sessionStorage.removeItem('eq_tp');
+    localStorage.removeItem('eq_tu'); localStorage.removeItem('eq_tp');
     document.getElementById('headerRight').innerHTML = `<button class="teacher-btn" onclick="openLogin()">🔑 Teacher</button>`;
     document.getElementById('tabTeacher').classList.add('hidden');
     switchTab('student');
