@@ -3,389 +3,418 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Scores · English Quest</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet"/>
+  <title>Chapter Scores · English Quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --purple: #7C3AED; --purple-light: #A78BFA; --purple-soft: #EDE9FE;
-      --purple-mid: #C4B5FD; --white: #fff; --off-white: #F9F7FF;
+      --purple-mid: #C4B5FD; --white: #FFFFFF; --off-white: #F9F7FF;
       --text-dark: #1E1040; --text-muted: #6B5B95; --border: #E5DEFF;
       --accent: #F59E0B; --green: #10B981; --red: #EF4444;
     }
-    body { font-family: 'IBM Plex Sans', sans-serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; font-size: 16px; }
-    main { min-height: calc(100vh - 280px); }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; }
 
-    /* HEADER */
-    header {
-      background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 50%, #4C1D95 100%);
-      padding: 36px 20px 52px; text-align: center; position: relative; overflow: hidden;
-    }
-    header::before {
-      content: ''; position: absolute; inset: 0;
-      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
-      background-size: 28px 28px; pointer-events: none;
-    }
-    .back-btn {
-      position: absolute; top: 20px; left: 20px; z-index: 2;
-      background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3);
-      color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.88rem;
-      font-weight: 600; padding: 8px 18px; border-radius: 999px; cursor: pointer;
-      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
-    }
+    header { background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 50%, #4C1D95 100%); padding: 36px 24px 52px; text-align: center; position: relative; overflow: hidden; }
+    header::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size: 28px 28px; pointer-events: none; }
+    .back-btn { position: absolute; top: 20px; left: 20px; z-index: 2; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); color: #fff; font-size: 0.88rem; font-weight: 600; padding: 8px 18px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
     .back-btn:hover { background: rgba(255,255,255,0.25); }
     header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 800; color: #fff; position: relative; z-index: 1; }
     header h1 span { color: var(--accent); font-style: italic; }
     .header-sub { color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-top: 8px; position: relative; z-index: 1; }
     .wave { display: block; width: 100%; margin-top: -2px; }
 
-    /* MAIN */
-    main { max-width: 700px; margin: 0 auto; padding: 28px 16px 80px; }
+    main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
 
-    /* SELECTOR CARD */
-    .selector-card {
-      background: var(--white); border: 1.5px solid var(--border);
-      border-radius: 20px; padding: 28px 24px; margin-bottom: 24px;
-    }
-    .selector-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 20px; }
-    .field { margin-bottom: 16px; }
-    .field label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-    .field select {
-      width: 100%; padding: 14px 16px; border: 1.5px solid var(--border);
-      border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem;
-      background: var(--off-white); color: var(--text-dark); outline: none;
-      transition: border-color 0.2s;
-    }
-    .field select:focus { border-color: var(--purple-light); }
-    .btn-view {
-      width: 100%; padding: 15px; background: linear-gradient(135deg, var(--purple), #5B21B6);
-      color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700;
-      font-size: 1rem; border: none; border-radius: 12px; cursor: pointer;
-      margin-top: 4px; transition: opacity 0.2s;
-    }
-    .btn-view:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-view:hover:not(:disabled) { opacity: 0.9; }
+    /* MODE BADGE */
+    .mode-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; font-family: 'IBM Plex Mono', monospace; margin-bottom: 20px; }
+    .mode-badge.teacher { background: #FEF3C7; color: #92400E; border: 1.5px solid #FCD34D; }
+    .mode-badge.student { background: var(--purple-soft); color: var(--purple); border: 1.5px solid var(--purple-mid); }
 
-    /* SCORE CARD */
-    .score-card {
-      background: var(--white); border: 1.5px solid var(--border);
-      border-radius: 20px; overflow: hidden; margin-bottom: 20px;
-      animation: slideUp 0.3s ease;
-    }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    /* FILTERS */
+    .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
+    .filter-label { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; }
+    .filter-select { padding: 10px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.9rem; color: var(--text-dark); background: var(--white); outline: none; cursor: pointer; }
+    .filter-select:focus { border-color: var(--purple-light); }
 
-    /* Student profile strip */
-    .profile-strip {
-      background: linear-gradient(135deg, #7C3AED, #5B21B6);
-      padding: 22px 24px; display: flex; align-items: center; gap: 16px;
-    }
-    .avatar {
-      width: 54px; height: 54px; border-radius: 50%;
-      background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; flex-shrink: 0; font-family: 'Playfair Display', serif;
-      font-weight: 700; color: #fff;
-    }
-    .profile-info .profile-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: #fff; line-height: 1.2; }
-    .profile-info .profile-meta { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-top: 4px; }
+    /* STUDENT PICKER (student mode) */
+    .student-picker { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+    .picker-field { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
+    .picker-field label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'IBM Plex Mono', monospace; }
+    .picker-field select { padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.9rem; color: var(--text-dark); background: var(--off-white); outline: none; }
+    .picker-field select:focus { border-color: var(--purple-light); background: #fff; }
+    .btn-view-scores { padding: 11px 24px; background: linear-gradient(135deg, var(--purple), #5B21B6); color: #fff; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; font-family: inherit; white-space: nowrap; }
 
-    /* Score items */
-    .score-body { padding: 8px 0; }
-    .score-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 24px; border-bottom: 1px solid var(--border);
-      transition: background 0.15s;
-    }
-    .score-item:last-child { border-bottom: none; }
-    .score-item:hover { background: var(--off-white); }
-    .score-label { font-size: 0.92rem; font-weight: 500; color: var(--text-muted); }
-    .score-value {
-      font-family: 'IBM Plex Mono', monospace; font-size: 1rem; font-weight: 600;
-      color: var(--text-dark); text-align: right;
-    }
-    .score-value.good   { color: var(--green); }
-    .score-value.warn   { color: var(--accent); }
-    .score-value.bad    { color: var(--red); }
-    .score-value.muted  { color: var(--text-muted); }
+    /* STUDENT SCORE CARD */
+    .student-score-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 20px; }
+    .score-card-header { background: linear-gradient(135deg, var(--purple), #5B21B6); padding: 20px 24px; display: flex; align-items: center; gap: 16px; }
+    .score-card-avatar { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 800; color: #fff; font-family: 'Playfair Display', serif; flex-shrink: 0; }
+    .score-card-name { color: #fff; }
+    .score-card-name .name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; }
+    .score-card-name .meta { font-size: 0.8rem; opacity: 0.8; margin-top: 2px; }
+    .score-card-body { padding: 20px 24px; }
 
-    /* Special badges */
-    .badge {
-      font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 999px;
-      font-family: 'IBM Plex Sans', sans-serif;
-    }
-    .badge-yes    { background: #D1FAE5; color: #065F46; }
-    .badge-no     { background: #FEE2E2; color: #991B1B; }
-    .badge-active { background: #EDE9FE; color: #4C1D95; }
+    /* CHAPTER TABS */
+    .chapter-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .ch-tab { padding: 9px 20px; border-radius: 999px; border: 1.5px solid var(--border); background: var(--white); color: var(--text-muted); font-size: 0.85rem; font-weight: 700; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: all 0.15s; }
+    .ch-tab.active { background: var(--purple); color: #fff; border-color: var(--purple); }
 
-    /* Section divider */
-    .score-section-label {
-      padding: 10px 24px 6px; font-size: 0.72rem; font-weight: 700;
-      color: var(--purple-light); text-transform: uppercase; letter-spacing: 0.1em;
-      background: var(--off-white); border-bottom: 1px solid var(--border);
-      font-family: 'IBM Plex Mono', monospace;
-    }
+    /* SCORE GRID (student view) */
+    .score-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .score-tile { background: var(--off-white); border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 16px; text-align: center; }
+    .score-tile-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'IBM Plex Mono', monospace; margin-bottom: 8px; }
+    .score-tile-val { font-size: 1.5rem; font-weight: 800; font-family: 'IBM Plex Mono', monospace; color: var(--text-dark); }
+    .score-tile-val.empty { color: var(--border); font-size: 1.2rem; }
+    .score-tile.highlight { background: linear-gradient(135deg, var(--purple-soft), #F3E8FF); border-color: var(--purple-mid); }
+    .score-tile.highlight .score-tile-val { color: var(--purple); }
 
-    /* Final score highlight */
-    .final-score-row {
-      background: linear-gradient(135deg, var(--purple-soft), #F0EBFF);
-      padding: 18px 24px; display: flex; align-items: center; justify-content: space-between;
-      border-top: 2px solid var(--purple-mid);
-    }
-    .final-label { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--purple); }
-    .final-value { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; color: var(--purple); }
+    /* FINAL SUMMARY */
+    .final-summary { display: flex; gap: 12px; flex-wrap: wrap; }
+    .summary-item { flex: 1; min-width: 120px; background: var(--off-white); border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 16px; text-align: center; }
+    .summary-item.grade { background: linear-gradient(135deg, #D1FAE5, #A7F3D0); border-color: #6EE7B7; }
+    .summary-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'IBM Plex Mono', monospace; margin-bottom: 6px; }
+    .summary-val { font-size: 1.6rem; font-weight: 800; font-family: 'IBM Plex Mono', monospace; color: var(--text-dark); }
+    .grade-badge { display: inline-block; font-size: 1.6rem; font-weight: 800; font-family: 'IBM Plex Mono', monospace; }
+    .grade-A { color: #065F46; } .grade-B { color: #1E40AF; } .grade-C { color: #92400E; } .grade-D { color: #991B1B; }
 
-    /* Loading / empty */
-    .loading { text-align: center; padding: 48px; color: var(--text-muted); }
-    .spinner { display: inline-block; width: 26px; height: 26px; border: 3px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+    /* TEACHER TABLE */
+    .table-wrap { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    thead th { background: linear-gradient(135deg, var(--purple), #5B21B6); color: #fff; padding: 12px 14px; font-size: 0.78rem; font-family: 'IBM Plex Mono', monospace; font-weight: 600; letter-spacing: 0.04em; text-align: center; white-space: nowrap; }
+    thead th:first-child { text-align: left; min-width: 160px; }
+    thead th.col-calc { background: rgba(255,255,255,0.15); }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--off-white); }
+    tbody td { padding: 10px 14px; font-size: 0.88rem; text-align: center; }
+    tbody td:first-child { text-align: left; font-weight: 600; }
+    .student-nickname { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+    .score-input { width: 58px; padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 0.88rem; text-align: center; color: var(--text-dark); background: var(--off-white); outline: none; transition: all 0.15s; }
+    .score-input:focus { border-color: var(--purple-light); background: #fff; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+    .score-input.saving { border-color: var(--accent); background: #FFFBEB; }
+    .score-input.saved { border-color: var(--green); background: #ECFDF5; }
+    .score-input.error { border-color: var(--red); background: #FEF2F2; }
+    .calc-val { font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--text-muted); }
+    .ind-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
+    .ind-A { background: #D1FAE5; color: #065F46; } .ind-B { background: #DBEAFE; color: #1E40AF; }
+    .ind-C { background: #FEF3C7; color: #92400E; } .ind-D { background: #FEE2E2; color: #991B1B; }
+    .ind-X { background: var(--off-white); color: var(--text-muted); }
+
+    /* STATE CARDS */
+    .state-card { text-align: center; padding: 60px 20px; }
+    .state-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .state-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+    .state-sub { font-size: 0.85rem; color: var(--text-muted); }
+    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Toast */
-    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text-dark); color: #fff; padding: 12px 24px; border-radius: 999px; font-size: 0.9rem; font-weight: 500; transition: transform 0.3s; z-index: 999; white-space: nowrap; pointer-events: none; }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-    .toast.err  { background: #DC2626; }
+    .save-bar { position: fixed; bottom: 24px; right: 24px; background: var(--text-dark); color: #fff; padding: 12px 20px; border-radius: 14px; font-size: 0.85rem; font-weight: 600; z-index: 100; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    .save-bar.show { display: block; }
+    .save-bar.green { background: var(--green); }
+    .save-bar.red { background: var(--red); }
 
     footer { background: var(--text-dark); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 0.85rem; }
     footer strong { color: var(--purple-light); }
-
-    @media (max-width: 480px) {
-      .profile-strip { padding: 18px 16px; }
-      .score-item { padding: 13px 16px; }
-      .score-section-label { padding: 10px 16px 6px; }
-      .final-score-row { padding: 16px; }
+    @media (max-width: 600px) {
+      .filters { flex-direction: column; align-items: stretch; }
+      .score-grid { grid-template-columns: repeat(3, 1fr); }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <a class="back-btn" href="index.html">← Back</a>
-  <h1>Student <span>Scores</span></h1>
-  <p class="header-sub">English Quest · SMA Negeri 6 Surakarta</p>
+  <a class="back-btn" href="index.html">&#8592; Back</a>
+  <h1>Chapter <span>Scores</span></h1>
+  <p class="header-sub">English Quest &middot; SMA Negeri 6 Surakarta</p>
 </header>
-
 <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" preserveAspectRatio="none">
   <path fill="#4C1D95" d="M0,32 C360,0 1080,64 1440,32 L1440,0 L0,0 Z"/>
   <path fill="#F9F7FF" d="M0,48 C360,16 1080,64 1440,32 L1440,48 Z"/>
 </svg>
 
-<main>
+<main id="mainContent"></main>
 
-  <!-- SELECTOR -->
-  <div class="selector-card">
-    <div class="selector-title">🎓 Find Your Score</div>
-    <div class="field">
-      <label>Your Class</label>
-      <select id="classSelect" onchange="onClassChange()">
-        <option value="">— Select your class —</option>
-        <option value="XE1">X E-1</option>
-        <option value="XE4">X E-4</option>
-        <option value="XE5">X E-5</option>
-        <option value="XE6">X E-6</option>
-        <option value="XE7">X E-7</option>
-        <option value="XE8">X E-8</option>
-        <option value="XE9">X E-9</option>
-        <option value="XE10">X E-10</option>
-        <option value="XE11">X E-11</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Your Name</label>
-      <select id="nameSelect" disabled>
-        <option value="">— Select class first —</option>
-      </select>
-    </div>
-    <button class="btn-view" id="viewBtn" onclick="viewScore()" disabled>View My Score</button>
-  </div>
+<div class="save-bar" id="saveBar"></div>
 
-  <!-- SCORE DISPLAY -->
-  <div id="scoreSection"></div>
-
-</main>
-
-<footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
-<div class="toast" id="toast"></div>
+<footer>&#169; 2025 <strong>English Quest</strong> &middot; SMA Negeri 6 Surakarta &middot; Built with &#10084;&#65039; by <strong>LaksMedia</strong></footer>
 
 <script>
-  // ── IMPORTANT: Replace with your Scores Apps Script deployment URL ──
-  const API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
+const SCORES_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
+const CLASSES = ['XE1','XE4','XE5','XE6','XE7','XE8','XE9','XE10','XE11'];
+const CLASS_LABELS = { XE1:'X E-1', XE4:'X E-4', XE5:'X E-5', XE6:'X E-6', XE7:'X E-7', XE8:'X E-8', XE9:'X E-9', XE10:'X E-10', XE11:'X E-11' };
 
-  let studentsCache = {};
+var savedUser = localStorage.getItem('eq_tu') || '';
+var savedPass = localStorage.getItem('eq_tp') || '';
+var isTeacher = !!savedUser;
+var currentClass   = localStorage.getItem('eq_last_class') || 'XE1';
+var currentChapter = 4;
+var allStudents    = [];
 
-  // ── JSONP helper ───────────────────────────────────────────
-  // Try fetch first, fall back to JSONP for mobile compatibility
-  async function apiGet(params) {
-    const url = API + '?' + new URLSearchParams(params);
-    // Try fetch with cors first (works on desktop & some mobile)
-    try {
-      const res = await fetch(url, { method: 'GET' });
-      if (res.ok) {
-        const data = await res.json();
-        return data;
-      }
-    } catch(e) { /* fall through to JSONP */ }
+function apiGet(params) {
+  var url = SCORES_API + '?';
+  var parts = [];
+  for (var k in params) parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k]));
+  url += parts.join('&');
+  return new Promise(function(resolve, reject) {
+    var cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    var script = document.createElement('script');
+    window[cb] = function(data) { delete window[cb]; document.head.removeChild(script); resolve(data); };
+    script.onerror = function() { reject(new Error('Network error')); };
+    script.src = url + '&callback=' + cb;
+    document.head.appendChild(script);
+  });
+}
 
-    // JSONP fallback for mobile
-    return new Promise((resolve, reject) => {
-      const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-      const p  = { ...params, callback: cb, _t: Date.now() };
-      const jsonpUrl = API + '?' + new URLSearchParams(p);
-      const script   = document.createElement('script');
-      script.async   = true;
-      const timer    = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 20000);
-      function cleanup() {
-        delete window[cb];
-        try { if (script.parentNode) script.parentNode.removeChild(script); } catch(e) {}
-        clearTimeout(timer);
-      }
-      window[cb]     = data => { cleanup(); resolve(data); };
-      script.onerror = ()   => { cleanup(); reject(new Error('Failed to load')); };
-      script.src     = jsonpUrl;
-      (document.head || document.body).appendChild(script);
+function init() {
+  if (isTeacher) {
+    renderTeacherMode();
+  } else {
+    renderStudentMode();
+  }
+}
+
+// ── STUDENT MODE ─────────────────────────────────────────────
+function renderStudentMode() {
+  var main = document.getElementById('mainContent');
+  var classOptions = CLASSES.map(function(c) {
+    return '<option value="' + c + '"' + (c === currentClass ? ' selected' : '') + '>' + CLASS_LABELS[c] + '</option>';
+  }).join('');
+
+  main.innerHTML =
+    '<div class="mode-badge student">&#128203; Student View</div>' +
+    '<div class="student-picker">' +
+      '<div class="picker-field"><label>Class</label><select id="sClass">' + classOptions + '</select></div>' +
+      '<div class="picker-field"><label>Your Name</label><select id="sStudent"><option value="">-- Select class first --</option></select></div>' +
+      '<button class="btn-view-scores" id="sViewBtn">View My Scores</button>' +
+    '</div>' +
+    '<div id="sResult"></div>';
+
+  document.getElementById('sClass').addEventListener('change', function() {
+    currentClass = this.value;
+    localStorage.setItem('eq_last_class', currentClass);
+    loadStudentList();
+  });
+  document.getElementById('sViewBtn').addEventListener('click', viewStudentScores);
+  loadStudentList();
+}
+
+function loadStudentList() {
+  var sel = document.getElementById('sStudent');
+  sel.innerHTML = '<option value="">Loading...</option>';
+  apiGet({ action: 'getStudents', className: currentClass }).then(function(res) {
+    if (res.error || !res.students) { sel.innerHTML = '<option value="">Error loading</option>'; return; }
+    allStudents = res.students;
+    sel.innerHTML = '<option value="">-- Select your name --</option>';
+    res.students.forEach(function(s) {
+      var label = s.nickname ? s.name + ' (' + s.nickname + ')' : s.name;
+      sel.innerHTML += '<option value="' + s.no + '">' + label + '</option>';
+    });
+  });
+}
+
+function viewStudentScores() {
+  var studentNo = document.getElementById('sStudent').value;
+  if (!studentNo) { showBar('Please select your name first', 'red'); setTimeout(hideBar, 2000); return; }
+  var student = allStudents.find(function(s) { return String(s.no) === String(studentNo); });
+  var result = document.getElementById('sResult');
+  result.innerHTML = '<div class="state-card"><div class="spinner"></div><div class="state-title">Loading scores...</div></div>';
+
+  // Load both chapters in parallel
+  Promise.all([
+    apiGet({ action: 'getChapterScores', className: currentClass, chapter: 4 }),
+    apiGet({ action: 'getChapterScores', className: currentClass, chapter: 5 })
+  ]).then(function(responses) {
+    var ch4Data = responses[0];
+    var ch5Data = responses[1];
+
+    var ch4Student = ch4Data.students ? ch4Data.students.find(function(s) { return String(s.no) === String(studentNo); }) : null;
+    var ch5Student = ch5Data.students ? ch5Data.students.find(function(s) { return String(s.no) === String(studentNo); }) : null;
+
+    renderStudentScoreCard(student, ch4Student, ch5Student, ch4Data.inputCols, ch5Data.inputCols);
+  });
+}
+
+function renderStudentScoreCard(student, ch4, ch5, cols4, cols5) {
+  var result = document.getElementById('sResult');
+  var initial = student ? student.name.charAt(0).toUpperCase() : '?';
+
+  var html = '<div class="student-score-card">';
+  html += '<div class="score-card-header"><div class="score-card-avatar">' + initial + '</div><div class="score-card-name"><div class="name">' + (student ? student.name : '') + '</div><div class="meta">' + CLASS_LABELS[currentClass] + ' &middot; ' + (student && student.nickname ? student.nickname : '') + '</div></div></div>';
+  html += '<div class="score-card-body">';
+
+  // Chapter tabs
+  html += '<div class="chapter-tabs"><button class="ch-tab active" id="stab4" onclick="switchStudentTab(4)">Chapter 4</button><button class="ch-tab" id="stab5" onclick="switchStudentTab(5)">Chapter 5</button></div>';
+
+  // Chapter 4 scores
+  html += '<div id="sScoreCh4">' + buildStudentChapterHTML(ch4, cols4, 4) + '</div>';
+  html += '<div id="sScoreCh5" style="display:none">' + buildStudentChapterHTML(ch5, cols5, 5) + '</div>';
+
+  html += '</div></div>';
+  result.innerHTML = html;
+}
+
+function buildStudentChapterHTML(chData, cols, ch) {
+  if (!chData) return '<div class="state-card"><div class="state-icon">&#128203;</div><div class="state-title">No data yet</div><div class="state-sub">Chapter ' + ch + ' scores haven\'t been entered yet.</div></div>';
+
+  var html = '<div class="score-grid">';
+  if (cols) {
+    cols.forEach(function(col) {
+      var val = chData.scores[col];
+      var isEmpty = val === '' || val === undefined || val === null;
+      html += '<div class="score-tile"><div class="score-tile-label">' + col + '</div><div class="score-tile-val' + (isEmpty ? ' empty' : '') + '">' + (isEmpty ? '-' : val) + '</div></div>';
     });
   }
+  html += '</div>';
 
-  // ── CONTROLS ───────────────────────────────────────────────
-  async function onClassChange() {
-    const cls = document.getElementById('classSelect').value;
-    const nameSelect = document.getElementById('nameSelect');
-    const viewBtn    = document.getElementById('viewBtn');
+  // Summary row
+  var avg   = chData.average   !== '' && chData.average   !== undefined ? Number(chData.average).toFixed(1)   : '-';
+  var final = chData.finalScore !== '' && chData.finalScore !== undefined ? Number(chData.finalScore).toFixed(1) : '-';
+  var ind   = chData.indicator || '-';
+  var gradeClass = ind !== '-' ? 'grade-' + ind.charAt(0).toUpperCase() : '';
 
-    nameSelect.innerHTML = '<option>Loading...</option>';
-    nameSelect.disabled  = true;
-    viewBtn.disabled     = true;
-    document.getElementById('scoreSection').innerHTML = '';
+  html += '<div class="final-summary">';
+  html += '<div class="summary-item"><div class="summary-label">Average</div><div class="summary-val">' + avg + '</div></div>';
+  html += '<div class="summary-item"><div class="summary-label">Final Score</div><div class="summary-val">' + final + '</div></div>';
+  html += '<div class="summary-item grade"><div class="summary-label">Grade</div><div class="summary-val"><span class="grade-badge ' + gradeClass + '">' + ind + '</span></div></div>';
+  html += '</div>';
 
-    if (!cls) { nameSelect.innerHTML = '<option>— Select class first —</option>'; return; }
+  return html;
+}
 
-    try {
-      let data = studentsCache[cls];
-      if (!data) {
-        data = await apiGet({ action: 'getStudents', className: cls });
-        studentsCache[cls] = data;
-      }
-      if (data.error) { showToast(data.error, 'err'); return; }
+function switchStudentTab(ch) {
+  document.getElementById('stab4').className = 'ch-tab' + (ch === 4 ? ' active' : '');
+  document.getElementById('stab5').className = 'ch-tab' + (ch === 5 ? ' active' : '');
+  document.getElementById('sScoreCh4').style.display = ch === 4 ? '' : 'none';
+  document.getElementById('sScoreCh5').style.display = ch === 5 ? '' : 'none';
+}
 
-      nameSelect.innerHTML = '<option value="">— Select your name —</option>';
-      data.students.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s.no;
-        opt.textContent = s.name + (s.nickname ? ' (' + s.nickname + ')' : '');
-        nameSelect.appendChild(opt);
-      });
-      nameSelect.disabled = false;
-      nameSelect.onchange = () => { viewBtn.disabled = !nameSelect.value; };
-    } catch(e) {
-      showToast('Failed to load — tap to retry', 'err');
-      nameSelect.innerHTML = '<option>— Select class first —</option>';
-      nameSelect.disabled = true;
-      // Auto retry once after 2 seconds
-      setTimeout(() => { if (document.getElementById('classSelect').value === cls) onClassChange(); }, 2000);
-    }
+// ── TEACHER MODE ─────────────────────────────────────────────
+function renderTeacherMode() {
+  var main = document.getElementById('mainContent');
+  var classOptions = CLASSES.map(function(c) {
+    return '<option value="' + c + '"' + (c === currentClass ? ' selected' : '') + '>' + CLASS_LABELS[c] + '</option>';
+  }).join('');
+
+  main.innerHTML =
+    '<div class="mode-badge teacher">&#9997; Teacher Mode &mdash; Editable</div>' +
+    '<div class="filters"><span class="filter-label">Class</span><select class="filter-select" id="tClassSelect">' + classOptions + '</select></div>' +
+    '<div class="chapter-tabs"><button class="ch-tab active" id="ttab4" onclick="switchTeacherChapter(4)">Chapter 4</button><button class="ch-tab" id="ttab5" onclick="switchTeacherChapter(5)">Chapter 5</button></div>' +
+    '<div id="tTableArea"><div class="state-card"><div class="spinner"></div><div class="state-title">Loading...</div></div></div>';
+
+  document.getElementById('tClassSelect').addEventListener('change', function() {
+    currentClass = this.value;
+    localStorage.setItem('eq_last_class', currentClass);
+    loadTeacherScores();
+  });
+
+  loadTeacherScores();
+}
+
+function switchTeacherChapter(ch) {
+  currentChapter = ch;
+  document.getElementById('ttab4').className = 'ch-tab' + (ch === 4 ? ' active' : '');
+  document.getElementById('ttab5').className = 'ch-tab' + (ch === 5 ? ' active' : '');
+  loadTeacherScores();
+}
+
+function loadTeacherScores() {
+  var area = document.getElementById('tTableArea');
+  area.innerHTML = '<div class="state-card"><div class="spinner"></div><div class="state-title">Loading...</div></div>';
+  apiGet({ action: 'getChapterScores', className: currentClass, chapter: currentChapter })
+    .then(function(res) {
+      if (res.error) { area.innerHTML = '<div class="state-card"><div class="state-icon">&#128580;</div><div class="state-title">Error</div><div class="state-sub">' + res.error + '</div></div>'; return; }
+      renderTeacherTable(res.students, res.inputCols);
+    });
+}
+
+function renderTeacherTable(students, inputCols) {
+  var area = document.getElementById('tTableArea');
+  if (!students || !students.length) { area.innerHTML = '<div class="state-card"><div class="state-icon">&#128203;</div><div class="state-title">No students found</div></div>'; return; }
+
+  var thead = '<thead><tr><th>Student</th>';
+  inputCols.forEach(function(col) { thead += '<th>' + col + '</th>'; });
+  thead += '<th class="col-calc">Average</th><th class="col-calc">Final</th><th class="col-calc">Grade</th></tr></thead>';
+
+  var tbody = '<tbody>';
+  students.forEach(function(s) {
+    tbody += '<tr>';
+    tbody += '<td><div>' + s.name + '</div><div class="student-nickname">' + (s.nickname || '') + '</div></td>';
+    inputCols.forEach(function(col) {
+      var val = s.scores[col] !== undefined ? s.scores[col] : '';
+      tbody += '<td><input class="score-input" type="number" min="0" max="100" value="' + val + '" data-no="' + s.no + '" data-col="' + col + '" onchange="saveScore(this)"/></td>';
+    });
+    var avg   = s.average   !== '' && s.average   !== undefined ? Number(s.average).toFixed(1)   : '-';
+    var final = s.finalScore !== '' && s.finalScore !== undefined ? Number(s.finalScore).toFixed(1) : '-';
+    var ind   = s.indicator || '-';
+    var indClass = ind && ind !== '-' ? 'ind-' + ind.charAt(0).toUpperCase() : 'ind-X';
+    tbody += '<td class="calc-val">' + avg + '</td><td class="calc-val">' + final + '</td>';
+    tbody += '<td><span class="ind-badge ' + indClass + '">' + ind + '</span></td></tr>';
+  });
+  tbody += '</tbody>';
+
+  area.innerHTML = '<div class="table-wrap"><table>' + thead + tbody + '</table></div>';
+}
+
+function saveScore(input) {
+  var studentNo = input.getAttribute('data-no');
+  var col       = input.getAttribute('data-col');
+  var value     = input.value.trim();
+
+  if (value !== '' && (isNaN(value) || Number(value) < 0 || Number(value) > 100)) {
+    input.className = 'score-input error';
+    showBar('Value must be 0-100', 'red');
+    return;
   }
 
-  // ── VIEW SCORE ─────────────────────────────────────────────
-  async function viewScore() {
-    const cls       = document.getElementById('classSelect').value;
-    const studentNo = document.getElementById('nameSelect').value;
-    if (!cls || !studentNo) return;
+  input.className = 'score-input saving';
+  showBar('Saving...', '');
 
-    document.getElementById('scoreSection').innerHTML = '<div class="loading"><div class="spinner"></div><br/>Loading your scores...</div>';
-    document.getElementById('viewBtn').disabled    = true;
-    document.getElementById('viewBtn').textContent = '⏳ Loading...';
-
-    try {
-      const data = await apiGet({ action: 'getScore', className: cls, studentNo });
-      if (data.error) { showToast(data.error, 'err'); document.getElementById('scoreSection').innerHTML = ''; return; }
-      renderScore(data);
-    } catch(e) {
-      showToast('Failed to load scores', 'err');
-      document.getElementById('scoreSection').innerHTML = '';
-    } finally {
-      document.getElementById('viewBtn').disabled    = false;
-      document.getElementById('viewBtn').textContent = 'View My Score';
-    }
-  }
-
-  // ── RENDER SCORE CARD ──────────────────────────────────────
-  function renderScore(data) {
-    const s       = data.score;
-    const name    = data.name;
-    const nick    = data.nickname;
-    const cls     = document.getElementById('classSelect').options[document.getElementById('classSelect').selectedIndex].text;
-    const initial = nick ? nick[0].toUpperCase() : name[0].toUpperCase();
-
-    function scoreClass(val) {
-      const n = parseFloat(val);
-      if (isNaN(n) || val === '-') return 'muted';
-      if (n >= 80) return 'good';
-      if (n >= 65) return 'warn';
-      return 'bad';
-    }
-
-    function row(label, val, type, alwaysShow) {
-      if (!alwaysShow && (val === undefined || val === null || val === '')) return '';
-      let valueHtml;
-      if (type === 'badge-yn') {
-        const isYes = String(val).toLowerCase().startsWith('y');
-        valueHtml = `<span class="badge ${isYes ? 'badge-yes' : 'badge-no'}">${val}</span>`;
-      } else if (type === 'badge-active') {
-        valueHtml = `<span class="badge badge-active">${val}</span>`;
+  apiGet({ action: 'saveChapterScore', username: savedUser, password: savedPass, className: currentClass, chapter: currentChapter, studentNo: studentNo, column: col, value: value })
+    .then(function(res) {
+      if (res.success) {
+        input.className = 'score-input saved';
+        showBar('Saved!', 'green');
+        setTimeout(function() { input.className = 'score-input'; hideBar(); }, 1800);
+        setTimeout(function() { refreshRow(studentNo); }, 700);
       } else {
-        valueHtml = `<span class="score-value ${scoreClass(val)}">${val}</span>`;
+        input.className = 'score-input error';
+        showBar('Error: ' + (res.error || 'Failed'), 'red');
       }
-      return `<div class="score-item"><span class="score-label">${label}</span>${valueHtml}</div>`;
+    }).catch(function() { input.className = 'score-input error'; showBar('Network error', 'red'); });
+}
+
+function refreshRow(studentNo) {
+  apiGet({ action: 'getChapterScores', className: currentClass, chapter: currentChapter }).then(function(res) {
+    if (!res.students) return;
+    var s = res.students.find(function(x) { return String(x.no) === String(studentNo); });
+    if (!s) return;
+    var inputs = document.querySelectorAll('input[data-no="' + studentNo + '"]');
+    if (!inputs.length) return;
+    var row = inputs[0].closest('tr');
+    if (!row) return;
+    var calcCells = row.querySelectorAll('.calc-val');
+    if (calcCells[0]) calcCells[0].textContent = s.average   !== '' ? Number(s.average).toFixed(1)   : '-';
+    if (calcCells[1]) calcCells[1].textContent = s.finalScore !== '' ? Number(s.finalScore).toFixed(1) : '-';
+    var badge = row.querySelector('.ind-badge');
+    if (badge) {
+      var ind = s.indicator || '-';
+      badge.textContent = ind;
+      badge.className = 'ind-badge ' + (ind && ind !== '-' ? 'ind-' + ind.charAt(0).toUpperCase() : 'ind-X');
     }
+  });
+}
 
-    // Dynamically find chapter columns (anything starting with 'Chapter' or named 'ASAT')
-    const chapterKeys   = Object.keys(s).filter(k => k.startsWith('Chapter') || k === 'ASAT');
-    const summaryKeys   = ['Average', 'Final Score', 'Indicator'];
-    const statusKeys    = ['Strikes', 'Can Join Summative?'];
-    const skipKeys      = new Set(['No.', 'Nama', 'Nickname', ...chapterKeys, ...summaryKeys, ...statusKeys, 'Activeness', 'Final Score']);
+var barTimer = null;
+function showBar(msg, type) {
+  var bar = document.getElementById('saveBar');
+  bar.textContent = msg;
+  bar.className = 'save-bar show' + (type ? ' ' + type : '');
+  if (barTimer) clearTimeout(barTimer);
+}
+function hideBar() { document.getElementById('saveBar').className = 'save-bar'; }
 
-    const chapterRows = chapterKeys.map(k => row(k, s[k] || '-', null, true)).join('');
-    const summaryRows = summaryKeys.filter(k => k !== 'Final Score').map(k => row(k, s[k])).join('') + row('Activeness', s['Activeness'], 'badge-active');
-    const statusRows  = statusKeys.map(k => {
-      if (k === 'Can Join Summative?') return row(k, s[k], 'badge-yn');
-      return row(k, s[k]);
-    }).join('');
-
-    const finalScore = s['Final Score'] || s['Average'] || '-';
-    const finalClass = scoreClass(finalScore);
-    const finalColor = finalClass === 'good' ? '#10B981' : finalClass === 'warn' ? '#F59E0B' : finalClass === 'bad' ? '#EF4444' : '#6B5B95';
-
-    const html = `
-      <div class="score-card">
-        <div class="profile-strip">
-          <div class="avatar">${initial}</div>
-          <div class="profile-info">
-            <div class="profile-name">${nick || name}</div>
-            <div class="profile-meta">${name} · ${cls}</div>
-          </div>
-        </div>
-        <div class="score-body">
-          ${chapterRows ? `<div class="score-section-label">📚 Chapter Scores</div>${chapterRows}` : ''}
-          <div class="score-section-label">📊 Summary</div>
-          ${summaryRows}
-          <div class="score-section-label">⚠️ Status</div>
-          ${statusRows}
-        </div>
-        <div class="final-score-row">
-          <div class="final-label">Final Score</div>
-          <div class="final-value" style="color:${finalColor}">${finalScore}</div>
-        </div>
-      </div>`;
-
-    document.getElementById('scoreSection').innerHTML = html;
-  }
-
-  // ── TOAST ──────────────────────────────────────────────────
-  function showToast(msg, type) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className   = 'toast ' + (type || '');
-    setTimeout(() => t.classList.add('show'), 10);
-    setTimeout(() => t.classList.remove('show'), 3500);
-  }
+init();
 </script>
 </body>
 </html>
