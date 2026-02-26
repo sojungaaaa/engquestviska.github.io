@@ -1440,8 +1440,8 @@ let summUser = '', summPass = '';
 let countdownInterval = null;
 
 // Share session with other pages
-summUser = sessionStorage.getItem('eq_tu') || '';
-summPass = sessionStorage.getItem('eq_tp') || '';
+summUser = localStorage.getItem('eq_tu') || '';
+summPass = localStorage.getItem('eq_tp') || '';
 if (summUser && summPass) {
   summApiGet({ action:'checkLogin', username:summUser, password:summPass })
     .then(d => {
@@ -1586,8 +1586,8 @@ function showSummToast(msg, type) {
 <script>
 // ── HOMEPAGE TEACHER LOGIN ─────────────────────────────────────
 (function() {
-  const u = sessionStorage.getItem('eq_tu') || '';
-  const p = sessionStorage.getItem('eq_tp') || '';
+  const u = localStorage.getItem('eq_tu') || '';
+  const p = localStorage.getItem('eq_tp') || '';
   if (u && p) {
     // Already logged in — verify and show badge
     fetch('https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec?action=checkLogin&username=' + encodeURIComponent(u) + '&password=' + encodeURIComponent(p))
@@ -1612,8 +1612,8 @@ async function doHeaderLogin() {
     const res = await fetch('https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec?action=checkLogin&username=' + encodeURIComponent(u) + '&password=' + encodeURIComponent(p));
     const data = await res.json();
     if (data.ok) {
-      sessionStorage.setItem('eq_tu', u);
-      sessionStorage.setItem('eq_tp', p);
+      localStorage.setItem('eq_tu', u);
+      localStorage.setItem('eq_tp', p);
       closeHeaderLogin();
       showTeacherBadge();
       // Trigger summative float button if exists
@@ -1636,8 +1636,8 @@ function showTeacherBadge() {
 }
 
 function headerLogout() {
-  sessionStorage.removeItem('eq_tu');
-  sessionStorage.removeItem('eq_tp');
+  localStorage.removeItem('eq_tu');
+  localStorage.removeItem('eq_tp');
   document.getElementById('headerLoginBtn').style.display = 'inline-block';
   document.getElementById('headerTeacherBadge').style.display = 'none';
   // Hide summative controls
@@ -2194,7 +2194,7 @@ function closeSidebar() {
   document.body.style.overflow = '';
 }
 function updateSidebarTeacher() {
-  const loggedIn = !!sessionStorage.getItem('eq_tu');
+  const loggedIn = !!localStorage.getItem('eq_tu');
   document.getElementById('sbTeacherLoggedOut').style.display = loggedIn ? 'none' : 'block';
   document.getElementById('sbTeacherLoggedIn').style.display  = loggedIn ? 'block' : 'none';
 }
