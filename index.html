@@ -854,6 +854,35 @@
     .summ-toast.ok  { background: #059669; }
     .summ-toast.err { background: #DC2626; }
 
+
+    /* STUDENT IDENTITY */
+    .student-greeting { display:none; align-items:center; gap:10px; margin-top:14px; position:relative; z-index:2; background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.25); border-radius:16px; padding:10px 16px; max-width:340px; margin-left:auto; margin-right:auto; }
+    .student-greeting.show { display:flex; }
+    .sg-avatar { width:36px; height:36px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1rem; color:#fff; flex-shrink:0; font-family:'Playfair Display',serif; }
+    .sg-info { flex:1; text-align:left; }
+    .sg-name { font-size:0.88rem; font-weight:700; color:#fff; }
+    .sg-class { font-size:0.72rem; color:rgba(255,255,255,0.65); }
+    .sg-change { font-size:0.7rem; color:rgba(255,255,255,0.5); cursor:pointer; text-decoration:underline; flex-shrink:0; }
+    .sg-change:hover { color:rgba(255,255,255,0.85); }
+
+    /* SETUP MODAL */
+    .setup-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.85); backdrop-filter:blur(10px); z-index:500; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .setup-overlay.hidden { display:none; }
+    .setup-card { background:#fff; border-radius:28px; width:100%; max-width:420px; overflow:hidden; box-shadow:0 32px 80px rgba(0,0,0,0.3); }
+    .setup-top { background:linear-gradient(135deg,#7C3AED,#5B21B6); padding:32px 28px 24px; text-align:center; }
+    .setup-top-icon { font-size:2.5rem; margin-bottom:12px; }
+    .setup-top-title { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:800; color:#fff; margin-bottom:6px; }
+    .setup-top-sub { font-size:0.85rem; color:rgba(255,255,255,0.75); }
+    .setup-body { padding:24px 28px 28px; display:flex; flex-direction:column; gap:16px; }
+    .setup-field label { display:block; font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:7px; font-family:'IBM Plex Mono',monospace; }
+    .setup-field select { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-family:'IBM Plex Sans',sans-serif; font-size:0.95rem; color:var(--text-dark); background:var(--off-white); outline:none; }
+    .setup-field select:focus { border-color:var(--purple-light); background:#fff; }
+    .setup-submit { width:100%; padding:14px; background:linear-gradient(135deg,#7C3AED,#5B21B6); color:#fff; font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:1rem; border:none; border-radius:14px; cursor:pointer; transition:opacity 0.15s; }
+    .setup-submit:hover { opacity:0.9; }
+    .setup-submit:disabled { opacity:0.5; cursor:not-allowed; }
+    .setup-skip { text-align:center; font-size:0.78rem; color:var(--text-muted); cursor:pointer; }
+    .setup-skip:hover { color:var(--purple); }
+
   </style>
 </head>
 <body>
@@ -957,6 +986,15 @@
       🎓 Logged in as Teacher <span style="cursor:pointer;opacity:0.8" onclick="headerLogout()">✕</span>
     </div>
   </div>
+
+  <div class="student-greeting" id="studentGreeting">
+    <div class="sg-avatar" id="sgAvatar">?</div>
+    <div class="sg-info">
+      <div class="sg-name" id="sgName">Student</div>
+      <div class="sg-class" id="sgClass">Class</div>
+    </div>
+    <span class="sg-change" onclick="openSetup(true)">Change</span>
+  </div>
 </header>
 
 <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" preserveAspectRatio="none">
@@ -966,6 +1004,33 @@
 
 <!-- ── MAIN ── -->
 <main>
+
+<script>
+(function() {
+  var cls  = localStorage.getItem('eq_student_class');
+  var no   = localStorage.getItem('eq_student_no');
+  var name = localStorage.getItem('eq_student_name');
+  if (!cls || !no || !name) return;
+
+  var clsLabels = { XE1:'X E-1', XE4:'X E-4', XE5:'X E-5', XE6:'X E-6', XE7:'X E-7', XE8:'X E-8', XE9:'X E-9', XE10:'X E-10', XE11:'X E-11' };
+
+  var card = document.createElement('div');
+  card.style.cssText = 'background:linear-gradient(135deg,#7C3AED,#4C1D95);border-radius:20px;padding:18px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,0.25);';
+  card.innerHTML =
+    '<div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:800;font-size:1.2rem;color:#fff;flex-shrink:0;">' + name.charAt(0) + '</div>' +
+    '<div style="flex:1;">' +
+      '<div style="font-size:0.72rem;color:rgba(255,255,255,0.65);font-family:monospace;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">My Scores</div>' +
+      '<div style="font-weight:700;font-size:1rem;color:#fff;">' + name.split(' ').slice(0,2).join(' ') + '</div>' +
+      '<div style="font-size:0.78rem;color:rgba(255,255,255,0.65);">' + (clsLabels[cls] || cls) + ' · Tap to view your scores</div>' +
+    '</div>' +
+    '<div style="font-size:1.3rem;color:rgba(255,255,255,0.5);">›</div>';
+  card.onclick = function() { window.location.href = 'scores.html'; };
+
+  var main = document.querySelector('main');
+  if (main) main.insertBefore(card, main.firstChild);
+})();
+</script>
+
 
 
 
@@ -2083,6 +2148,160 @@ function updateSidebarTeacher() {
 }
 updateSidebarTeacher();
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
+</script>
+
+
+<!-- STUDENT SETUP MODAL -->
+<div class="setup-overlay hidden" id="setupOverlay">
+  <div class="setup-card">
+    <div class="setup-top">
+      <div class="setup-top-icon">👋</div>
+      <div class="setup-top-title">Welcome to English Quest!</div>
+      <div class="setup-top-sub">Tell us who you are so we can personalize your experience</div>
+    </div>
+    <div class="setup-body">
+      <div class="setup-field">
+        <label>Your Class</label>
+        <select id="setupClass">
+          <option value="">-- Select your class --</option>
+          <option value="XE1">X E-1</option>
+          <option value="XE4">X E-4</option>
+          <option value="XE5">X E-5</option>
+          <option value="XE6">X E-6</option>
+          <option value="XE7">X E-7</option>
+          <option value="XE8">X E-8</option>
+          <option value="XE9">X E-9</option>
+          <option value="XE10">X E-10</option>
+          <option value="XE11">X E-11</option>
+        </select>
+      </div>
+      <div class="setup-field">
+        <label>Your Name</label>
+        <select id="setupName" disabled>
+          <option value="">-- Select class first --</option>
+        </select>
+      </div>
+      <button class="setup-submit" id="setupSubmit" disabled>Let's Go! 🚀</button>
+      <div class="setup-skip" onclick="skipSetup()">I'm just browsing, skip this</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ── STUDENT IDENTITY ─────────────────────────────────────────
+const CLASS_LABELS_FULL = { XE1:'X E-1', XE4:'X E-4', XE5:'X E-5', XE6:'X E-6', XE7:'X E-7', XE8:'X E-8', XE9:'X E-9', XE10:'X E-10', XE11:'X E-11' };
+
+function getStudentIdentity() {
+  var cls  = localStorage.getItem('eq_student_class');
+  var no   = localStorage.getItem('eq_student_no');
+  var name = localStorage.getItem('eq_student_name');
+  if (cls && no && name) return { cls, no, name };
+  return null;
+}
+
+function initStudentGreeting() {
+  var id = getStudentIdentity();
+  if (id) {
+    // Show greeting
+    var greeting = document.getElementById('studentGreeting');
+    greeting.classList.add('show');
+    document.getElementById('sgAvatar').textContent = id.name.charAt(0).toUpperCase();
+    document.getElementById('sgName').textContent   = id.name.split(' ')[0]; // first name only
+    document.getElementById('sgClass').textContent  = CLASS_LABELS_FULL[id.cls] || id.cls;
+  } else {
+    // First visit — show setup after short delay
+    var skipped = localStorage.getItem('eq_setup_skipped');
+    if (!skipped) {
+      setTimeout(function() { openSetup(false); }, 800);
+    }
+  }
+}
+
+function openSetup(isChange) {
+  document.getElementById('setupOverlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  // Pre-fill if changing
+  if (isChange) {
+    var id = getStudentIdentity();
+    if (id) {
+      document.getElementById('setupClass').value = id.cls;
+      loadSetupNames(id.cls, id.no);
+    }
+  } else {
+    document.getElementById('setupClass').value = '';
+    document.getElementById('setupName').innerHTML = '<option value="">-- Select class first --</option>';
+    document.getElementById('setupName').disabled = true;
+    document.getElementById('setupSubmit').disabled = true;
+  }
+}
+
+function skipSetup() {
+  localStorage.setItem('eq_setup_skipped', '1');
+  document.getElementById('setupOverlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('setupClass').addEventListener('change', function() {
+  var cls = this.value;
+  if (!cls) return;
+  loadSetupNames(cls, null);
+});
+
+document.getElementById('setupName').addEventListener('change', function() {
+  document.getElementById('setupSubmit').disabled = !this.value;
+});
+
+function loadSetupNames(cls, preselectNo) {
+  var sel = document.getElementById('setupName');
+  sel.innerHTML = '<option value="">Loading...</option>';
+  sel.disabled = true;
+  document.getElementById('setupSubmit').disabled = true;
+
+  apiGet({ action: 'getStudents', className: cls }).then(function(res) {
+    if (!res.students) { sel.innerHTML = '<option value="">Error loading</option>'; return; }
+    sel.innerHTML = '<option value="">-- Select your name --</option>';
+    res.students.forEach(function(s) {
+      var label = s.nickname ? s.name + ' (' + s.nickname + ')' : s.name;
+      var opt = document.createElement('option');
+      opt.value = s.no;
+      opt.textContent = label;
+      opt.setAttribute('data-name', s.name);
+      if (preselectNo && String(s.no) === String(preselectNo)) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    sel.disabled = false;
+    if (preselectNo) document.getElementById('setupSubmit').disabled = false;
+  }).catch(function() {
+    sel.innerHTML = '<option value="">Failed to load</option>';
+  });
+}
+
+document.getElementById('setupSubmit').addEventListener('click', function() {
+  var cls = document.getElementById('setupClass').value;
+  var sel = document.getElementById('setupName');
+  var no  = sel.value;
+  var name = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].getAttribute('data-name') : '';
+  if (!cls || !no || !name) return;
+
+  localStorage.setItem('eq_student_class', cls);
+  localStorage.setItem('eq_student_no', no);
+  localStorage.setItem('eq_student_name', name);
+  localStorage.removeItem('eq_setup_skipped');
+
+  document.getElementById('setupOverlay').classList.add('hidden');
+  document.body.style.overflow = '';
+
+  // Update greeting
+  var greeting = document.getElementById('studentGreeting');
+  greeting.classList.add('show');
+  document.getElementById('sgAvatar').textContent = name.charAt(0).toUpperCase();
+  document.getElementById('sgName').textContent   = name.split(' ')[0];
+  document.getElementById('sgClass').textContent  = CLASS_LABELS_FULL[cls] || cls;
+});
+
+// Run on load
+initStudentGreeting();
 </script>
 
 </body>
