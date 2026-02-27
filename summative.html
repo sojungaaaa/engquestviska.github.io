@@ -101,11 +101,17 @@
 
     footer { background:var(--text-dark); color:rgba(255,255,255,0.5); text-align:center; padding:20px; font-size:0.85rem; }
     footer strong { color:var(--purple-light); }
+
+    .logout-btn { position: absolute; top: 20px; right: 20px; z-index: 2; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-family: inherit; display: none; align-items: center; gap: 5px; }
+    .logout-btn:hover { background: rgba(255,255,255,0.22); }
+    .teacher-active .logout-btn { display: flex; }
   </style>
 </head>
 <body>
 
 <header>
+  
+  <button class="logout-btn" onclick="doLogout()">&#128274; Logout</button>
   <a class="back-btn" href="index.html">← Back</a>
   <h1><span class="pulse-dot"></span>Summative <span>Assessments</span></h1>
   <p class="header-sub">Exam schedule, topics & what to study · English Quest</p>
