@@ -142,31 +142,7 @@
 
 <main>
 
-<script>
-(function() {
-  var cls  = localStorage.getItem('eq_student_class');
-  var no   = localStorage.getItem('eq_student_no');
-  var name = localStorage.getItem('eq_student_name');
-  if (!cls || !no || !name) return;
 
-  // Map XE1 → XE-1 for activeness page
-  var clsMap = { XE1:'XE-1', XE4:'XE-4', XE5:'XE-5', XE6:'XE-6', XE7:'XE-7', XE8:'XE-8', XE9:'XE-9', XE10:'XE-10', XE11:'XE-11' };
-  var displayCls = clsMap[cls] || cls;
-
-  var banner = document.createElement('div');
-  banner.style.cssText = 'background:linear-gradient(135deg,#7C3AED,#5B21B6);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;border-bottom:1.5px solid rgba(255,255,255,0.1);';
-  banner.innerHTML = '<div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;flex-shrink:0;">' + name.charAt(0) + '</div>' +
-    '<div style="flex:1;"><div style="font-weight:700;font-size:0.9rem;">View My Activeness Stats</div><div style="font-size:0.75rem;opacity:0.75;">' + name.split(' ')[0] + ' · ' + displayCls + '</div></div>' +
-    '<div style="font-size:0.8rem;opacity:0.8;">Tap ›</div>';
-  banner.onclick = function() {
-    // Trigger the student's activeness popup
-    window.__autoOpenStudent = { name: name, cls: displayCls };
-  };
-
-  var main = document.querySelector('main');
-  if (main) main.insertBefore(banner, main.firstChild);
-})();
-</script>
 
 
   <!-- LOGIN WALL -->
@@ -418,13 +394,6 @@
     t.textContent = msg; t.className = 'toast ' + (type || '');
     setTimeout(() => t.classList.add('show'), 10);
     setTimeout(() => t.classList.remove('show'), 2500);
-  }
-
-  // Auto-open saved student popup if banner was tapped
-  if (window.__autoOpenStudent) {
-    var s = window.__autoOpenStudent;
-    setTimeout(function() { openActModal(s.name, s.cls); }, 500);
-    window.__autoOpenStudent = null;
   }
 
 </script>
