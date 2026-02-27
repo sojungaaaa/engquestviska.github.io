@@ -495,10 +495,10 @@
     setTimeout(() => t.classList.remove('show'), 3000);
   }
 
-  // Auto-select saved student identity
-  (function() {
-    var cls  = localStorage.getItem('eq_student_class');
-    var no   = localStorage.getItem('eq_student_no');
+  // Auto-select saved student — waits for page to be fully ready
+  document.addEventListener('DOMContentLoaded', function() {
+    var cls = localStorage.getItem('eq_student_class');
+    var no  = localStorage.getItem('eq_student_no');
     if (!cls || !no) return;
     var clsSel = document.getElementById('sClassSelect');
     if (!clsSel) return;
@@ -507,11 +507,10 @@
       var nameSel = document.getElementById('sNameSelect');
       if (!nameSel) return;
       nameSel.value = no;
-      // Enable view button and auto-click it
       var viewBtn = document.getElementById('sViewBtn');
       if (viewBtn) { viewBtn.disabled = false; viewBtn.click(); }
     }).catch(function(){});
-  })();
+  });
 
 </script>
 </body>
