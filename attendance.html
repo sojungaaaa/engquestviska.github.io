@@ -16,6 +16,8 @@
     body { font-family: 'IBM Plex Sans', sans-serif; background: var(--off-white); color: var(--text-dark); min-height: 100vh; font-size: 16px; }
 
     /* HEADER */
+    .back-btn { position: absolute; top: 20px; left: 20px; z-index: 2; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); color: #fff; font-size: 0.88rem; font-weight: 600; padding: 8px 18px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+    .back-btn:hover { background: rgba(255,255,255,0.25); }
     header {
       background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 50%, #4C1D95 100%);
       padding: 28px 20px 44px; text-align: center; position: relative; overflow: hidden;
@@ -229,6 +231,7 @@
 
 <!-- HEADER -->
 <header>
+  <a class="back-btn" href="index.html">&#8592; Back</a>
   <div class="header-right" id="headerRight">
     <button class="login-btn" onclick="openLogin()">🔑 Teacher Login</button>
   </div>
