@@ -452,44 +452,45 @@ const apiClsMap  = { "XE-1":"XE1","XE-4":"XE4","XE-5":"XE5","XE-6":"XE6","XE-7":
 let totalLoaded  = 0;
 let totalStudents = 0;
 
-// Show loading state
-classes.forEach(cls => {
-  const list = document.getElementById('list-' + cls);
-  list.innerHTML = '<div style="padding:16px;color:var(--text-muted);font-size:0.85rem;">Loading...</div>';
-});
-document.getElementById('countBadge').textContent = 'Loading...';
-
-// Fetch all classes in parallel
-Promise.all(classes.map(cls =>
-  apiGet({ action: 'getStudents', className: apiClsMap[cls] })
-    .then(res => ({ cls, students: res.students || [] }))
-    .catch(() => ({ cls, students: [] }))
-)).then(results => {
-  results.forEach(({ cls, students }) => {
-    const list  = document.getElementById('list-' + cls);
-    list.innerHTML = '';
-    students.forEach((s, i) => {
-      const name = s.name || '';
-      const item = document.createElement('div');
-      item.className = 'student-item';
-      item.dataset.name  = name.toLowerCase();
-      item.dataset.class = cls;
-      item.innerHTML = `
-        <span class="student-num">${i + 1}</span>
-        <span class="student-dot"></span>
-        <span class="student-name">${name}${s.nickname ? ' <span style="color:var(--text-muted);font-size:0.82em;">(' + s.nickname + ')</span>' : ''}</span>
-      `;
-      item.addEventListener('click', () => openActModal(name, cls));
-      list.appendChild(item);
-    });
-    document.getElementById('count-' + cls).textContent = students.length + ' students';
-    totalStudents += students.length;
+// Will be called after apiGet is defined below
+function loadAllStudents() {
+  classes.forEach(cls => {
+    const list = document.getElementById('list-' + cls);
+    list.innerHTML = '<div style="padding:16px;color:var(--text-muted);font-size:0.85rem;">Loading...</div>';
   });
-  document.getElementById('countBadge').textContent = totalStudents + ' students';
-  updateCount();
-}).catch(() => {
-  document.getElementById('countBadge').textContent = 'Failed to load';
-});
+  document.getElementById('countBadge').textContent = 'Loading...';
+
+  Promise.all(classes.map(cls =>
+    apiGet({ action: 'getStudents', className: apiClsMap[cls] })
+      .then(res => ({ cls, students: res.students || [] }))
+      .catch(() => ({ cls, students: [] }))
+  )).then(results => {
+    results.forEach(({ cls, students }) => {
+      const list = document.getElementById('list-' + cls);
+      list.innerHTML = '';
+      students.forEach((s, i) => {
+        const name = s.name || '';
+        const item = document.createElement('div');
+        item.className = 'student-item';
+        item.dataset.name  = name.toLowerCase();
+        item.dataset.class = cls;
+        item.innerHTML = `
+          <span class="student-num">${i + 1}</span>
+          <span class="student-dot"></span>
+          <span class="student-name">${name}${s.nickname ? ' <span style="color:var(--text-muted);font-size:0.82em;">(' + s.nickname + ')</span>' : ''}</span>
+        `;
+        item.addEventListener('click', () => openActModal(name, cls));
+        list.appendChild(item);
+      });
+      document.getElementById('count-' + cls).textContent = students.length + ' students';
+      totalStudents += students.length;
+    });
+    document.getElementById('countBadge').textContent = totalStudents + ' students';
+    updateCount();
+  }).catch(() => {
+    document.getElementById('countBadge').textContent = 'Failed to load';
+  });
+}
 
 function filterStudents() {
   const query = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -528,6 +529,9 @@ function updateCount(n) {
 // ── ACTIVENESS STATS ──────────────────────────────────────────
 const SCORES_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
 const activenessCache = {};
+
+// Now safe to load students (apiGet is defined above)
+loadAllStudents();
 
 const ACTS = [
   { key: 'VocabularyBox',    label: 'Vocabulary Box',    color: '#8B5CF6' },
