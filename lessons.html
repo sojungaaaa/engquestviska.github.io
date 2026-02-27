@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lesson Materials · English Quest</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -224,11 +225,25 @@ function apiGet(params) {
   url += parts.join('&');
   return new Promise(function(resolve, reject) {
     var cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    var s = document.createElement('script');
-    window[cb] = function(d) { delete window[cb]; document.head.removeChild(s); resolve(d); };
-    s.onerror = function() { reject(new Error('Network error')); };
-    s.src = url + '&callback=' + cb;
-    document.head.appendChild(s);
+    var script = document.createElement('script');
+    var timer = setTimeout(function() {
+      delete window[cb];
+      try { document.head.removeChild(script); } catch(e) {}
+      reject(new Error('Request timed out. Please check your connection and try again.'));
+    }, 12000);
+    window[cb] = function(data) {
+      clearTimeout(timer);
+      delete window[cb];
+      try { document.head.removeChild(script); } catch(e) {}
+      resolve(data);
+    };
+    script.onerror = function() {
+      clearTimeout(timer);
+      delete window[cb];
+      reject(new Error('Network error. Please try again.'));
+    };
+    script.src = url + '&callback=' + cb;
+    document.head.appendChild(script);
   });
 }
 
