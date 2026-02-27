@@ -317,11 +317,16 @@
     .student-item .student-name::after { content: ' ›'; font-size: 0.75rem; color: var(--purple-light); opacity: 0; transition: opacity 0.15s; }
     .student-item:hover .student-name::after { opacity: 1; }
 
+
+    .logout-btn { position: absolute; top: 20px; right: 20px; z-index: 2; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-family: inherit; display: none; align-items: center; gap: 5px; }
+    .logout-btn:hover { background: rgba(255,255,255,0.22); }
+    .teacher-active .logout-btn { display: flex; }
   </style>
 </head>
 <body>
 
 <header>
+  <button class="logout-btn" onclick="doLogout()">&#128274; Logout</button>
   <a href="index.html" class="back-btn">← Back</a>
   <h1>Student <span>List</span></h1>
   <p class="header-sub">English Quest · SMA Negeri 6 Surakarta</p>
@@ -439,60 +444,66 @@
 
 </main>
 
-<footer>
-  <p>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></p>
-</footer>
+<footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
 
 <script>
-const data = {
-  "XE-1": ["ANGGITA ANASTASYA PUTRI","ANNISA FEBRIYANTI AZIZAH","APRILIA GALUH PURNAMASARI","ARDHINDA NAOMI PUTRI","AUREL ANNASTASYA","AVIS OMEYRO SETIAWAN","BAIM DWI FANO","CLARESTA JANET VOISHELA","DANIEL PUTRA WAHANA","DEAN JOSHUA","DEVANNDRA JAVAS NARARYA","DINDA KAYLA","ELLENA ALLYSA SETIANANG","ELVANUELLE EDGAR PUTRA JAYANTO","EXCEL JUAN PRATAMA","FAUZAN DAVIN PUTRA YUNANTO","GADIS LINTANG WAHYU ASIH","GANDRUNG JESHUA CANGGIH CAKSANA","GRACIA LARASATI","GRACIA THEOVANI","HEKA TRAH VENDIKA","HELENA KRISTIANINGRUM","KRISTINA KRISEL WAHYU PRATIWI","LINGGOM GATAN NADEAK","MELINDA PATRICIA","MICHELLE OLIVIA MAGDALENA","NA ILLA INGGIT MEYSANDRA","NATANIA PRATIWI","NATASHA DEANDRA KRISHNA PUTRI","RAPHAEL GRISTO MAYNARDIVE","RUTH CLARICE AURELLIA BERNADIGTA","ZEFANYA MEINSHA HANDAYANI","ZEFANYA PUTRI MAHARANI PRAMONO"],
-  "XE-4": ["ADITIYA PUTRA PRATAMA","ALIF MOCHAMMAD RIZQI YUSNIAR","ALVIANO DIMAS PUTRA PRADIPTA","ALZENA ZAKYA","ANITA FEBRIAN KHOIRUNISA","ARENZA DWI RANADIKA","ARINTA KUSUMA WARDANI WIDIYANTORO","AULIA KARTIKA AYUNIDIA","AURELIA SHABRINA INTAN SUBROTO","CHAYYIRA GESTYLANIA EL-FIRDAUS","DELYLA NATASYA APRYAWAN","DHIMAS ARYA PRADANA","DIMAS ALFIN NURPRASETYO AJI","DIMAS BAGUS NARENDRA","DWI PUSPITASARI","ELENNA MYRA ALEXA","GALEN RAMADHAN SRI WIDORO","GEMILANG WISNU ANGGORO","GRISELDA AMINAHISYA CETTA","ITSNAINI SYAFAATUN NUR JANNAH","JIVA TIARA DEVANI","KALISYA RATRI NDARU PRAMANASARI","KHAYANA RARA DUHITA","LIANDRA MARVELINO PUTRA ALIANTO","MUHAMMAD NAUFAL RAYA RAMADHANI","NASYWA PUTRI YASHETA","NIDA MEI NUR MADINA","PHANG INDAH MULIA PERMATA HATI","RAISSA ANINDYA KUNARYA","RAKA ALFARIZI","RIANA PUTRI OKTAVIANI","SARIYANTO","VRISQA JOFAN INSANI","ZAHRA KHOIRUN NISA","ZALFA AULIA SALSABILA","ZHEVA PUTRA WARDANA"],
-  "XE-5": ["AFRAND ATHA NAYAKA","AIRA KARUNIA PRATIWI","ALTIFFANY ZIVANA KANAYA TABITHA","ALVINO ARIEL MARTHA PUTRA","AZKA REZA RAMADHAN","AZ'ZAHRA SETYAWAN","DASYA GILANG PRAYITNA PUTRA","DEWI CAHYA NINGRUM","FAKHRI RAMADHAN PUTRA PRATAMA","FATHIYAH SAFA SABITA","FATIN ILMAA SYAKIRA","FENDI SETIYAWAN","GHANIYA RATNADUHITA","HALWA TRI SALSABILA","HARA AKASH BAHADRIKA DHIAULHAQ","ILYAS SUJA'I","KEIHNA NABILLA SYAFANI","KURNIA WENING PRATIWI","LINTANG ARDINAR","MUHAMMAD FARHAN KHALISH MAJID","MUHAMMAD MAULANA AL GHIFARY","NABILA AURELIA PUTRI","NABILA NUR AISYAH","NABILA RAFIKA KIRANA SARI","NADIRA DILA ANASTASYA","NAYLA JOVITA MAHARANI","OCTARA YURA ARUNA","OKTAVIA DWIHASTUTI","RINI TRI DANISWARI","SUCIATI","TASYA NUR APRILIA","VALDIS DITO OKTAVIANTO PUTRA PRATAMA","VEGA MOHAMAD ADYTIA","VINCENT ALAN SYAHREZA","ZAHRA ELVARETTA PUTRI MARZHA","ZAHWA ZHAKIRNA RAHMADANI KYOSGOE"],
-  "XE-6": ["AILIN RAISSA LUTHFIYAH","ARFARYZKI MUHAMMAD RAMADHAN","ATHAYA JINAN KAMILATUNNISA","AZKA REZQIE RAMADHAN","BINTON BINGAR BASKORO","CLARISSA NATHANNYA SALSABILA","DEKAYLOVIOLA GLADYSHEZA M","DEWANGGA ZAHIRUDDIN RASYID HERNINTO","DIMAS DAUD FEBRIANTO","DYAH RENANING PINASTI","EL NATA WIJAYA","ESA CHELA SABRILIA","FADHIEL IRFAN HARTANTO","FARDAN EKA SAPUTRA","FAUZIA NAIMA KHASANAH","HANA PUTRI KIRANA","ILYAS AKMAL NUR FALAH","MAYA JHOVINSHA","MOHAMMAD CEYSAR ADHI PRATAMA","MUHAMMAD CHEVIN ABDUL AZIZ","MUHAMMAD HARIST ZAIDAN","MULIAXZA CAHYA NABILLAH","MUSTIKA CITRA NUGRAHANTI","NABILA NANDA BERLIAN","NAFA SYAIKAN CONCEKA","NAJWA SAFIRA HUSEIN","NARYAMA DZAKY ALVARO","NAUFAL ABQORY SUSANTO","NEYLA KAMIL ATUTININGTYAS","RAKHMA NURI KHAIRUNNISA","REVALINA AULYA KUSUMA","SEKAR TIARA AULIA","SYIFA ISKARIMA AULIA RAHMA","TRIA LATIFA LEGOWATI","VITO MIO SARWAHITA","WILDAN NORIS ABDURROHMAN"],
-  "XE-7": ["ADINDA AULIYA KUSUMA DEWI","ALISA RAHMAWATI","ARIN KENCANA ARUM","ARKAN RAMADHAN PURDIANSYAH","ASHANTY NUR OCTAVIA","AURELIA WAHYU PUTRI","AZZHA LUTHFIYAH PUTRIANA","DHI'FAN AGHNAT DZULFIQAR PUTRA","DIAH KUSUMAWARDANI","DZILA DWI DZIHNI","ERIKA DWI PRATIWI","FARAH PUTRI SALSABILLA","HAMZAH ABDUL HAKIM","JEMIMA KINARA IZZATA","JIHAN AYU OKTAVIANA","LUTHFYA FERNI QONITA","MAHESA RESTU MAULANA","MARSYA NUGRAHENI","MELVY PUTRI ARDINATA","MUHAMMAD ALGHAFA ARDIANSYAH","MUHAMMAD ILHAM FIRMANSYAH","NAKEISHA ILSE FIDELIA FAUSTINE","NAUFAL AZMI SAFARAZ HERIANSYAH","PRITA NAYLA PUTRI","PURI MAHGHALI RISQI NIKTAMAR","RAFA MULEN SAMBOGA","RANDI BAGUS ADITYA","REHAN DIAS SETIAWAN","SAHITHA ASTHA WIBOWO","SANGGITA CITRA NUGRAHENI","SERAVINA INDAH ANJELINA","SUCI LARASATI","WILDAN PRADIPTA","ZAHROTUS SHITA RETNANI","ZAKKI KEANU ALBRIAN","ZALFAN HAIDAR WIDANA"],
-  "XE-8": ["ALLAN YOGIANTARA","ANINDIA ARIMBI","ANNISA NUR RAHMAH","AQEELA NADIA PERWITHA PURISANT","ARDHIN FATIMAH AZZAHRA","ASTVAT ERETA MALKUTHA HR","ATHIFA AURELIA","DAVIN KHAIRUL AZAM","DESFINA KURNIA ARBITA","DITO RHAMADIANTO","DUAN ADIYA UTAMA","ELLISA MELATI PUTRI","EVAN NANDANA PUTRA PAMBUDI","FADHIL DAMAR RAJENDRA","FADILLA ALISYA PUTRI","FARID DZULFIKAR HARYANTO","GADIS AMELIA AKHIRA","GIANDRA NAYOGI","GIVTA KHUSNUL KHOTIMAH","HAFIZ LUCKY PRADYAWAN","INTAN JULIANI","JESSICA MAHARANI","MARSHA ELYCIA PUTRI OKTAVIANANDA","MUHAMMAD ABDUL BASITH MUGHNY","MUHAMMAD FAUZAN ADHIMA AL-HABSYI","MUHAMMAD REZAUL FATTAH","MUTIARA NUR AZIZAH","NABIL ARSHAQ GHOFRAN HAKEEM","NAFIZA MAYYADA FARHANI","NAJWA AZZAHRA MELANIE PUTRI","REVA PUTRI NATAMENGGALA","REZKY AGUNG RAMADHAN","SAFA DWI ANGGITA","SAFARAZ RAZIQ YUSTIAN","SATRIO FAWWAZ BAGASKORO PUTRO","TIKA INDI HAPSARI"],
-  "XE-9": ["ABDULLAH AZZAM AL-KAELANI","ADENA CALLYSTA NAJLA","ADI TEGAR AHMAD THALIBAN","ADITYA DANU PRAKOSO","AFIRA CARISSA HUMAIRA","ALFIANA NUR KURNIAWATI","ALYSCO FAJAR KURNIAWAN","AMALIA ALTHAFUNNISA","ANDREAN LISTO WAHYU PUTRA","ANINDITA PRAMESWARI","ANISSA KHAMILA ALTHAFUNISA","ANNISA QORI'ATUS SHOLIKHAH","APSARI NUR MAULIDA","AUERELLA RONA PURNAMA","AURELLIA FARRA ANDINI","AVISSA RIVAI","AYESHA HUMAYRA PUTRI ANDINA","BUDHI SURYA ATMAJA","CLARETTA AULIA WARDANI","ICA ERNIASIFA","IMELDA PUTRI","MAHENDRA FADLI PRADANA","MUHAMAD RAFFA ADITYA PRASETYO","MUHAMMAD IQBAL AL QUDSI","MUHAMMAD MUFQI TAQIYUDDIN","MUHAMMAD RENDHY SEPTIAWAN","NABILA ZALFA THALITA MAILAN","NADIA AZALIA ADI MAHARANI","NAZHIR HISYAM AMINUDDIN","QUEEN XENIA ALKHALIFI","REVALINA JULIYANTI","RHEALYTA CHINTA","SABRINA ADRIYANINGTYAS SUPRIADI","SABIAN PUTRA ARDIANSYAH","SEKAR ARUM PRAWESWARI AURANGGA KURNIAWIDI","VERLITA CHANTIKA SARI"],
-  "XE-10": ["A LUNA DESTHIRTY","ADRIFFA MIKAIL","AISYAH BILQIS SAFA","ALDAN SATRIA PAMUNGKAS","ALISSA DEWI MARANTI","ALIZA PUTRI DAMAYANTI","ALLENZHA DIODA ARKADHANI","ALVIANTO RIZQ NUGROHO","ANNISA ANGELICA FEBRIANI","ARIEF RACHMAN HAKIM","ATETA HIMAWAN PUTRA","AULIA ANGGELLINI","AURA ARYA SAFIRA","BILQIS REINATA DWIANTI","CAHYA ASGY OKTAVIA","DAVINA AULIA PUTRI KURNIAWAN","DEAN MARCELLO ROBERT","DHIRGHAM FADHIL MAULANA SAKHI","DIAN KIANA KASIH","FAIZ AKBAR NURHASAN PRABOWO","FARAH ALIFAH KHAIRUNISA","GHANIYYA SHIRIN MAIZA HUMAYYUN","GHORA SWARA GISHTARA SUHERMAN","HANIS NUR FATHURAHMAN","HAURA AZZAFRIKA MESSIANA PUTRI","JAGAD SAKSENA PUTRA WIBOWO","KAYRA LATHISA KUSUMA KATJONG","MARVIN ARDYAN SYAHPUTRA","MUHAMMAD NAUFAL DHIYA U'L HAQ","NABILA NUR AIVI","PUAN PUTRI KHUSNUL KHOTIMAH","RIKA PRAMUKTI JATI","SAFA ZAHRA HAFIDAH","VELAND ZAHRO AGTADO RIYADI","YUSTINA MELANIE PUTRI","ZAHRA MUTIA AQSHA"],
-  "XE-11": ["ABELIA DWI SAPUTRI","ADINDA AULIA PUTRI","ALDINO EKA RAMADHAN","ALIFA AJENG DIRGANTARI","ALTINOGA RIZKI SAPUTRA","ALVINO SATRYO PRATAMA","ARKHANIA PRAMESTHI REINATA INTAN LISTYONINGSIH","ATAYA CALLISTA ANINDYA","DAHAYU CHINDAGA ALINE","DHIYA AULIYA KHAIRUNNISA","EGI ZANIT PUTRI WURISMA","FIFIAN KHAIRUNISA DANISWORO","FRISSA EKA RIDWAN","GILANG JANU PRASETYO","HANAN KHOIRUL AHNAF","IRFAN TRI WAHYUDI","IZDAM RANGGA SAMUDRA","KHUMAYRA AULIA ZAHRA","LIDIYA HUMAIRA JATMIKO","MALIK IBRAHIM","MAZAYA CALLULA NEYSA","MIFTA SABRINA MULIA","MUHAMMAD ALFIAN FIRANSYAH","MUHAMMAD RAIHAN NAFIS SALAM","NABILLAH THALITA VALDA PRABOWO","NANDA WIDYA ANGGRAINI","PUTRI MAHARANI PAUWAE","RENATA SULISTIANA","RIZKY AHKBAR PURNOMO","SABIAN DAFFA WARDOYO","SATRIA RIZKY EXOTIX","SOFIA INAS LABIBAH","SRI LESTARI MAHANANI","SYAUQI ABDAN","THEONA KALILA NARESWARI","ZULFIANA PUTRI IMANISYAH"]
-};
+const classes    = ["XE-1","XE-4","XE-5","XE-6","XE-7","XE-8","XE-9","XE-10","XE-11"];
+const apiClsMap  = { "XE-1":"XE1","XE-4":"XE4","XE-5":"XE5","XE-6":"XE6","XE-7":"XE7","XE-8":"XE8","XE-9":"XE9","XE-10":"XE10","XE-11":"XE11" };
+let totalLoaded  = 0;
+let totalStudents = 0;
 
-const classes = ["XE-1","XE-4","XE-5","XE-6","XE-7","XE-8","XE-9","XE-10","XE-11"];
-
-// Render all students
+// Show loading state
 classes.forEach(cls => {
   const list = document.getElementById('list-' + cls);
-  const students = data[cls];
-  students.forEach((name, i) => {
-    const item = document.createElement('div');
-    item.className = 'student-item';
-    item.dataset.name = name.toLowerCase();
-    item.dataset.class = cls;
-    item.innerHTML = `
-      <span class="student-num">${i + 1}</span>
-      <span class="student-dot"></span>
-      <span class="student-name">${name}</span>
-    `;
-    item.addEventListener('click', () => openActModal(name, cls));
-    list.appendChild(item);
-  });
-  document.getElementById('count-' + cls).textContent = students.length + ' students';
+  list.innerHTML = '<div style="padding:16px;color:var(--text-muted);font-size:0.85rem;">Loading...</div>';
 });
+document.getElementById('countBadge').textContent = 'Loading...';
 
-updateCount();
+// Fetch all classes in parallel
+Promise.all(classes.map(cls =>
+  apiGet({ action: 'getStudents', className: apiClsMap[cls] })
+    .then(res => ({ cls, students: res.students || [] }))
+    .catch(() => ({ cls, students: [] }))
+)).then(results => {
+  results.forEach(({ cls, students }) => {
+    const list  = document.getElementById('list-' + cls);
+    list.innerHTML = '';
+    students.forEach((s, i) => {
+      const name = s.name || '';
+      const item = document.createElement('div');
+      item.className = 'student-item';
+      item.dataset.name  = name.toLowerCase();
+      item.dataset.class = cls;
+      item.innerHTML = `
+        <span class="student-num">${i + 1}</span>
+        <span class="student-dot"></span>
+        <span class="student-name">${name}${s.nickname ? ' <span style="color:var(--text-muted);font-size:0.82em;">(' + s.nickname + ')</span>' : ''}</span>
+      `;
+      item.addEventListener('click', () => openActModal(name, cls));
+      list.appendChild(item);
+    });
+    document.getElementById('count-' + cls).textContent = students.length + ' students';
+    totalStudents += students.length;
+  });
+  document.getElementById('countBadge').textContent = totalStudents + ' students';
+  updateCount();
+}).catch(() => {
+  document.getElementById('countBadge').textContent = 'Failed to load';
+});
 
 function filterStudents() {
   const query = document.getElementById('searchInput').value.toLowerCase().trim();
-  const cls = document.getElementById('classFilter').value;
+  const cls   = document.getElementById('classFilter').value;
   let visible = 0;
 
   classes.forEach(c => {
     const section = document.querySelector(`.class-section[data-class="${c}"]`);
-    const items = section.querySelectorAll('.student-item');
+    const items   = section.querySelectorAll('.student-item');
     let sectionVisible = 0;
 
     items.forEach(item => {
-      const nameMatch = !query || item.dataset.name.includes(query);
-      const classMatch = !cls || item.dataset.class === cls;
+      const nameMatch  = !query || item.dataset.name.includes(query);
+      const classMatch = !cls   || item.dataset.class === cls;
       if (nameMatch && classMatch) {
         item.classList.remove('hidden');
         sectionVisible++;
@@ -501,7 +512,6 @@ function filterStudents() {
         item.classList.add('hidden');
       }
     });
-
     section.style.display = (cls && cls !== c) ? 'none' : (sectionVisible === 0 && query ? 'none' : '');
   });
 
@@ -510,10 +520,10 @@ function filterStudents() {
 }
 
 function updateCount(n) {
-  const total = n !== undefined ? n : Object.values(data).reduce((a, b) => a + b.length, 0);
-  document.getElementById('countBadge').textContent = total + ' students';
+  if (n !== undefined) {
+    document.getElementById('countBadge').textContent = n + ' students';
+  }
 }
-
 
 // ── ACTIVENESS STATS ──────────────────────────────────────────
 const SCORES_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
