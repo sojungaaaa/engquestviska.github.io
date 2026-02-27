@@ -120,11 +120,17 @@
       .filters { flex-direction: column; align-items: stretch; }
       .score-grid { grid-template-columns: repeat(3, 1fr); }
     }
+
+    .logout-btn { position: absolute; top: 20px; right: 20px; z-index: 2; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-family: inherit; display: none; align-items: center; gap: 5px; }
+    .logout-btn:hover { background: rgba(255,255,255,0.22); }
+    .teacher-active .logout-btn { display: flex; }
   </style>
 </head>
 <body>
 
 <header>
+  
+  <button class="logout-btn" onclick="doLogout()">&#128274; Logout</button>
   <a class="back-btn" href="index.html">&#8592; Back</a>
   <h1>Chapter <span>Scores</span></h1>
   <p class="header-sub">English Quest &middot; SMA Negeri 6 Surakarta</p>
@@ -138,7 +144,7 @@
 
 <div class="save-bar" id="saveBar"></div>
 
-<footer>&#169; 2025 <strong>English Quest</strong> &middot; SMA Negeri 6 Surakarta &middot; Built with &#10084;&#65039; by <strong>LaksMedia</strong></footer>
+<footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
 
 <script>
 const SCORES_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
