@@ -2243,7 +2243,12 @@ function initStudentGreeting() {
     // Also auto-open setup on first ever visit
     var skipped = localStorage.getItem('eq_setup_skipped');
     if (!skipped) {
-      setTimeout(function() { openSetup(false); }, 800);
+      // Wait for fonts/layout to settle before showing modal
+      if (document.readyState === 'complete') {
+        openSetup(false);
+      } else {
+        window.addEventListener('load', function() { openSetup(false); });
+      }
     }
   }
 }
