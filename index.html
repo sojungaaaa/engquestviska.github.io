@@ -2190,27 +2190,58 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar
 
 <script>
 // ── STUDENT IDENTITY ─────────────────────────────────────────
+const SETUP_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
 const CLASS_LABELS_FULL = { XE1:'X E-1', XE4:'X E-4', XE5:'X E-5', XE6:'X E-6', XE7:'X E-7', XE8:'X E-8', XE9:'X E-9', XE10:'X E-10', XE11:'X E-11' };
+
+function setupApiGet(params) {
+  var url = SETUP_API + '?';
+  var parts = [];
+  for (var k in params) parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k]));
+  url += parts.join('&');
+  return new Promise(function(resolve, reject) {
+    var cb = 'setup_cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    var script = document.createElement('script');
+    var timer = setTimeout(function() {
+      delete window[cb];
+      try { document.head.removeChild(script); } catch(e) {}
+      reject(new Error('Timeout'));
+    }, 12000);
+    window[cb] = function(data) {
+      clearTimeout(timer);
+      delete window[cb];
+      try { document.head.removeChild(script); } catch(e) {}
+      resolve(data);
+    };
+    script.onerror = function() { clearTimeout(timer); reject(new Error('Network error')); };
+    script.src = url + '&callback=' + cb;
+    document.head.appendChild(script);
+  });
+}
 
 function getStudentIdentity() {
   var cls  = localStorage.getItem('eq_student_class');
   var no   = localStorage.getItem('eq_student_no');
   var name = localStorage.getItem('eq_student_name');
-  if (cls && no && name) return { cls, no, name };
+  if (cls && no && name) return { cls: cls, no: no, name: name };
   return null;
 }
 
 function initStudentGreeting() {
   var id = getStudentIdentity();
   if (id) {
-    // Show greeting
     var greeting = document.getElementById('studentGreeting');
     greeting.classList.add('show');
     document.getElementById('sgAvatar').textContent = id.name.charAt(0).toUpperCase();
-    document.getElementById('sgName').textContent   = id.name.split(' ')[0]; // first name only
+    document.getElementById('sgName').textContent   = id.name.split(' ')[0];
     document.getElementById('sgClass').textContent  = CLASS_LABELS_FULL[id.cls] || id.cls;
   } else {
-    // First visit — show setup after short delay
+    // Show a small "Personalize" button in greeting area instead of greeting
+    var greeting = document.getElementById('studentGreeting');
+    greeting.classList.add('show');
+    greeting.style.justifyContent = 'center';
+    greeting.innerHTML = '<span onclick="openSetup(false)" style="font-size:0.8rem;color:rgba(255,255,255,0.7);cursor:pointer;text-decoration:underline;">👤 Personalize for me</span>';
+
+    // Also auto-open setup on first ever visit
     var skipped = localStorage.getItem('eq_setup_skipped');
     if (!skipped) {
       setTimeout(function() { openSetup(false); }, 800);
@@ -2219,27 +2250,34 @@ function initStudentGreeting() {
 }
 
 function openSetup(isChange) {
-  document.getElementById('setupOverlay').classList.remove('hidden');
+  var overlay = document.getElementById('setupOverlay');
+  overlay.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
-  // Pre-fill if changing
+
   if (isChange) {
     var id = getStudentIdentity();
     if (id) {
       document.getElementById('setupClass').value = id.cls;
       loadSetupNames(id.cls, id.no);
+      return;
     }
-  } else {
-    document.getElementById('setupClass').value = '';
-    document.getElementById('setupName').innerHTML = '<option value="">-- Select class first --</option>';
-    document.getElementById('setupName').disabled = true;
-    document.getElementById('setupSubmit').disabled = true;
   }
+  // Reset form
+  document.getElementById('setupClass').value = '';
+  document.getElementById('setupName').innerHTML = '<option value="">-- Select class first --</option>';
+  document.getElementById('setupName').disabled = true;
+  document.getElementById('setupSubmit').disabled = true;
 }
 
 function skipSetup() {
   localStorage.setItem('eq_setup_skipped', '1');
   document.getElementById('setupOverlay').classList.add('hidden');
   document.body.style.overflow = '';
+  // Show personalize link
+  var greeting = document.getElementById('studentGreeting');
+  greeting.classList.add('show');
+  greeting.style.justifyContent = 'center';
+  greeting.innerHTML = '<span onclick="openSetup(false)" style="font-size:0.8rem;color:rgba(255,255,255,0.7);cursor:pointer;text-decoration:underline;">👤 Personalize for me</span>';
 }
 
 document.getElementById('setupClass').addEventListener('change', function() {
@@ -2258,46 +2296,57 @@ function loadSetupNames(cls, preselectNo) {
   sel.disabled = true;
   document.getElementById('setupSubmit').disabled = true;
 
-  apiGet({ action: 'getStudents', className: cls }).then(function(res) {
-    if (!res.students) { sel.innerHTML = '<option value="">Error loading</option>'; return; }
-    sel.innerHTML = '<option value="">-- Select your name --</option>';
-    res.students.forEach(function(s) {
-      var label = s.nickname ? s.name + ' (' + s.nickname + ')' : s.name;
-      var opt = document.createElement('option');
-      opt.value = s.no;
-      opt.textContent = label;
-      opt.setAttribute('data-name', s.name);
-      if (preselectNo && String(s.no) === String(preselectNo)) opt.selected = true;
-      sel.appendChild(opt);
+  setupApiGet({ action: 'getStudents', className: cls })
+    .then(function(res) {
+      if (!res.students || !res.students.length) {
+        sel.innerHTML = '<option value="">No students found</option>';
+        return;
+      }
+      sel.innerHTML = '<option value="">-- Select your name --</option>';
+      res.students.forEach(function(s) {
+        var label = s.nickname ? s.name + ' (' + s.nickname + ')' : s.name;
+        var opt   = document.createElement('option');
+        opt.value = s.no;
+        opt.textContent = label;
+        opt.setAttribute('data-name', s.name);
+        if (preselectNo && String(s.no) === String(preselectNo)) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      sel.disabled = false;
+      if (preselectNo) document.getElementById('setupSubmit').disabled = false;
+    })
+    .catch(function(e) {
+      sel.innerHTML = '<option value="">Failed to load — try again</option>';
+      sel.disabled = false;
     });
-    sel.disabled = false;
-    if (preselectNo) document.getElementById('setupSubmit').disabled = false;
-  }).catch(function() {
-    sel.innerHTML = '<option value="">Failed to load</option>';
-  });
 }
 
 document.getElementById('setupSubmit').addEventListener('click', function() {
   var cls = document.getElementById('setupClass').value;
   var sel = document.getElementById('setupName');
   var no  = sel.value;
-  var name = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].getAttribute('data-name') : '';
+  var selectedOpt = sel.options[sel.selectedIndex];
+  var name = selectedOpt ? (selectedOpt.getAttribute('data-name') || selectedOpt.textContent.split(' (')[0]) : '';
   if (!cls || !no || !name) return;
 
   localStorage.setItem('eq_student_class', cls);
-  localStorage.setItem('eq_student_no', no);
-  localStorage.setItem('eq_student_name', name);
+  localStorage.setItem('eq_student_no',    no);
+  localStorage.setItem('eq_student_name',  name);
   localStorage.removeItem('eq_setup_skipped');
 
   document.getElementById('setupOverlay').classList.add('hidden');
   document.body.style.overflow = '';
 
-  // Update greeting
   var greeting = document.getElementById('studentGreeting');
   greeting.classList.add('show');
-  document.getElementById('sgAvatar').textContent = name.charAt(0).toUpperCase();
-  document.getElementById('sgName').textContent   = name.split(' ')[0];
-  document.getElementById('sgClass').textContent  = CLASS_LABELS_FULL[cls] || cls;
+  greeting.style.justifyContent = '';
+  greeting.innerHTML =
+    '<div class="sg-avatar" id="sgAvatar">' + name.charAt(0).toUpperCase() + '</div>' +
+    '<div class="sg-info">' +
+      '<div class="sg-name">' + name.split(' ')[0] + '</div>' +
+      '<div class="sg-class">' + (CLASS_LABELS_FULL[cls] || cls) + '</div>' +
+    '</div>' +
+    '<span class="sg-change" onclick="openSetup(true)">Change</span>';
 });
 
 // Run on load
