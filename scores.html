@@ -159,32 +159,35 @@ var currentChapter = 4;
 var allStudents    = [];
 
 function apiGet(params) {
-  var url = SCORES_API + '?';
+  var base = SCORES_API + '?';
   var parts = [];
   for (var k in params) parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k]));
-  url += parts.join('&');
-  return new Promise(function(resolve, reject) {
-    var cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    var script = document.createElement('script');
-    var timer = setTimeout(function() {
-      delete window[cb];
-      try { document.head.removeChild(script); } catch(e) {}
-      reject(new Error('Request timed out. Please check your connection and try again.'));
-    }, 12000);
-    window[cb] = function(data) {
-      clearTimeout(timer);
-      delete window[cb];
-      try { document.head.removeChild(script); } catch(e) {}
-      resolve(data);
-    };
-    script.onerror = function() {
-      clearTimeout(timer);
-      delete window[cb];
-      reject(new Error('Network error. Please try again.'));
-    };
-    script.src = url + '&callback=' + cb;
-    document.head.appendChild(script);
-  });
+  var url = base + parts.join('&');
+
+  function attempt(retries) {
+    return new Promise(function(resolve, reject) {
+      var cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      var script = document.createElement('script');
+      var timer = setTimeout(function() {
+        cleanup();
+        if (retries > 0) { attempt(retries - 1).then(resolve).catch(reject); }
+        else { reject(new Error('Request timed out. Please check your connection and try again.')); }
+      }, 15000);
+      function cleanup() {
+        clearTimeout(timer); delete window[cb];
+        try { if (script.parentNode) script.parentNode.removeChild(script); } catch(e) {}
+      }
+      window[cb] = function(data) { cleanup(); resolve(data); };
+      script.onerror = function() {
+        cleanup();
+        if (retries > 0) { attempt(retries - 1).then(resolve).catch(reject); }
+        else { reject(new Error('Network error. Please try again.')); }
+      };
+      script.src = url + '&callback=' + cb;
+      (document.body || document.head).appendChild(script);
+    });
+  }
+  return attempt(1);
 }
 
 function init() {
