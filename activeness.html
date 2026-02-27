@@ -117,13 +117,19 @@
       .students-grid { grid-template-columns: 1fr; }
       .act-label { width: 72px; }
     }
+
+    .logout-btn { position: absolute; top: 20px; right: 20px; z-index: 2; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-family: inherit; display: none; align-items: center; gap: 5px; }
+    .logout-btn:hover { background: rgba(255,255,255,0.22); }
+    .teacher-active .logout-btn { display: flex; }
   </style>
 </head>
 <body>
 
 <header>
   <div class="header-row">
-    <a class="back-btn" href="index.html">← Back</a>
+    
+  <button class="logout-btn" onclick="doLogout()">&#128274; Logout</button>
+  <a class="back-btn" href="index.html">← Back</a>
     <div class="header-center">
       <div class="header-title">Activeness</div>
       <div class="header-sub">English Quest · Real-time tracker</div>
@@ -181,7 +187,7 @@
 
 </main>
 
-<footer>© 2025 English Quest · SMA Negeri 6 Surakarta · Built with ❤️ by LaksMedia</footer>
+<footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
 <div class="toast" id="toast"></div>
 
 <script>
