@@ -264,13 +264,28 @@ function autoLoadStudentScores(cls, no, name) {
     var ch4 = responses[0].students ? responses[0].students.find(function(s) { return String(s.no) === String(no); }) : null;
     var ch5 = responses[1].students ? responses[1].students.find(function(s) { return String(s.no) === String(no); }) : null;
     var fakeStudent = { name: name, nickname: '' };
-    renderStudentScoreCard(fakeStudent, ch4, ch5, responses[0].inputCols, responses[1].inputCols);
-    // Re-render tabs since renderStudentScoreCard overwrites the container
+
+    // Build ch4 and ch5 HTML directly without using renderStudentScoreCard
+    // (which overwrites the whole container including tabs)
+    var ch4Html = buildStudentChapterHTML(ch4, responses[0].inputCols, 4);
+    var ch5Html = buildStudentChapterHTML(ch5, responses[1].inputCols, 5);
+
     var result = document.getElementById('sResult');
-    if (result) {
-      var tabsDiv = '<div class="chapter-tabs" style="margin-bottom:16px;"><button class="ch-tab active" id="stab4" onclick="switchStudentTab(4)">Chapter 4</button><button class="ch-tab" id="stab5" onclick="switchStudentTab(5)">Chapter 5</button></div>';
-      result.innerHTML = tabsDiv + result.innerHTML;
-    }
+    result.innerHTML =
+      '<div class="student-score-card">' +
+        '<div class="score-card-header">' +
+          '<div class="score-card-avatar">' + name.charAt(0).toUpperCase() + '</div>' +
+          '<div class="score-card-name">' +
+            '<div class="name">' + name + '</div>' +
+            '<div class="meta">' + (CLASS_LABELS[cls] || cls) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="score-card-body">' +
+          '<div class="chapter-tabs"><button class="ch-tab active" id="stab4" onclick="switchStudentTab(4)">Chapter 4</button><button class="ch-tab" id="stab5" onclick="switchStudentTab(5)">Chapter 5</button></div>' +
+          '<div id="sScoreCh4">' + ch4Html + '</div>' +
+          '<div id="sScoreCh5" style="display:none">' + ch5Html + '</div>' +
+        '</div>' +
+      '</div>';
   }).catch(function(e) {
     document.getElementById('sResult').innerHTML = '<div class="state-card"><div class="state-icon">&#9203;</div><div class="state-title">Connection problem</div><div class="state-sub">' + e.message + '</div></div>';
   });
