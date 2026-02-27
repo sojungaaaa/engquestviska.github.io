@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chapter Scores · English Quest</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -159,8 +160,22 @@ function apiGet(params) {
   return new Promise(function(resolve, reject) {
     var cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
     var script = document.createElement('script');
-    window[cb] = function(data) { delete window[cb]; document.head.removeChild(script); resolve(data); };
-    script.onerror = function() { reject(new Error('Network error')); };
+    var timer = setTimeout(function() {
+      delete window[cb];
+      try { document.head.removeChild(script); } catch(e) {}
+      reject(new Error('Request timed out. Please check your connection and try again.'));
+    }, 12000);
+    window[cb] = function(data) {
+      clearTimeout(timer);
+      delete window[cb];
+      try { document.head.removeChild(script); } catch(e) {}
+      resolve(data);
+    };
+    script.onerror = function() {
+      clearTimeout(timer);
+      delete window[cb];
+      reject(new Error('Network error. Please try again.'));
+    };
     script.src = url + '&callback=' + cb;
     document.head.appendChild(script);
   });
@@ -186,7 +201,7 @@ function renderStudentMode() {
     '<div class="student-picker">' +
       '<div class="picker-field"><label>Class</label><select id="sClass">' + classOptions + '</select></div>' +
       '<div class="picker-field"><label>Your Name</label><select id="sStudent"><option value="">-- Select class first --</option></select></div>' +
-      '<button class="btn-view-scores" id="sViewBtn">View My Scores</button>' +
+      '<button class="btn-view-scores" id="sViewBtn">&#128065; View Scores</button>' +
     '</div>' +
     '<div id="sResult"></div>';
 
@@ -194,8 +209,15 @@ function renderStudentMode() {
     currentClass = this.value;
     localStorage.setItem('eq_last_class', currentClass);
     loadStudentList();
+    document.getElementById('sResult').innerHTML = '';
   });
   document.getElementById('sViewBtn').addEventListener('click', viewStudentScores);
+  // Also trigger on select change for faster UX
+  document.addEventListener('change', function(e) {
+    if (e.target && e.target.id === 'sStudent' && e.target.value) {
+      viewStudentScores();
+    }
+  });
   loadStudentList();
 }
 
@@ -325,6 +347,8 @@ function loadTeacherScores() {
     .then(function(res) {
       if (res.error) { area.innerHTML = '<div class="state-card"><div class="state-icon">&#128580;</div><div class="state-title">Error</div><div class="state-sub">' + res.error + '</div></div>'; return; }
       renderTeacherTable(res.students, res.inputCols);
+    }).catch(function(e) {
+      area.innerHTML = '<div class="state-card"><div class="state-icon">&#9203;</div><div class="state-title">Connection problem</div><div class="state-sub">' + e.message + '</div></div>';
     });
 }
 
