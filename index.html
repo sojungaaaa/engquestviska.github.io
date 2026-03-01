@@ -42,7 +42,6 @@
       text-align: center;
     }
 
-    /* decorative blobs */
     header::before {
       content: '';
       position: absolute;
@@ -71,7 +70,6 @@
       pointer-events: none;
     }
 
-    /* dot grid texture */
     .dot-grid {
       position: absolute; inset: 0;
       background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
@@ -120,9 +118,7 @@
       animation: fadeDown 0.7s 0.1s ease both;
     }
 
-    header h1 span {
-      color: var(--accent);
-    }
+    header h1 span { color: var(--accent); }
 
     .header-welcome { color: rgba(255,255,255,0.7); font-size: 0.88rem; margin-bottom: 12px; position: relative; z-index: 1; }
     .header-sub {
@@ -153,7 +149,6 @@
       border-radius: 999px;
     }
 
-    /* ── WAVE DIVIDER ── */
     .wave {
       display: block;
       width: 100%;
@@ -273,7 +268,6 @@
       z-index: 1;
     }
 
-    /* icon color themes */
     .ic-purple { background: linear-gradient(135deg, #DDD6FE, #A78BFA); }
     .ic-blue   { background: linear-gradient(135deg, #BFDBFE, #60A5FA); }
     .ic-green  { background: linear-gradient(135deg, #BBF7D0, #34D399); }
@@ -282,8 +276,10 @@
     .ic-orange { background: linear-gradient(135deg, #FED7AA, #FB923C); }
     .ic-teal   { background: linear-gradient(135deg, #99F6E4, #2DD4BF); }
     .ic-rose   { background: linear-gradient(135deg, #FECDD3, #FB7185); }
+    .ic-red    { background: linear-gradient(135deg, #FECDD3, #FB7185); }
+    .ic-indigo { background: linear-gradient(135deg, #C7D2FE, #818CF8); }
 
-    /* ── WIDE CARD (for announcements) ── */
+    /* ── WIDE CARD ── */
     .card-wide {
       background: var(--white);
       border: 1.5px solid var(--border);
@@ -422,16 +418,12 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
       .card-grid { grid-template-columns: repeat(2, 1fr); }
       .highlight-banner { padding: 24px 22px; }
       .highlight-banner::after { display: none; }
     }
 
-
-
-
     /* ── POPUPS (HOF + STRIKE) ── */
     .info-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:400; display:flex; align-items:flex-end; justify-content:center; }
     .info-overlay.hidden { display:none; }
@@ -445,7 +437,6 @@
     .info-close { margin-left:auto; width:30px; height:30px; border-radius:50%; background:#F9F7FF; border:1.5px solid #E5DEFF; color:#6B5B95; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .info-body { padding:16px 20px; }
 
-    /* HOF stats */
     .hof-popup-total { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
     .hof-popup-total-label { font-size:0.72rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; }
     .hof-popup-total-val { font-size:0.95rem; font-weight:700; color:#7C3AED; font-family:'IBM Plex Mono',monospace; }
@@ -462,94 +453,6 @@
     .hof-stat-pts { font-size:0.8rem; font-weight:700; font-family:'IBM Plex Mono',monospace; }
     .hof-popup-indicator { margin-top:14px; padding:10px 14px; border-radius:12px; font-size:0.82rem; font-weight:700; text-align:center; }
 
-    /* Strike popup */
-    .strike-popup-dots { display:flex; gap:10px; margin-bottom:14px; }
-    .strike-popup-dot { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; border:2px solid; }
-    .strike-popup-dot.hit  { background:#FEE2E2; border-color:#FCA5A5; }
-    .strike-popup-dot.miss { background:#F9F7FF; border-color:#E5DEFF; }
-    .strike-popup-detail { background:#F9F7FF; border:1.5px solid #E5DEFF; border-radius:12px; padding:12px 14px; }
-    .strike-popup-row { display:flex; gap:10px; margin-bottom:8px; align-items:flex-start; }
-    .strike-popup-row:last-child { margin-bottom:0; }
-    .strike-popup-label { font-size:0.7rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.06em; font-family:'IBM Plex Mono',monospace; min-width:55px; flex-shrink:0; padding-top:1px; }
-    .strike-popup-val { font-size:0.88rem; color:#1E1040; font-weight:500; }
-    .hof-row, .strike-list-row { cursor:pointer; }
-    .hof-row:hover .hof-name, .strike-list-row:hover .sl-name { color:var(--purple); }
-
-    /* ── STRIKE INFO MODAL ── */
-    .strike-info-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:400; display:flex; align-items:flex-end; justify-content:center; padding:0; }
-    .strike-info-overlay.hidden { display:none; }
-    .strike-info-sheet { background:#fff; border-radius:28px 28px 0 0; width:100%; max-width:540px; max-height:88vh; overflow-y:auto; padding:0 0 40px; animation:sheetUp 0.35s cubic-bezier(0.34,1.2,0.64,1); }
-    @keyframes sheetUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
-    .si-handle { width:40px; height:4px; background:#E5DEFF; border-radius:999px; margin:14px auto 0; }
-    .si-head { padding:20px 24px 16px; border-bottom:1.5px solid #FEE2E2; background:linear-gradient(135deg,#DC2626,#991B1B); border-radius:28px 28px 0 0; }
-    .si-head-title { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:800; color:#fff; margin-bottom:4px; }
-    .si-head-sub { font-size:0.8rem; color:rgba(255,255,255,0.7); }
-    .si-close { float:right; background:rgba(255,255,255,0.2); border:none; color:#fff; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:0.9rem; margin-top:-2px; }
-
-    .si-body { padding:20px 24px 0; }
-
-    /* Consequences */
-    .si-cons-title { font-size:0.7rem; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.1em; font-family:'IBM Plex Mono',monospace; margin-bottom:12px; }
-    .si-con-row { display:flex; gap:12px; align-items:flex-start; padding:12px 14px; border-radius:14px; margin-bottom:8px; }
-    .si-con-row.one   { background:#FEF3C7; border:1.5px solid #FCD34D; }
-    .si-con-row.three { background:#FEE2E2; border:1.5px solid #FCA5A5; }
-    .si-con-icon { font-size:1.3rem; flex-shrink:0; }
-    .si-con-label { font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; font-family:'IBM Plex Mono',monospace; margin-bottom:3px; }
-    .si-con-row.one   .si-con-label { color:#92400E; }
-    .si-con-row.three .si-con-label { color:#991B1B; }
-    .si-con-text { font-size:0.88rem; font-weight:600; color:var(--text-dark); line-height:1.4; }
-    .si-con-sub  { font-size:0.75rem; color:var(--text-muted); margin-top:3px; }
-
-    /* Divider */
-    .si-divider { display:flex; align-items:center; gap:10px; margin:18px 0; }
-    .si-divider-line { flex:1; height:1px; background:var(--border); }
-    .si-divider-label { font-size:0.7rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; white-space:nowrap; }
-
-    /* Clearance steps */
-    .si-step { display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
-    .si-step:last-child { border-bottom:none; }
-    .si-step-num { width:26px; height:26px; border-radius:50%; background:var(--purple-soft); color:var(--purple); font-size:0.75rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'IBM Plex Mono',monospace; }
-    .si-step-text { font-size:0.88rem; color:var(--text-dark); line-height:1.5; padding-top:3px; }
-    .si-step-text strong { color:var(--purple); }
-    .si-step-text span { display:block; font-size:0.78rem; color:var(--text-muted); margin-top:3px; }
-
-    /* Full guide link */
-    .si-full-link { display:block; text-align:center; margin-top:18px; padding:13px; background:var(--purple-soft); border:1.5px solid var(--purple-mid); border-radius:14px; font-size:0.88rem; font-weight:700; color:var(--purple); text-decoration:none; }
-    .si-full-link:hover { background:var(--purple-mid); }
-
-
-
-    /* ── POPUPS (HOF + STRIKE) ── */
-    .info-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:400; display:flex; align-items:flex-end; justify-content:center; }
-    .info-overlay.hidden { display:none; }
-    .info-sheet { background:#fff; border-radius:28px 28px 0 0; width:100%; max-width:480px; max-height:88vh; overflow-y:auto; animation:infoUp 0.35s cubic-bezier(0.34,1.2,0.64,1); padding-bottom:28px; }
-    @keyframes infoUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
-    .info-handle { width:40px; height:4px; background:#E5DEFF; border-radius:999px; margin:12px auto 0; }
-    .info-head { padding:18px 20px 14px; border-bottom:1.5px solid #E5DEFF; display:flex; align-items:center; gap:12px; }
-    .info-avatar { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:800; font-size:1.2rem; color:#fff; flex-shrink:0; }
-    .info-head-name { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:#1E1040; }
-    .info-head-sub { font-size:0.75rem; color:#6B5B95; margin-top:2px; }
-    .info-close { margin-left:auto; width:30px; height:30px; border-radius:50%; background:#F9F7FF; border:1.5px solid #E5DEFF; color:#6B5B95; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-    .info-body { padding:16px 20px; }
-
-    /* HOF stats */
-    .hof-popup-total { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-    .hof-popup-total-label { font-size:0.72rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; }
-    .hof-popup-total-val { font-size:0.95rem; font-weight:700; color:#7C3AED; font-family:'IBM Plex Mono',monospace; }
-    .hof-popup-bar-wrap { background:#E5DEFF; border-radius:999px; height:8px; overflow:hidden; margin-bottom:18px; }
-    .hof-popup-bar { height:8px; border-radius:999px; background:linear-gradient(90deg,#7C3AED,#A78BFA); transition:width 0.7s ease; }
-    .hof-stat-cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-    .hof-stat-card { background:#F9F7FF; border:1.5px solid #E5DEFF; border-radius:12px; padding:10px 12px; }
-    .hof-stat-card-top { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
-    .hof-stat-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-    .hof-stat-cat { font-size:0.65rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.04em; font-family:'IBM Plex Mono',monospace; }
-    .hof-stat-nums { display:flex; justify-content:space-between; align-items:flex-end; }
-    .hof-stat-times { font-size:1.1rem; font-weight:800; color:#1E1040; font-family:'Playfair Display',serif; line-height:1; }
-    .hof-stat-times small { font-size:0.6rem; color:#6B5B95; font-weight:500; font-family:'IBM Plex Sans',sans-serif; display:block; margin-top:1px; }
-    .hof-stat-pts { font-size:0.8rem; font-weight:700; font-family:'IBM Plex Mono',monospace; }
-    .hof-popup-indicator { margin-top:14px; padding:10px 14px; border-radius:12px; font-size:0.82rem; font-weight:700; text-align:center; }
-
-    /* Strike popup */
     .strike-popup-dots { display:flex; gap:10px; margin-bottom:14px; }
     .strike-popup-dot { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; border:2px solid; }
     .strike-popup-dot.hit  { background:#FEE2E2; border-color:#FCA5A5; }
@@ -574,7 +477,6 @@
     .si-head-sub { font-size:0.78rem; color:#6B5B95; margin-top:2px; }
     .si-close { margin-left:auto; width:32px; height:32px; border-radius:50%; background:#F9F7FF; border:1.5px solid #E5DEFF; color:#6B5B95; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 
-    /* Consequence cards */
     .si-consequences { padding:18px 20px; display:flex; flex-direction:column; gap:10px; border-bottom:1.5px solid #E5DEFF; }
     .si-cons-title { font-size:0.7rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-bottom:4px; }
     .si-cons-card { border-radius:14px; padding:14px 16px; display:flex; gap:12px; align-items:flex-start; border:1.5px solid; }
@@ -595,7 +497,6 @@
     .c2 .si-cons-sub { color:#991B1B; opacity:0.75; }
     .c3 .si-cons-sub { color:rgba(255,255,255,0.65); }
 
-    /* Clearance steps */
     .si-clear { padding:18px 20px; }
     .si-clear-title { font-size:0.7rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-bottom:14px; }
     .si-step { display:flex; gap:12px; align-items:flex-start; margin-bottom:14px; }
@@ -604,11 +505,6 @@
     .si-step-text { font-size:0.88rem; color:#1E1040; line-height:1.5; padding-top:4px; }
     .si-step-text strong { color:#7C3AED; }
     .si-step-text span { display:block; font-size:0.78rem; color:#6B5B95; margin-top:3px; }
-
-    /* Chapter badge */
-    .si-chapter { display:inline-flex; align-items:center; gap:8px; background:#EDE9FE; border:1.5px solid #C4B5FD; border-radius:10px; padding:6px 12px; margin-top:6px; }
-    .si-chapter-label { font-size:0.65rem; font-weight:700; color:#A78BFA; text-transform:uppercase; letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; }
-    .si-chapter-val { font-size:0.82rem; font-weight:700; color:#5B21B6; }
 
     /* ── STRIKE LIST ── */
     .strike-list-section { margin-bottom: 40px; }
@@ -649,7 +545,6 @@
     .hof-spinner { display: inline-block; width: 20px; height: 20px; border: 2.5px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: hofSpin 0.8s linear infinite; margin-bottom: 8px; }
     @keyframes hofSpin { to { transform: rotate(360deg); } }
 
-    /* Top 5 leaderboard */
     .hof-top5 { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 16px; }
     .hof-top5-header { background: linear-gradient(135deg, #7C3AED, #5B21B6); padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
     .hof-top5-header-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: #fff; }
@@ -670,7 +565,6 @@
     .hof-bar-wrap { width: 80px; background: var(--border); border-radius: 999px; height: 5px; overflow: hidden; flex-shrink: 0; }
     .hof-bar { height: 5px; border-radius: 999px; background: linear-gradient(90deg, var(--purple), var(--purple-light)); }
 
-    /* Category champions */
     .hof-champs-title { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; font-family: 'IBM Plex Mono', monospace; }
     .hof-champs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
     .hof-champ-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 14px 12px; text-align: center; transition: transform 0.15s, box-shadow 0.15s; }
@@ -680,7 +574,6 @@
     .hof-champ-name { font-family: 'Playfair Display', serif; font-size: 0.88rem; font-weight: 700; color: var(--text-dark); line-height: 1.2; margin-bottom: 3px; }
     .hof-champ-class { font-size: 0.68rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-bottom: 6px; }
     .hof-champ-val { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; display: inline-block; }
-
 
     /* ── SCHEDULE ── */
     .sched-wrap { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 16px; }
@@ -695,7 +588,6 @@
     .sched-body { display: none; border-top: 1.5px solid var(--border); }
     .sched-body.open { display: block; }
 
-    /* Day tabs */
     .sched-days { display: flex; overflow-x: auto; border-bottom: 1.5px solid var(--border); scrollbar-width: none; }
     .sched-days::-webkit-scrollbar { display: none; }
     .sched-day-btn { padding: 11px 18px; font-size: 0.82rem; font-weight: 700; border: none; background: none; cursor: pointer; white-space: nowrap; color: var(--text-muted); border-bottom: 2.5px solid transparent; margin-bottom: -2px; font-family: 'IBM Plex Sans', sans-serif; transition: all 0.2s; flex-shrink: 0; }
@@ -703,7 +595,6 @@
     .sched-day-btn.today { color: var(--accent); border-bottom-color: var(--accent); }
     .sched-day-btn.today.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-    /* Schedule items */
     .sched-content { padding: 4px 0 8px; }
     .sched-item { display: flex; align-items: center; gap: 14px; padding: 12px 20px; border-bottom: 1px solid var(--border); }
     .sched-item:last-child { border-bottom: none; }
@@ -716,7 +607,6 @@
     .sched-break-line { flex: 1; height: 1px; background: var(--border); }
     .sched-break-label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; font-family: 'IBM Plex Mono', monospace; }
 
-    /* Class color badges */
     .cls-e1  { background: #EDE9FE; color: #5B21B6; }
     .cls-e4  { background: #DBEAFE; color: #1D4ED8; }
     .cls-e5  { background: #D1FAE5; color: #065F46; }
@@ -726,8 +616,6 @@
     .cls-e9  { background: #F0FDF4; color: #166534; }
     .cls-e10 { background: #FFF7ED; color: #9A3412; }
     .cls-e11 { background: #F5F3FF; color: #4C1D95; }
-
-
 
     /* ── SIDEBAR NAV ── */
     .hamburger { position:absolute; top:20px; right:20px; z-index:10; background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); border-radius:10px; width:40px; height:40px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; cursor:pointer; padding:0; }
@@ -768,92 +656,47 @@
     .sidebar-teacher-logged span { cursor:pointer; color:rgba(255,255,255,0.4); font-size:0.75rem; margin-left:auto; }
 
     /* ── SUMMATIVE BANNER ── */
-    .summ-banner {
-      position: sticky; top: 0; z-index: 200;
-      background: linear-gradient(135deg, #DC2626 0%, #991B1B 50%, #7F1D1D 100%);
-      border-bottom: 2px solid #FCA5A5;
-      padding: 0;
-      display: none; /* shown by JS when data exists */
-    }
-    .summ-banner.visible { display: block; }
-    .summ-banner-inner {
-      max-width: 960px; margin: 0 auto;
-      padding: 10px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-    }
-    .summ-pulse { width: 10px; height: 10px; border-radius: 50%; background: #FCA5A5; flex-shrink: 0;
-      animation: sumPulse 1.4s ease-in-out infinite; }
-    @keyframes sumPulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(252,165,165,0.7); }
-      50% { box-shadow: 0 0 0 8px rgba(252,165,165,0); }
-    }
-    .summ-label { font-size: 0.7rem; font-weight: 800; color: #FCA5A5; text-transform: uppercase;
-      letter-spacing: 0.1em; font-family: 'IBM Plex Mono', monospace; flex-shrink: 0; }
-    .summ-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.2); flex-shrink: 0; }
-    .summ-text { flex: 1; font-size: 0.88rem; color: #fff; font-weight: 600; line-height: 1.4; }
-    .summ-text strong { color: #FCA5A5; }
-    .summ-countdown { font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; font-weight: 700;
-      background: rgba(0,0,0,0.25); color: #fff; padding: 4px 12px; border-radius: 999px;
-      white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
-    .summ-countdown.urgent { background: rgba(255,255,255,0.15); color: #FEF2F2; animation: urgentBlink 1s ease-in-out infinite; }
+    .summ-banner { position:sticky; top:0; z-index:200; background:linear-gradient(135deg,#DC2626 0%,#991B1B 50%,#7F1D1D 100%); border-bottom:2px solid #FCA5A5; padding:0; display:none; }
+    .summ-banner.visible { display:block; }
+    .summ-banner-inner { max-width:960px; margin:0 auto; padding:10px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .summ-pulse { width:10px; height:10px; border-radius:50%; background:#FCA5A5; flex-shrink:0; animation:sumPulse 1.4s ease-in-out infinite; }
+    @keyframes sumPulse { 0%,100%{box-shadow:0 0 0 0 rgba(252,165,165,0.7)} 50%{box-shadow:0 0 0 8px rgba(252,165,165,0)} }
+    .summ-label { font-size:0.7rem; font-weight:800; color:#FCA5A5; text-transform:uppercase; letter-spacing:0.1em; font-family:'IBM Plex Mono',monospace; flex-shrink:0; }
+    .summ-divider { width:1px; height:18px; background:rgba(255,255,255,0.2); flex-shrink:0; }
+    .summ-text { flex:1; font-size:0.88rem; color:#fff; font-weight:600; line-height:1.4; }
+    .summ-text strong { color:#FCA5A5; }
+    .summ-countdown { font-family:'IBM Plex Mono',monospace; font-size:0.82rem; font-weight:700; background:rgba(0,0,0,0.25); color:#fff; padding:4px 12px; border-radius:999px; white-space:nowrap; flex-shrink:0; border:1px solid rgba(255,255,255,0.15); }
+    .summ-countdown.urgent { background:rgba(255,255,255,0.15); color:#FEF2F2; animation:urgentBlink 1s ease-in-out infinite; }
     @keyframes urgentBlink { 0%,100%{opacity:1} 50%{opacity:0.6} }
-    .summ-edit-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-      color: #fff; font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 999px;
-      cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; flex-shrink: 0; display: none; }
-    .summ-edit-btn.visible { display: block; }
-    .summ-edit-btn:hover { background: rgba(255,255,255,0.25); }
+    .summ-edit-btn { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; font-size:0.72rem; font-weight:700; padding:4px 12px; border-radius:999px; cursor:pointer; font-family:'IBM Plex Sans',sans-serif; flex-shrink:0; display:none; }
+    .summ-edit-btn.visible { display:block; }
+    .summ-edit-btn:hover { background:rgba(255,255,255,0.25); }
 
+    .summ-float-btn { position:fixed; bottom:24px; right:20px; z-index:300; background:linear-gradient(135deg,#DC2626,#991B1B); color:#fff; border:none; border-radius:999px; padding:12px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:0.85rem; font-weight:700; cursor:pointer; display:none; align-items:center; gap:8px; box-shadow:0 4px 20px rgba(220,38,38,0.4); transition:transform 0.15s,box-shadow 0.15s; }
+    .summ-float-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(220,38,38,0.5); }
 
-    /* Floating summative set button for teacher */
-    .summ-float-btn {
-      position: fixed; bottom: 24px; right: 20px; z-index: 300;
-      background: linear-gradient(135deg, #DC2626, #991B1B);
-      color: #fff; border: none; border-radius: 999px;
-      padding: 12px 20px; font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 0.85rem; font-weight: 700; cursor: pointer;
-      display: none; align-items: center; gap: 8px;
-      box-shadow: 0 4px 20px rgba(220,38,38,0.4);
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .summ-float-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(220,38,38,0.5); }
+    .summ-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(6px); z-index:500; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .summ-overlay.hidden { display:none; }
+    .summ-modal { background:#fff; border-radius:24px; padding:32px 28px; width:100%; max-width:480px; max-height:90vh; overflow-y:auto; }
+    .summ-modal-title { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:800; margin-bottom:4px; color:#1E1040; }
+    .summ-modal-sub { font-size:0.85rem; color:#6B5B95; margin-bottom:24px; }
+    .summ-field { margin-bottom:16px; }
+    .summ-field label { display:block; font-size:0.75rem; font-weight:700; color:#6B5B95; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
+    .summ-field input, .summ-field textarea, .summ-field select { width:100%; padding:12px 16px; border:1.5px solid #E5DEFF; border-radius:12px; font-family:'IBM Plex Sans',sans-serif; font-size:0.95rem; outline:none; color:#1E1040; background:#F9F7FF; }
+    .summ-field input:focus, .summ-field textarea:focus, .summ-field select:focus { border-color:#A78BFA; }
+    .summ-field textarea { resize:none; height:80px; }
+    .summ-classes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .summ-cls-btn { padding:8px 6px; border:1.5px solid #E5DEFF; border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer; background:#F9F7FF; color:#6B5B95; font-family:'IBM Plex Mono',monospace; text-align:center; transition:all 0.15s; }
+    .summ-cls-btn.selected { background:#EDE9FE; border-color:#7C3AED; color:#5B21B6; }
+    .summ-modal-btns { display:flex; gap:10px; margin-top:24px; flex-wrap:wrap; }
+    .summ-btn-save { flex:1; padding:13px; background:linear-gradient(135deg,#DC2626,#991B1B); color:#fff; font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:0.95rem; border:none; border-radius:12px; cursor:pointer; }
+    .summ-btn-clear { padding:13px 18px; background:#F9F7FF; border:1.5px solid #E5DEFF; border-radius:12px; font-family:'IBM Plex Sans',sans-serif; cursor:pointer; color:#6B5B95; }
+    .summ-btn-cancel { padding:13px 18px; background:#F9F7FF; border:1.5px solid #E5DEFF; border-radius:12px; font-family:'IBM Plex Sans',sans-serif; cursor:pointer; color:#6B5B95; }
 
-    /* Teacher panel modal */
-    .summ-overlay { position: fixed; inset: 0; background: rgba(15,10,40,0.7); backdrop-filter: blur(6px);
-      z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .summ-overlay.hidden { display: none; }
-    .summ-modal { background: #fff; border-radius: 24px; padding: 32px 28px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
-    .summ-modal-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; color: #1E1040; }
-    .summ-modal-sub { font-size: 0.85rem; color: #6B5B95; margin-bottom: 24px; }
-    .summ-field { margin-bottom: 16px; }
-    .summ-field label { display: block; font-size: 0.75rem; font-weight: 700; color: #6B5B95;
-      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-    .summ-field input, .summ-field textarea, .summ-field select {
-      width: 100%; padding: 12px 16px; border: 1.5px solid #E5DEFF; border-radius: 12px;
-      font-family: 'IBM Plex Sans', sans-serif; font-size: 0.95rem; outline: none; color: #1E1040;
-      background: #F9F7FF; }
-    .summ-field input:focus, .summ-field textarea:focus, .summ-field select:focus { border-color: #A78BFA; }
-    .summ-field textarea { resize: none; height: 80px; }
-    .summ-classes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .summ-cls-btn { padding: 8px 6px; border: 1.5px solid #E5DEFF; border-radius: 10px; font-size: 0.78rem;
-      font-weight: 700; cursor: pointer; background: #F9F7FF; color: #6B5B95; font-family: 'IBM Plex Mono', monospace;
-      text-align: center; transition: all 0.15s; }
-    .summ-cls-btn.selected { background: #EDE9FE; border-color: #7C3AED; color: #5B21B6; }
-    .summ-modal-btns { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
-    .summ-btn-save { flex: 1; padding: 13px; background: linear-gradient(135deg, #DC2626, #991B1B);
-      color: #fff; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 0.95rem;
-      border: none; border-radius: 12px; cursor: pointer; }
-    .summ-btn-clear { padding: 13px 18px; background: #F9F7FF; border: 1.5px solid #E5DEFF;
-      border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; cursor: pointer; color: #6B5B95; }
-    .summ-btn-cancel { padding: 13px 18px; background: #F9F7FF; border: 1.5px solid #E5DEFF;
-      border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; cursor: pointer; color: #6B5B95; }
-
-    /* Toast */
-    .summ-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
-      background: #1E1040; color: #fff; padding: 12px 24px; border-radius: 999px; font-size: 0.9rem;
-      font-weight: 500; transition: transform 0.3s; z-index: 999; white-space: nowrap; pointer-events: none; }
-    .summ-toast.show { transform: translateX(-50%) translateY(0); }
-    .summ-toast.ok  { background: #059669; }
-    .summ-toast.err { background: #DC2626; }
-
+    .summ-toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px); background:#1E1040; color:#fff; padding:12px 24px; border-radius:999px; font-size:0.9rem; font-weight:500; transition:transform 0.3s; z-index:999; white-space:nowrap; pointer-events:none; }
+    .summ-toast.show { transform:translateX(-50%) translateY(0); }
+    .summ-toast.ok  { background:#059669; }
+    .summ-toast.err { background:#DC2626; }
 
     /* STUDENT IDENTITY */
     .student-greeting { display:none; align-items:center; gap:10px; margin-top:14px; position:relative; z-index:2; background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.25); border-radius:16px; padding:10px 16px; max-width:340px; margin-left:auto; margin-right:auto; }
@@ -883,6 +726,12 @@
     .setup-skip { text-align:center; font-size:0.78rem; color:var(--text-muted); cursor:pointer; }
     .setup-skip:hover { color:var(--purple); }
 
+    /* STRIKE INFO OVERLAY */
+    .strike-info-overlay { position:fixed; inset:0; background:rgba(15,10,40,0.7); backdrop-filter:blur(8px); z-index:400; display:flex; align-items:flex-end; justify-content:center; }
+    .strike-info-overlay.hidden { display:none; }
+    .strike-info-sheet { background:#fff; border-radius:28px 28px 0 0; width:100%; max-width:540px; max-height:88vh; overflow-y:auto; padding:0 0 40px; animation:sheetUp 0.35s cubic-bezier(0.34,1.2,0.64,1); }
+    @keyframes sheetUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+    .si-handle { width:40px; height:4px; background:#E5DEFF; border-radius:999px; margin:14px auto 0; }
   </style>
 </head>
 <body>
@@ -903,7 +752,7 @@
   </div>
 </div>
 
-<!-- ── SUMMATIVE STICKY BANNER ── -->
+<!-- SUMMATIVE STICKY BANNER -->
 <div class="summ-banner" id="summBanner">
   <div class="summ-banner-inner">
     <div class="summ-pulse"></div>
@@ -930,7 +779,7 @@
     </div>
     <div class="summ-field">
       <label>What to Study</label>
-      <textarea id="summStudy" placeholder="e.g. Grammar: Present Perfect, Vocabulary Box words, Chapter 4 & 5 reading texts..."></textarea>
+      <textarea id="summStudy" placeholder="e.g. Grammar: Present Perfect, Vocabulary Box words..."></textarea>
     </div>
     <div class="summ-field">
       <label>Which Classes</label>
@@ -955,11 +804,9 @@
 </div>
 
 <div class="summ-toast" id="summToast"></div>
-<button class="summ-float-btn" id="summFloatBtn" onclick="openSummModal()">
-  📝 Set Summative
-</button>
+<button class="summ-float-btn" id="summFloatBtn" onclick="openSummModal()">📝 Set Summative</button>
 
-<!-- ── HEADER ── -->
+<!-- HEADER -->
 <header>
   <div class="dot-grid"></div>
   <div class="header-blob"></div>
@@ -967,6 +814,7 @@
   <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
+
   <div class="logo-wrap">
     <img src="logo.jpg" alt="English Quest Logo" />
     <span class="logo-badge">SMAVISKA</span>
@@ -974,15 +822,16 @@
 
   <h1>ENGLISH <span>QUEST</span></h1>
   <p class="header-sub">Information & Learning Portal · SMA Negeri 6 Surakarta</p>
-
   <p class="header-welcome">Your one-stop hub for class documents, student data, and updates.</p>
+
   <div class="header-tags">
     <span class="tag">📖 English Class</span>
     <span class="tag">🏫 SMAVISKA</span>
   </div>
+
   <div id="headerLoginArea" style="margin-top:14px;position:relative;z-index:2;">
     <button id="headerLoginBtn" onclick="openHeaderLogin()" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.35);color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:0.82rem;font-weight:700;padding:8px 20px;border-radius:999px;cursor:pointer;">🔑 Teacher Login</button>
-    <div id="headerTeacherBadge" style="display:none;background:var(--accent);color:#fff;font-size:0.82rem;font-weight:700;padding:8px 18px;border-radius:999px;display:none;align-items:center;gap:8px;">
+    <div id="headerTeacherBadge" style="display:none;background:var(--accent);color:#fff;font-size:0.82rem;font-weight:700;padding:8px 18px;border-radius:999px;align-items:center;gap:8px;">
       🎓 Logged in as Teacher <span style="cursor:pointer;opacity:0.8" onclick="headerLogout()">✕</span>
     </div>
   </div>
@@ -1002,7 +851,7 @@
   <path fill="#F9F7FF" d="M0,48 C360,16 1080,64 1440,32 L1440,48 Z"/>
 </svg>
 
-<!-- ── MAIN ── -->
+<!-- MAIN -->
 <main>
 
 <script>
@@ -1011,13 +860,11 @@
   var no   = localStorage.getItem('eq_student_no');
   var name = localStorage.getItem('eq_student_name');
   if (!cls || !no || !name) return;
-
   var clsLabels = { XE1:'X E-1', XE4:'X E-4', XE5:'X E-5', XE6:'X E-6', XE7:'X E-7', XE8:'X E-8', XE9:'X E-9', XE10:'X E-10', XE11:'X E-11' };
-
   var card = document.createElement('div');
   card.style.cssText = 'background:linear-gradient(135deg,#7C3AED,#4C1D95);border-radius:20px;padding:18px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,0.25);';
   card.innerHTML =
-    '<div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:800;font-size:1.2rem;color:#fff;flex-shrink:0;">' + name.charAt(0) + '</div>' +
+    '<div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-family:serif;font-weight:800;font-size:1.2rem;color:#fff;flex-shrink:0;">' + name.charAt(0) + '</div>' +
     '<div style="flex:1;">' +
       '<div style="font-size:0.72rem;color:rgba(255,255,255,0.65);font-family:monospace;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">My Scores</div>' +
       '<div style="font-weight:700;font-size:1rem;color:#fff;">' + name.split(' ').slice(0,2).join(' ') + '</div>' +
@@ -1025,16 +872,10 @@
     '</div>' +
     '<div style="font-size:1.3rem;color:rgba(255,255,255,0.5);">›</div>';
   card.onclick = function() { window.location.href = 'scores.html'; };
-
   var main = document.querySelector('main');
   if (main) main.insertBefore(card, main.firstChild);
 })();
 </script>
-
-
-
-
-
 
   <!-- HALL OF FAME -->
   <div class="hof-section" id="hofSection">
@@ -1049,7 +890,7 @@
     </div>
   </div>
 
-  <!-- STRIKE LIST -->
+  <!-- STRIKE BOARD -->
   <div class="strike-list-section">
     <div class="hof-title-row">
       <div>
@@ -1074,7 +915,7 @@
     </div>
   </div>
 
-  <!-- DOCUMENTS / FILES -->
+  <!-- DOCUMENTS & FILES -->
   <div class="section" id="docs">
     <div class="section-label">Documents & Files</div>
     <div class="section-title">Class Resources</div>
@@ -1095,7 +936,38 @@
         <div class="card-desc">Submit your assignment links</div>
         <div style="position:absolute;top:8px;right:8px;background:#F59E0B;color:#fff;font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:999px;font-family:'IBM Plex Mono',monospace;">SOON</div>
       </a>
+    </div>
+  </div>
 
+  <!-- READING -->
+  <div class="section" id="reading">
+    <div class="section-label">Reading</div>
+    <div class="section-title">Reading Materials</div>
+    <div class="card-grid">
+      <a href="https://drive.google.com/file/d/1VJC_bOqOeqEONkB3gS8egOmO3IGmOAQT/view?usp=drive_link" target="_blank" class="card">
+        <div class="card-icon ic-teal">📖</div>
+        <div class="card-name">Reading Anthology</div>
+        <div class="card-desc">Open on Google Drive</div>
+      </a>
+      <a href="https://drive.google.com/file/d/1tfisw-3zczDmWv4WBc4w8QGndoveMsuH/view?usp=drive_link" target="_blank" class="card">
+        <div class="card-icon ic-blue">📄</div>
+        <div class="card-name">Reading 3</div>
+        <div class="card-desc">Open on Google Drive</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- VIDEO LEARNING -->
+  <div class="section" id="video">
+    <div class="section-label">Video Learning</div>
+    <div class="section-title">Video Materials</div>
+    <div class="card-grid">
+      <div class="card" style="opacity:0.6;pointer-events:none;position:relative;">
+        <div class="card-icon ic-rose">🎬</div>
+        <div class="card-name">Video 1</div>
+        <div class="card-desc">Coming soon</div>
+        <div style="position:absolute;top:8px;right:8px;background:#EC4899;color:#fff;font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:999px;font-family:'IBM Plex Mono',monospace;">SOON</div>
+      </div>
     </div>
   </div>
 
@@ -1134,8 +1006,6 @@
         <div class="card-name">Activeness</div>
         <div class="card-desc">Real-time activeness tracker</div>
       </a>
-
-
     </div>
   </div>
 
@@ -1144,7 +1014,6 @@
     <div class="section-label">News & Updates</div>
     <div class="section-title">Latest from English Quest</div>
     <div class="wide-grid">
-
       <div class="sched-wrap">
         <div class="sched-header" onclick="toggleSched()">
           <span class="sched-icon">🗓️</span>
@@ -1167,7 +1036,6 @@
         </div>
         <div class="card-wide-arrow">›</div>
       </a>
-
     </div>
   </div>
 
@@ -1181,38 +1049,37 @@
         <div class="card-name">Instagram</div>
         <div class="card-desc">@engquest.viska</div>
       </a>
-      <a href="#" class="card" style="opacity:0.6;pointer-events:none;position:relative;" onclick="return false;">
+      <a href="#" class="card" style="opacity:0.6;pointer-events:none;position:relative;">
         <div class="card-icon ic-blue">🖼️</div>
         <div class="card-name">Photo Gallery</div>
         <div class="card-desc">Class moments</div>
         <div style="position:absolute;top:8px;right:8px;background:#3B82F6;color:#fff;font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:999px;font-family:'IBM Plex Mono',monospace;">SOON</div>
       </a>
-      <a href="#" class="card" style="opacity:0.6;pointer-events:none;position:relative;" onclick="return false;">
+      <a href="#" class="card" style="opacity:0.6;pointer-events:none;position:relative;">
         <div class="card-icon ic-yellow">🏅</div>
         <div class="card-name">Achievements</div>
         <div class="card-desc">Awards & recognition</div>
         <div style="position:absolute;top:8px;right:8px;background:#F59E0B;color:#fff;font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:999px;font-family:'IBM Plex Mono',monospace;">SOON</div>
       </a>
-
     </div>
   </div>
 
 </main>
 
-<!-- ── FOOTER ── -->
+<!-- FOOTER -->
 <footer>© 2025 <strong>English Quest</strong> · SMA Negeri 6 Surakarta · Built with ❤️ by <strong>LaksMedia</strong></footer>
 
 
 <script>
-// ── HALL OF FAME ────────────────────────────────────────────
+// ── HALL OF FAME ─────────────────────────────────────────────
 const HOF_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
 const HOF_CLASSES = ['XE1','XE4','XE5','XE6','XE7','XE8','XE9','XE10','XE11'];
 const HOF_ACTS = [
-  { key: 'VocabularyBox',    label: 'Vocab Box',    icon: '📚', color: '#8B5CF6', bg: '#EDE9FE', pts: 1 },
-  { key: 'Answering',        label: 'Answering',    icon: '🙋', color: '#3B82F6', bg: '#DBEAFE', pts: 2 },
-  { key: 'Presenting',       label: 'Presenting',   icon: '🎤', color: '#10B981', bg: '#D1FAE5', pts: 5 },
-  { key: 'DoingTaskOnTime',  label: 'Task On Time', icon: '✅', color: '#F59E0B', bg: '#FEF3C7', pts: 2 },
-  { key: 'HelpingHand',      label: 'Helping Hand', icon: '🤝', color: '#EC4899', bg: '#FCE7F3', pts: 1 },
+  { key:'VocabularyBox',   label:'Vocab Box',    icon:'📚', color:'#8B5CF6', bg:'#EDE9FE', pts:1 },
+  { key:'Answering',       label:'Answering',    icon:'🙋', color:'#3B82F6', bg:'#DBEAFE', pts:2 },
+  { key:'Presenting',      label:'Presenting',   icon:'🎤', color:'#10B981', bg:'#D1FAE5', pts:5 },
+  { key:'DoingTaskOnTime', label:'Task On Time', icon:'✅', color:'#F59E0B', bg:'#FEF3C7', pts:2 },
+  { key:'HelpingHand',     label:'Helping Hand', icon:'🤝', color:'#EC4899', bg:'#FCE7F3', pts:1 },
 ];
 const AVATAR_COLORS = ['#7C3AED','#2563EB','#059669','#D97706','#DC2626','#7C3AED','#0891B2','#9333EA','#16A34A'];
 
@@ -1235,7 +1102,6 @@ async function hofApiGet(params) {
 
 async function loadHallOfFame() {
   try {
-    // Fetch all classes in parallel
     const results = await Promise.all(
       HOF_CLASSES.map(cls =>
         hofApiGet({ action: 'getAllActiveness', className: cls })
@@ -1244,7 +1110,6 @@ async function loadHallOfFame() {
       )
     );
 
-    // Flatten all students with class tag
     const all = [];
     results.forEach(({ cls, students }) => {
       students.forEach(s => {
@@ -1255,22 +1120,19 @@ async function loadHallOfFame() {
 
     if (all.length === 0) { document.getElementById('hofContent').innerHTML = '<div class="hof-loading">No data yet.</div>'; return; }
 
-    // Top 5 overall by total points
-    const top5 = [...all].sort((a,b) => b.total - a.total).slice(0, 5);
-    const maxPts = 100; // Fixed to Plus Ultra threshold
-
-    // Category champions — highest raw count per activity
+    const top5   = [...all].sort((a,b) => b.total - a.total).slice(0, 5);
+    const maxPts = 100;
     const champs = HOF_ACTS.map(act => {
       const best = [...all].sort((a,b) => (b[act.key]||0) - (a[act.key]||0))[0];
       return { ...act, champion: best };
     });
 
-    const rankIcons = ['🥇','🥈','🥉','4','5'];
+    const rankIcons   = ['🥇','🥈','🥉','4','5'];
     const rankClasses = ['hof-rank-1','hof-rank-2','hof-rank-3','hof-rank-n','hof-rank-n'];
 
     const top5Html = top5.map((s, i) => {
-      const pct     = Math.round((s.total / maxPts) * 100);
-      const clsIdx  = HOF_CLASSES.indexOf(s.cls);
+      const pct      = Math.round((s.total / maxPts) * 100);
+      const clsIdx   = HOF_CLASSES.indexOf(s.cls);
       const avatarBg = AVATAR_COLORS[clsIdx] || '#7C3AED';
       const initial  = (s.nickname || s.name)[0].toUpperCase();
       const dispName = s.nickname || s.name.split(' ')[0];
@@ -1289,7 +1151,7 @@ async function loadHallOfFame() {
     }).join('');
 
     const champsHtml = champs.map(c => {
-      const s    = c.champion;
+      const s   = c.champion;
       if (!s) return '';
       const val  = s[c.key] || 0;
       const pts  = val * c.pts;
@@ -1327,7 +1189,7 @@ loadHallOfFame();
 
 
 <script>
-// ── SCHEDULE ──────────────────────────────────────────────────
+// ── SCHEDULE ─────────────────────────────────────────────────
 const PERIODS = [
   { p:1,  time:'07.00–07.45' },
   { p:2,  time:'07.45–08.30' },
@@ -1358,28 +1220,26 @@ const DAY_SHORT = ['Mon','Tue','Wed','Thu','Fri'];
 let activeDay = '';
 let schedOpen = false;
 
-// Get current day
 function getTodayDay() {
-  const d = new Date().getDay(); // 0=Sun,1=Mon...5=Fri,6=Sat
+  const d = new Date().getDay();
   if (d >= 1 && d <= 5) return DAYS[d - 1];
   return 'Monday';
 }
 
-// Get current period
 function getCurrentPeriod() {
   const now  = new Date();
   const mins = now.getHours() * 60 + now.getMinutes();
   const ranges = [
-    [0*60+0,  7*60+45,  1],
-    [7*60+45, 8*60+30,  2],
-    [8*60+30, 9*60+15,  3],
-    [9*60+30, 10*60+15, 4],
-    [10*60+15,11*60+0,  5],
-    [11*60+0, 11*60+45, 6],
-    [12*60+30,13*60+15, 7],
-    [13*60+15,14*60+0,  8],
-    [14*60+0, 14*60+45, 9],
-    [14*60+45,15*60+30, 10],
+    [0,    7*60+45,  1],
+    [7*60+45, 8*60+30, 2],
+    [8*60+30, 9*60+15, 3],
+    [9*60+30, 10*60+15,4],
+    [10*60+15,11*60+0, 5],
+    [11*60+0, 11*60+45,6],
+    [12*60+30,13*60+15,7],
+    [13*60+15,14*60+0, 8],
+    [14*60+0, 14*60+45,9],
+    [14*60+45,15*60+30,10],
   ];
   for (const [s,e,p] of ranges) { if (mins >= s && mins < e) return p; }
   return -1;
@@ -1389,15 +1249,12 @@ function toggleSched() {
   schedOpen = !schedOpen;
   document.getElementById('schedBody').classList.toggle('open', schedOpen);
   document.getElementById('schedArrow').classList.toggle('open', schedOpen);
-  if (schedOpen && !activeDay) {
-    buildTabs();
-    showDay(getTodayDay());
-  }
+  if (schedOpen && !activeDay) { buildTabs(); showDay(getTodayDay()); }
 }
 
 function buildTabs() {
   const today = getTodayDay();
-  const tabs = document.getElementById('schedDayTabs');
+  const tabs  = document.getElementById('schedDayTabs');
   tabs.innerHTML = DAYS.map((d,i) => {
     const isToday = d === today;
     return `<button class="sched-day-btn ${isToday?'today':''}" id="tab-${d}" onclick="showDay('${d}')">${DAY_SHORT[i]}${isToday?' 📍':''}</button>`;
@@ -1406,7 +1263,6 @@ function buildTabs() {
 
 function showDay(day) {
   activeDay = day;
-  // Update tab active state
   DAYS.forEach(d => {
     const tab = document.getElementById('tab-' + d);
     if (tab) tab.classList.toggle('active', d === day);
@@ -1416,7 +1272,6 @@ function showDay(day) {
   const today       = getTodayDay();
   const currPeriod  = today === day ? getCurrentPeriod() : -1;
 
-  // Build period lookup for this day
   const periodMap = {};
   daySchedule.forEach(item => {
     if (typeof item.p === 'string') {
@@ -1426,7 +1281,6 @@ function showDay(day) {
     }
   });
 
-  // Render
   let html = '';
   PERIODS.forEach(slot => {
     if (slot.break) {
@@ -1437,37 +1291,32 @@ function showDay(day) {
       </div>`;
       return;
     }
-    const cls    = periodMap[slot.p];
-    const isNow  = slot.p === currPeriod && cls;
-    if (!cls) return; // skip empty periods
+    const cls   = periodMap[slot.p];
+    const isNow = slot.p === currPeriod && cls;
+    if (!cls) return;
 
-    // Get display period string
     const matchEntry = daySchedule.find(e => {
       if (typeof e.p === 'string') return e.p.split('-').includes(String(slot.p)) && e.cls === cls;
       return e.p === slot.p;
     });
 
-    // Only render the FIRST period of a double class
-    const pStr = typeof matchEntry?.p === 'string' ? matchEntry.p : String(slot.p);
-    // Avoid rendering second slot of doubles
     if (typeof matchEntry?.p === 'string') {
       const parts = matchEntry.p.split('-').map(Number);
       if (slot.p !== parts[0]) return;
     }
 
-    // Get time range
     let timeStr = slot.time;
     if (typeof matchEntry?.p === 'string') {
-      const parts   = matchEntry.p.split('-').map(Number);
-      const start   = PERIODS.find(x => x.p === parts[0])?.time.split('–')[0] || '';
-      const end     = PERIODS.find(x => x.p === parts[parts.length-1])?.time.split('–')[1] || '';
+      const parts = matchEntry.p.split('-').map(Number);
+      const start = PERIODS.find(x => x.p === parts[0])?.time.split('–')[0] || '';
+      const end   = PERIODS.find(x => x.p === parts[parts.length-1])?.time.split('–')[1] || '';
       timeStr = start + '–' + end;
     }
 
     const clsLabel = cls.replace('XE','X E-');
     const colCls   = CLS_COLORS[cls] || '';
     html += `<div class="sched-item ${isNow?'now':''}">
-      <span class="sched-period">${pStr}</span>
+      <span class="sched-period">${typeof matchEntry?.p === 'string' ? matchEntry.p : slot.p}</span>
       <span class="sched-time">${timeStr}</span>
       <span class="sched-class-badge ${colCls}">${clsLabel}</span>
       ${isNow ? '<span class="sched-now-badge">▶ Now</span>' : ''}
@@ -1477,17 +1326,14 @@ function showDay(day) {
   if (!html) html = '<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:0.88rem;">No classes today 🎉</div>';
   document.getElementById('schedContent').innerHTML = html;
 
-  // Update sub text
   const count = daySchedule.length;
   document.getElementById('schedSub').textContent = `${day} · ${count} class${count !== 1 ? 'es' : ''}`;
 }
 
-// Auto-open on today if it's a school day
 window.addEventListener('DOMContentLoaded', () => {
   const today = getTodayDay();
   const d = new Date().getDay();
   if (d >= 1 && d <= 5) {
-    // Show today's schedule info in sub even before opening
     const count = SCHEDULE[today]?.length || 0;
     document.getElementById('schedSub').textContent = `Today: ${today} · ${count} class${count !== 1 ? 'es' : ''}`;
   }
@@ -1496,14 +1342,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 <script>
-// ── SUMMATIVE BANNER ──────────────────────────────────────────
+// ── SUMMATIVE BANNER ─────────────────────────────────────────
 const SUMM_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
 let summData = null;
 let summTeacher = false;
 let summUser = '', summPass = '';
 let countdownInterval = null;
 
-// Share session with other pages
 summUser = localStorage.getItem('eq_tu') || '';
 summPass = localStorage.getItem('eq_tp') || '';
 if (summUser && summPass) {
@@ -1512,7 +1357,6 @@ if (summUser && summPass) {
       if (d.ok) {
         summTeacher = true;
         document.getElementById('summEditBtn').classList.add('visible');
-        // Also show floating set button in case banner is hidden
         document.getElementById('summFloatBtn').style.display = 'flex';
       }
     }).catch(()=>{});
@@ -1534,36 +1378,24 @@ async function summApiGet(params) {
   });
 }
 
-// Load summative on page open
 async function loadSummative() {
   try {
     const res = await summApiGet({ action:'getSummative' });
-    if (res.exists && res.data) {
-      summData = res.data;
-      renderBanner(res.data);
-    }
-  } catch(e) { /* fail silently */ }
+    if (res.exists && res.data) { summData = res.data; renderBanner(res.data); }
+  } catch(e) {}
 }
 loadSummative();
 
 function renderBanner(d) {
   if (!d || !d.date || !d.title) return;
   const banner = document.getElementById('summBanner');
-  const textEl  = document.getElementById('summBannerText');
-  const cdEl    = document.getElementById('summCountdown');
+  const textEl = document.getElementById('summBannerText');
+  const cdEl   = document.getElementById('summCountdown');
   banner.classList.add('visible');
-  document.getElementById('summFloatBtn').style.display = 'none'; // banner visible, float not needed
-
-  // Format classes
-  const clsLabel = d.classes && d.classes.length > 0
-    ? d.classes.map(c => c.replace('XE','X E-')).join(', ')
-    : 'All classes';
-
-  // Study info
+  document.getElementById('summFloatBtn').style.display = 'none';
+  const clsLabel = d.classes && d.classes.length > 0 ? d.classes.map(c => c.replace('XE','X E-')).join(', ') : 'All classes';
   const studyPart = d.study ? ` · Study: <strong>${d.study}</strong>` : '';
   textEl.innerHTML = `<strong>${d.title}</strong> · ${clsLabel} · ${formatDate(d.date)}${studyPart}`;
-
-  // Countdown
   startCountdown(d.date, cdEl);
 }
 
@@ -1590,10 +1422,8 @@ function startCountdown(dateStr, el) {
   countdownInterval = setInterval(update, 60000);
 }
 
-// ── TEACHER MODAL ─────────────────────────────────────────────
 function openSummModal() {
   if (!summTeacher) return;
-  // Pre-fill if data exists
   if (summData) {
     document.getElementById('summDate').value  = summData.date || '';
     document.getElementById('summTitle').value = summData.title || '';
@@ -1617,10 +1447,8 @@ async function saveSumm() {
   const data = { date, title, study, classes };
   try {
     const res = await summApiGet({ action:'setSummative', username:summUser, password:summPass, data: JSON.stringify(data) });
-    if (res.success) {
-      summData = data; renderBanner(data); closeSummModal();
-      showSummToast('✅ Summative published!', 'ok');
-    } else { showSummToast('Error: ' + res.error, 'err'); }
+    if (res.success) { summData = data; renderBanner(data); closeSummModal(); showSummToast('✅ Summative published!', 'ok'); }
+    else { showSummToast('Error: ' + res.error, 'err'); }
   } catch(e) { showSummToast('Failed to save', 'err'); }
 }
 
@@ -1648,12 +1476,11 @@ function showSummToast(msg, type) {
 
 
 <script>
-// ── HOMEPAGE TEACHER LOGIN ─────────────────────────────────────
+// ── HOMEPAGE TEACHER LOGIN ────────────────────────────────────
 (function() {
   const u = localStorage.getItem('eq_tu') || '';
   const p = localStorage.getItem('eq_tp') || '';
   if (u && p) {
-    // Already logged in — verify and show badge
     fetch('https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec?action=checkLogin&username=' + encodeURIComponent(u) + '&password=' + encodeURIComponent(p))
       .then(r => r.json()).then(d => { if (d.ok) showTeacherBadge(); }).catch(()=>{});
   }
@@ -1673,14 +1500,13 @@ async function doHeaderLogin() {
   const p = document.getElementById('hlPass').value.trim();
   if (!u || !p) return;
   try {
-    const res = await fetch('https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec?action=checkLogin&username=' + encodeURIComponent(u) + '&password=' + encodeURIComponent(p));
+    const res  = await fetch('https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec?action=checkLogin&username=' + encodeURIComponent(u) + '&password=' + encodeURIComponent(p));
     const data = await res.json();
     if (data.ok) {
       localStorage.setItem('eq_tu', u);
       localStorage.setItem('eq_tp', p);
       closeHeaderLogin();
       showTeacherBadge();
-      // Trigger summative float button if exists
       if (typeof summTeacher !== 'undefined') {
         summTeacher = true; summUser = u; summPass = p;
         document.getElementById('summFloatBtn').style.display = 'flex';
@@ -1704,7 +1530,6 @@ function headerLogout() {
   localStorage.removeItem('eq_tp');
   document.getElementById('headerLoginBtn').style.display = 'inline-block';
   document.getElementById('headerTeacherBadge').style.display = 'none';
-  // Hide summative controls
   if (typeof summTeacher !== 'undefined') {
     summTeacher = false;
     document.getElementById('summFloatBtn').style.display = 'none';
@@ -1745,7 +1570,6 @@ async function loadStrikeBoard() {
       )
     );
 
-    // Flatten and filter only students with strikes
     const withStrikes = [];
     results.forEach(({ cls, students }) => {
       students.forEach(s => {
@@ -1753,7 +1577,6 @@ async function loadStrikeBoard() {
       });
     });
 
-    // Sort by most strikes first, then name
     withStrikes.sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
 
     const el = document.getElementById('strikeListContent');
@@ -1766,7 +1589,7 @@ async function loadStrikeBoard() {
     }
 
     el.innerHTML = withStrikes.map((s, i) => {
-      const initial = (s.nickname || s.name)[0].toUpperCase();
+      const initial  = (s.nickname || s.name)[0].toUpperCase();
       const dispName = s.nickname || s.name.split(' ').slice(0,2).join(' ');
       const clsLabel = s.cls.replace('XE', 'X E-');
       const dots = [1,2,3,4].map(n =>
@@ -1807,7 +1630,6 @@ document.addEventListener('keydown', e => {
 </script>
 
 
-
 <!-- HOF STATS POPUP -->
 <div class="info-overlay hidden" id="hofPopupOverlay" onclick="closeHofPopup(event)">
   <div class="info-sheet" id="hofPopupSheet">
@@ -1845,67 +1667,51 @@ document.addEventListener('keydown', e => {
   <div class="strike-info-sheet" id="strikeInfoSheet">
     <div class="si-handle"></div>
     <div class="si-head">
-      <button class="si-close" onclick="closeStrikeInfo()">✕</button>
-      <div class="si-head-title">⚠️ Strike Information</div>
-      <div class="si-head-sub">Consequences & how to clear your strike</div>
+      <div class="si-head-icon">⚠️</div>
+      <div>
+        <div class="si-head-title">Strike Information</div>
+        <div class="si-head-sub">Consequences & how to clear your strike</div>
+      </div>
+      <button class="si-close" onclick="document.getElementById('strikeInfoOverlay').classList.add('hidden');document.body.style.overflow='';">✕</button>
     </div>
-    <div class="si-body">
-
+    <div class="si-consequences">
       <div class="si-cons-title">🚨 Consequences</div>
-      <div class="si-con-row one">
-        <div class="si-con-icon">📝</div>
+      <div class="si-cons-card c1">
+        <div class="si-cons-icon">📝</div>
         <div>
-          <div class="si-con-label">1 Strike or more</div>
-          <div class="si-con-text">You cannot join the Summative Test</div>
-          <div class="si-con-sub">Your strike must be cleared before the exam date.</div>
+          <div class="si-cons-strikes">1 Strike or more</div>
+          <div class="si-cons-text">You cannot join the Summative Test</div>
+          <div class="si-cons-sub">Your strike must be cleared before the exam date.</div>
         </div>
       </div>
-      <div class="si-con-row three">
-        <div class="si-con-icon">🚫</div>
+      <div class="si-cons-card c2">
+        <div class="si-cons-icon">🚫</div>
         <div>
-          <div class="si-con-label">3 Strikes or more</div>
-          <div class="si-con-text">You cannot join the class</div>
-          <div class="si-con-sub">You will be asked to leave until your strikes are resolved.</div>
+          <div class="si-cons-strikes">3 Strikes or more</div>
+          <div class="si-cons-text">You cannot join the class</div>
+          <div class="si-cons-sub">You will be asked to leave until your strikes are resolved.</div>
         </div>
       </div>
-
-      <div class="si-divider">
-        <div class="si-divider-line"></div>
-        <div class="si-divider-label">How to clear your strike</div>
-        <div class="si-divider-line"></div>
-      </div>
-
+    </div>
+    <div class="si-clear">
+      <div class="si-clear-title">How to clear your strike</div>
       <div class="si-step">
         <div class="si-step-num">1</div>
-        <div class="si-step-text">
-          Write a <strong>text based on the current chapter</strong>
-          <span>Chapter 4 → Analytical Exposition · Chapter 5 → Narrative Text</span>
-        </div>
+        <div class="si-step-text">Write a <strong>text based on the current chapter</strong><span>Chapter 4 → Analytical Exposition · Chapter 5 → Narrative Text</span></div>
       </div>
       <div class="si-step">
         <div class="si-step-num">2</div>
-        <div class="si-step-text">
-          Minimum <strong>3 paragraphs</strong>, each with at least <strong>5 sentences</strong>
-          <span>All text structure parts must be included.</span>
-        </div>
+        <div class="si-step-text">Minimum <strong>3 paragraphs</strong>, each with at least <strong>5 sentences</strong><span>All text structure parts must be included.</span></div>
       </div>
       <div class="si-step">
         <div class="si-step-num">3</div>
-        <div class="si-step-text">
-          <strong>Submit on paper</strong> directly to your teacher
-          <span>Handwritten or printed — your teacher will review it in class.</span>
-        </div>
+        <div class="si-step-text"><strong>Submit on paper</strong> directly to your teacher<span>Handwritten or printed — your teacher will review it in class.</span></div>
       </div>
       <div class="si-step">
         <div class="si-step-num">4</div>
-        <div class="si-step-text">
-          Your teacher will <strong>clear your strike</strong> once it's approved
-          <span>Check back here after submission to see it removed from the board.</span>
-        </div>
+        <div class="si-step-text">Your teacher will <strong>clear your strike</strong> once it's approved<span>Check back here after submission to see it removed from the board.</span></div>
       </div>
-
-      <a href="strikes.html" class="si-full-link">📖 See full text structure guide →</a>
-
+      <a href="strikes.html" style="display:block;text-align:center;margin-top:18px;padding:13px;background:#EDE9FE;border:1.5px solid #C4B5FD;border-radius:14px;font-size:0.88rem;font-weight:700;color:#7C3AED;text-decoration:none;">📖 See full text structure guide →</a>
     </div>
   </div>
 </div>
@@ -1941,15 +1747,8 @@ function openHofPopup(encoded) {
     s.Indicator && s.Indicator.includes('Active') && !s.Indicator.includes('Not') ? 'ind-active' :
     s.Indicator && s.Indicator.includes('Okay') ? 'ind-okay' : 'ind-not';
 
-  const indColors = {
-    'ind-ultra':'#F97316','ind-hyper':'#FBBF24','ind-super':'#10B981',
-    'ind-active':'#A78BFA','ind-okay':'#F59E0B','ind-not':'#EF4444'
-  };
-  const indBgs = {
-    'ind-ultra':'rgba(249,115,22,0.1)','ind-hyper':'rgba(251,191,36,0.12)',
-    'ind-super':'rgba(16,185,129,0.1)','ind-active':'rgba(139,92,246,0.1)',
-    'ind-okay':'rgba(245,158,11,0.1)','ind-not':'rgba(239,68,68,0.08)'
-  };
+  const indColors = { 'ind-ultra':'#F97316','ind-hyper':'#FBBF24','ind-super':'#10B981','ind-active':'#A78BFA','ind-okay':'#F59E0B','ind-not':'#EF4444' };
+  const indBgs    = { 'ind-ultra':'rgba(249,115,22,0.1)','ind-hyper':'rgba(251,191,36,0.12)','ind-super':'rgba(16,185,129,0.1)','ind-active':'rgba(139,92,246,0.1)','ind-okay':'rgba(245,158,11,0.1)','ind-not':'rgba(239,68,68,0.08)' };
 
   const statsHtml = HOF_ACT_DEFS.map(a => {
     const times = s[a.key] || 0;
@@ -2040,7 +1839,6 @@ document.addEventListener('keydown', e => {
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
   </div>
 
-  <!-- Teacher login area in sidebar -->
   <div class="sidebar-teacher">
     <div class="sidebar-teacher-label">🔑 Teacher Access</div>
     <div id="sbTeacherLoggedOut">
@@ -2064,6 +1862,15 @@ document.addEventListener('keydown', e => {
     <a href="submission.html" class="sidebar-item" style="opacity:0.5;pointer-events:none;">
       <div class="sidebar-item-icon" style="background:rgba(245,158,11,0.2)">📝</div>
       <div class="sidebar-item-name">Submission</div>
+      <span class="sidebar-item-badge badge-soon">SOON</span>
+    </a>
+    <a href="#reading" class="sidebar-item" onclick="closeSidebar()">
+      <div class="sidebar-item-icon" style="background:rgba(20,184,166,0.2)">📖</div>
+      <div class="sidebar-item-name">Reading</div>
+    </a>
+    <a href="#video" class="sidebar-item" onclick="closeSidebar()">
+      <div class="sidebar-item-icon" style="background:rgba(236,72,153,0.2)">🎬</div>
+      <div class="sidebar-item-name">Video Learning</div>
       <span class="sidebar-item-badge badge-soon">SOON</span>
     </a>
   </div>
@@ -2092,7 +1899,6 @@ document.addEventListener('keydown', e => {
       <div class="sidebar-item-icon" style="background:rgba(245,158,11,0.2)">⚡</div>
       <div class="sidebar-item-name">Activeness</div>
     </a>
-
     <a href="strikes.html" class="sidebar-item">
       <div class="sidebar-item-icon" style="background:rgba(220,38,38,0.2)">⚠️</div>
       <div class="sidebar-item-name">Strikes</div>
@@ -2122,7 +1928,6 @@ document.addEventListener('keydown', e => {
       <span class="sidebar-item-badge badge-soon">SOON</span>
     </a>
   </div>
-
 </nav>
 
 
@@ -2188,7 +1993,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar
 
 
 <script>
-// ── STUDENT IDENTITY ─────────────────────────────────────────
+// ── STUDENT IDENTITY ──────────────────────────────────────────
 const SETUP_API = 'https://script.google.com/macros/s/AKfycbxBTC4vnFB3A73QwThdRxrUruvUNZRlpwwLFBjt5C0cJGIh8wz461ZCn3b9Y6wWPpyAGg/exec';
 const CLASS_LABELS_FULL = { XE1:'X E-1', XE4:'X E-4', XE5:'X E-5', XE6:'X E-6', XE7:'X E-7', XE8:'X E-8', XE9:'X E-9', XE10:'X E-10', XE11:'X E-11' };
 
@@ -2206,8 +2011,7 @@ function setupApiGet(params) {
       reject(new Error('Timeout'));
     }, 12000);
     window[cb] = function(data) {
-      clearTimeout(timer);
-      delete window[cb];
+      clearTimeout(timer); delete window[cb];
       try { document.head.removeChild(script); } catch(e) {}
       resolve(data);
     };
@@ -2234,21 +2038,14 @@ function initStudentGreeting() {
     document.getElementById('sgName').textContent   = id.name.split(' ')[0];
     document.getElementById('sgClass').textContent  = CLASS_LABELS_FULL[id.cls] || id.cls;
   } else {
-    // Show a small "Personalize" button in greeting area instead of greeting
     var greeting = document.getElementById('studentGreeting');
     greeting.classList.add('show');
     greeting.style.justifyContent = 'center';
     greeting.innerHTML = '<span onclick="openSetup(false)" style="font-size:0.8rem;color:rgba(255,255,255,0.7);cursor:pointer;text-decoration:underline;">👤 Personalize for me</span>';
-
-    // Also auto-open setup on first ever visit
     var skipped = localStorage.getItem('eq_setup_skipped');
     if (!skipped) {
-      // Wait for fonts/layout to settle before showing modal
-      if (document.readyState === 'complete') {
-        openSetup(false);
-      } else {
-        window.addEventListener('load', function() { openSetup(false); });
-      }
+      if (document.readyState === 'complete') { openSetup(false); }
+      else { window.addEventListener('load', function() { openSetup(false); }); }
     }
   }
 }
@@ -2257,16 +2054,10 @@ function openSetup(isChange) {
   var overlay = document.getElementById('setupOverlay');
   overlay.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
-
   if (isChange) {
     var id = getStudentIdentity();
-    if (id) {
-      document.getElementById('setupClass').value = id.cls;
-      loadSetupNames(id.cls, id.no);
-      return;
-    }
+    if (id) { document.getElementById('setupClass').value = id.cls; loadSetupNames(id.cls, id.no); return; }
   }
-  // Reset form
   document.getElementById('setupClass').value = '';
   document.getElementById('setupName').innerHTML = '<option value="">-- Select class first --</option>';
   document.getElementById('setupName').disabled = true;
@@ -2277,7 +2068,6 @@ function skipSetup() {
   localStorage.setItem('eq_setup_skipped', '1');
   document.getElementById('setupOverlay').classList.add('hidden');
   document.body.style.overflow = '';
-  // Show personalize link
   var greeting = document.getElementById('studentGreeting');
   greeting.classList.add('show');
   greeting.style.justifyContent = 'center';
@@ -2299,13 +2089,9 @@ function loadSetupNames(cls, preselectNo) {
   sel.innerHTML = '<option value="">Loading...</option>';
   sel.disabled = true;
   document.getElementById('setupSubmit').disabled = true;
-
   setupApiGet({ action: 'getStudents', className: cls })
     .then(function(res) {
-      if (!res.students || !res.students.length) {
-        sel.innerHTML = '<option value="">No students found</option>';
-        return;
-      }
+      if (!res.students || !res.students.length) { sel.innerHTML = '<option value="">No students found</option>'; return; }
       sel.innerHTML = '<option value="">-- Select your name --</option>';
       res.students.forEach(function(s) {
         var label = s.nickname ? s.name + ' (' + s.nickname + ')' : s.name;
@@ -2319,7 +2105,7 @@ function loadSetupNames(cls, preselectNo) {
       sel.disabled = false;
       if (preselectNo) document.getElementById('setupSubmit').disabled = false;
     })
-    .catch(function(e) {
+    .catch(function() {
       sel.innerHTML = '<option value="">Failed to load — try again</option>';
       sel.disabled = false;
     });
@@ -2353,7 +2139,6 @@ document.getElementById('setupSubmit').addEventListener('click', function() {
     '<span class="sg-change" onclick="openSetup(true)">Change</span>';
 });
 
-// Run on load
 initStudentGreeting();
 </script>
 
